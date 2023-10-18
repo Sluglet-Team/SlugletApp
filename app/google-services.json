@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "899851531202",
+    "project_id": "sluglet-44dfa",
+    "storage_bucket": "sluglet-44dfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899851531202:android:27c472678c4149718ddc5b",
+        "android_client_info": {
+          "package_name": "com.example.sluglet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCakW8FgzJHWeNO8Xtn-HHsD7Ujwv4tRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899851531202:android:4d1a84255f457f428ddc5b",
+        "android_client_info": {
+          "package_name": "com.sluglet.slugletapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCakW8FgzJHWeNO8Xtn-HHsD7Ujwv4tRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
