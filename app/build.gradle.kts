@@ -79,4 +79,6 @@ dependencies {
 
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
+
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 }
