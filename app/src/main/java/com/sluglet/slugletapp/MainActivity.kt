@@ -9,8 +9,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
+import com.sluglet.slugletapp.common.composables.CourseBox
+import com.sluglet.slugletapp.common.composables.CourseData
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,10 +23,18 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = Color.Blue
                 ) {
-                    Greeting("Android")
+                    // Anything in here will fill the max size of the screen
                 }
+                val test = CourseData(
+                    courseNum = "CSE 115A",
+                    courseName = "Introduction to Software Engineering",
+                    profName = "Richard Julig",
+                    dateTime = "MWF 8:00am - 9:05am",
+                    location = "Baskin Auditorium 1"
+                )
+                CourseBox(coursedata = test, modifier = Modifier)
             }
         }
     }
