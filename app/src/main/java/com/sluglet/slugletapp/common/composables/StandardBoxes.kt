@@ -24,12 +24,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+/*
+This is where composables for box-like items go
+This includes things like:
+Course information composables
+Calendars
+etc.
+ */
 @Composable
+/*
+TODO: move isExpanded out of the function definition and make it a
+...mutableStateOf(false)
+ */
 fun CourseBox(
     coursedata: CourseData,
     modifier: Modifier,
     isExpanded: Boolean = false
 ) {
+    // Define a row: Left side will be the course info, right side the loc and add icons
     Row(
         modifier = modifier
             .padding(10.dp)
@@ -45,6 +57,7 @@ fun CourseBox(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        // Organizes class data in a column structure
         Column (
             modifier = Modifier
                 .padding(start = 15.dp)
@@ -56,6 +69,7 @@ fun CourseBox(
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black
             )
+            // Only show this data if the box is clicked
             if (isExpanded) {
                 CourseText(
                     modifier = Modifier,
@@ -84,6 +98,7 @@ fun CourseBox(
             }
 
         }
+        // Icons
         Row (
             modifier = Modifier
                 .padding(end = 15.dp),
@@ -95,6 +110,7 @@ fun CourseBox(
     }
 }
 
+// Using "Split" at the top right of Android studio shows the preview of composables
 @Preview (showBackground = true)
 @Composable
 fun CourseBoxPreview (
