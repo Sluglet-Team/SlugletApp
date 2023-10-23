@@ -81,4 +81,6 @@ dependencies {
     // https://firebase.google.com/docs/android/setup#available-libraries
 
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    // hilt
+    implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
 }
