@@ -1,4 +1,4 @@
-package com.sluglet.slugletapp.screens
+package com.sluglet.slugletapp.screens.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
