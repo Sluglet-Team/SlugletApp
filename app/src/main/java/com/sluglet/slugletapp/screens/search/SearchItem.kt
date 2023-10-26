@@ -1,4 +1,4 @@
-package com.sluglet.slugletapp.common.composables
+package com.sluglet.slugletapp.screens.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +19,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sluglet.slugletapp.common.composables.CourseText
 import com.sluglet.slugletapp.model.CourseData
 
+// search item is a single course
 /*
 This is where composables for box-like items go
 This includes things like:
@@ -29,18 +31,13 @@ Calendars
 etc.
  */
 @Composable
-/*
-TODO: move isExpanded out of the function definition and make it a
-...mutableStateOf(false)
- */
-fun CourseBox(
+fun SearchItem(
     coursedata: CourseData,
-    modifier: Modifier,
     isExpanded: Boolean = false
 ) {
     // Define a row: Left side will be the course info, right side the loc and add icons
     Row(
-        modifier = modifier
+        modifier = Modifier
             .padding(10.dp)
             .fillMaxWidth()
             .shadow(
@@ -108,9 +105,9 @@ fun CourseBox(
 }
 
 // Using "Split" at the top right of Android studio shows the preview of composables
-@Preview (showBackground = true)
+@Preview(showBackground = true)
 @Composable
-fun CourseBoxPreview (
+fun SearchItemPreview (
 ) {
     val test = CourseData(
         courseNum = "CSE 115A",
