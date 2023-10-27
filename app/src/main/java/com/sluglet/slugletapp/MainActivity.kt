@@ -11,9 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
-import com.sluglet.slugletapp.screens.search.CourseBox
+import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.screens.search.SearchItem
+import com.sluglet.slugletapp.screens.search.SearchScreenContent
 import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
 
@@ -39,7 +40,11 @@ class MainActivity : ComponentActivity() {
                     dateTime = "MWF 8:00am - 9:05am",
                     location = "Baskin Auditorium 1"
                 )
-                SearchItem(coursedata = test)
+                var testList = mutableListOf<CourseData>()
+                for (i in 1..100) {
+                    testList.add(test)
+                }
+                SearchScreenContent(courses = testList)
             }
         }
     }

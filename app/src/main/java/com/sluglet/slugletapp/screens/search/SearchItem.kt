@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.common.composables.CourseText
 import com.sluglet.slugletapp.model.CourseData
 

@@ -1,6 +1,7 @@
-package com.sluglet.slugletapp.screens.search
+package com.sluglet.slugletapp.common.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,13 +14,13 @@ import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sluglet.slugletapp.common.composables.CourseText
 import com.sluglet.slugletapp.model.CourseData
 
 /*
@@ -36,13 +37,13 @@ TODO: move isExpanded out of the function definition and make it a
  */
 fun CourseBox(
     coursedata: CourseData,
-    modifier: Modifier,
-    isExpanded: Boolean = false
+    modifier: Modifier = Modifier
 ) {
+    var isExpanded by remember {mutableStateOf(false)}
     // Define a row: Left side will be the course info, right side the loc and add icons
     Row(
         modifier = modifier
-            .padding(10.dp)
+            .padding(start = 10.dp, end = 10.dp)
             .fillMaxWidth()
             .shadow(
                 elevation = 5.dp,
@@ -51,6 +52,9 @@ fun CourseBox(
             .background(
                 color = Color.White,
                 shape = RoundedCornerShape(size = 20.dp)
+            )
+            .clickable(
+                onClick = { isExpanded = !isExpanded }
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -102,6 +106,7 @@ fun CourseBox(
                 .padding(end = 15.dp),
             Arrangement.SpaceEvenly
         ){
+            // TODO(CAMDEN): add clickables for icons
             Icon(Icons.Rounded.LocationOn, "map")
             Icon(Icons.Rounded.Add, "add")
         }

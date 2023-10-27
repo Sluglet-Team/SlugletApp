@@ -16,8 +16,11 @@ class SearchViewModel @Inject constructor(
     // get all courses from Firestore
     val courses = storageService.courses
 
-    // TODO: implement the following functions
+    // TODO(UNASSIGNED): implement the following functions
     fun onAddClick() {
+
+    }
+    fun onDeleteClick() {
 
     }
     fun onMapClick() {
