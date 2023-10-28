@@ -33,6 +33,8 @@ class MainActivity : ComponentActivity() {
                     }
                     else LightMode()
                 }
+
+                // FIXME(CAMDEN): Testing to END needs removed eventually
                 val test = CourseData(
                     courseNum = "CSE 115A",
                     courseName = "Introduction to Software Engineering",
@@ -45,6 +47,7 @@ class MainActivity : ComponentActivity() {
                     testList.add(test)
                 }
                 SearchScreenContent(courses = testList)
+                // FIXME(CAMDEN): END
             }
         }
     }
