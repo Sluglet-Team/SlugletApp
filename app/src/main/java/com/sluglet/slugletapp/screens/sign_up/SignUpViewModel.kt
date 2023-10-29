@@ -64,6 +64,7 @@ class SignUpViewModel @Inject constructor(
          */
         launchCatching {
             accountService.linkAccount(email, password)
+
             //TODO https://firebase.google.com/codelabs/build-android-app-with-firebase-compose#2
 
         }

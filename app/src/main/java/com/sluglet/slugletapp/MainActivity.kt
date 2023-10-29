@@ -20,6 +20,8 @@ import com.sluglet.slugletapp.common.composables.CourseData
 import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
 
+import com.sluglet.slugletapp.screens.sign_up.UserLogin
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +44,9 @@ class MainActivity : ComponentActivity() {
                     dateTime = "MWF 8:00am - 9:05am",
                     location = "Baskin Auditorium 1"
                 )
+
                 CourseBox(coursedata = test, modifier = Modifier)
+                UserLogin()
             }
         }
     }
