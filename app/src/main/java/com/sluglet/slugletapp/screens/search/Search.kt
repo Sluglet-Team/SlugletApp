@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sluglet.slugletapp.common.composables.CourseBox
+import com.sluglet.slugletapp.common.composables.SearchBox
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
 
@@ -29,6 +30,7 @@ fun Search (
 ) {
     // this should get all the courses from the DB
     // IDK if this will actually do that
+    // FIXME: it doesn't
     val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
 
     SearchScreenContent(
@@ -41,10 +43,10 @@ fun Search (
 fun SearchScreenContent (
     modifier: Modifier = Modifier,
     courses: List<CourseData>,
-    // FIXME: the following two  take the wrong arguments
+    // FIXME: the following two take the wrong arguments
     /*
-    onAddClick: ((String) -> Unit) -> Unit,
-    onMapClick: ((String) -> Unit) -> Unit,
+    onAddClick: ((String) -> Unit) -> Unit, wrong
+    onMapClick: ((String) -> Unit) -> Unit, wrong
     openScreen: (String) -> Unit
      */
 ) {
@@ -53,7 +55,7 @@ fun SearchScreenContent (
     Column (modifier = Modifier
 
     ) {
-
+        SearchBox()
         // LazyColumn with courses
         LazyColumn (
             state = rememberLazyListState(),

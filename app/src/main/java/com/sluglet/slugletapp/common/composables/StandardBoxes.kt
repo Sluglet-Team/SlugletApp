@@ -3,6 +3,7 @@ package com.sluglet.slugletapp.common.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sluglet.slugletapp.common.ext.basicRow
 import com.sluglet.slugletapp.model.CourseData
 
 /*
@@ -31,10 +33,6 @@ Calendars
 etc.
  */
 @Composable
-/*
-TODO: move isExpanded out of the function definition and make it a
-...mutableStateOf(false)
- */
 fun CourseBox(
     coursedata: CourseData,
     modifier: Modifier = Modifier
@@ -43,16 +41,7 @@ fun CourseBox(
     // Define a row: Left side will be the course info, right side the loc and add icons
     Row(
         modifier = modifier
-            .padding(start = 10.dp, end = 10.dp)
-            .fillMaxWidth()
-            .shadow(
-                elevation = 5.dp,
-                shape = RoundedCornerShape(20.dp)
-            )
-            .background(
-                color = Color.White,
-                shape = RoundedCornerShape(size = 20.dp)
-            )
+            .basicRow()
             .clickable(
                 onClick = { isExpanded = !isExpanded }
             ),
@@ -113,6 +102,17 @@ fun CourseBox(
     }
 }
 
+@Composable
+fun SearchBox (
+    modifier: Modifier = Modifier
+) {
+    Box (
+        modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)
+    ) {
+        SearchTextField()
+    }
+}
+
 // Using "Split" at the top right of Android studio shows the preview of composables
 @Preview (showBackground = true)
 @Composable
@@ -126,4 +126,12 @@ fun CourseBoxPreview (
         location = "Baskin Auditorium 1"
     )
     CourseBox(coursedata = test, modifier = Modifier)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SearchBoxPreview (
+
+) {
+    SearchBox()
 }

@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
 import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.model.CourseData
-import com.sluglet.slugletapp.screens.search.SearchItem
+import com.sluglet.slugletapp.screens.search.Search
 import com.sluglet.slugletapp.screens.search.SearchScreenContent
 import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
