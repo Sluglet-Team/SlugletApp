@@ -38,15 +38,17 @@ etc.
 
 @OptIn(ExperimentalMaterial3Api::class) // for TextField
 @Composable
-// TODO(CAMDEN): return text
+// TODO(CAMDEN): needs to work with ViewModel
 fun SearchTextField (
     modifier: Modifier = Modifier,
+    onSearchChange: (String) -> Unit,
+    userSearch: String
 ) {
     var text by remember { mutableStateOf(TextFieldValue("")) }
     val focusManager = LocalFocusManager.current
     TextField(
-        value = text,
-        onValueChange = { text = it },
+        value = userSearch,
+        onValueChange = onSearchChange,
         label = { Text(text = "Search") },
         modifier = Modifier.basicRow(),
         colors = TextFieldDefaults.textFieldColors(
@@ -80,6 +82,7 @@ fun SearchTextField (
             }
         )
     )
+
 }
 
 @Composable
@@ -112,5 +115,5 @@ fun CourseNumTextPreview() {
 fun SearchTextFieldPreview(
 
 ) {
-    SearchTextField()
+    SearchTextField(userSearch = "", onSearchChange = { })
 }

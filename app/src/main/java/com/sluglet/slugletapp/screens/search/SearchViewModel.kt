@@ -1,5 +1,6 @@
 package com.sluglet.slugletapp.screens.search
 
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,6 +16,12 @@ class SearchViewModel @Inject constructor(
 ) : SlugletViewModel(logService) {
     // get all courses from Firestore
     val courses = storageService.courses
+
+    var userSearch by mutableStateOf("")
+
+    fun updateSearch (searched: String) {
+        userSearch = searched
+    }
 
     // TODO(UNASSIGNED): implement the following functions
     fun onAddClick() {

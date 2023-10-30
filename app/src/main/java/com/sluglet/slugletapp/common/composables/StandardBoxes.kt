@@ -20,9 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sluglet.slugletapp.common.ext.basicRow
+import com.sluglet.slugletapp.common.ext.smallSpacer
 import com.sluglet.slugletapp.model.CourseData
 
 /*
@@ -51,7 +53,8 @@ fun CourseBox(
         // Organizes class data in a column structure
         Column (
             modifier = Modifier
-                .padding(start = 15.dp)
+                .smallSpacer()
+                .padding(start = 5.dp)
         ){
             // Course Prefix and Number
             CourseText(
@@ -95,21 +98,29 @@ fun CourseBox(
                 .padding(end = 15.dp),
             Arrangement.SpaceEvenly
         ){
-            // TODO(CAMDEN): add clickables for icons
-            Icon(Icons.Rounded.LocationOn, "map")
-            Icon(Icons.Rounded.Add, "add")
+            // TODO(CAMDEN): add clickables for icons that do the things
+            Icon(
+                Icons.Rounded.LocationOn,
+                "map"
+            )
+            Icon(
+                Icons.Rounded.Add,
+                "add"
+            )
         }
     }
 }
 
 @Composable
 fun SearchBox (
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSearchChange: (String) -> Unit,
+    userSearch: String
 ) {
     Box (
-        modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)
+        modifier = Modifier.padding(top = 15.dp, bottom = 20.dp)
     ) {
-        SearchTextField()
+        SearchTextField(userSearch = userSearch, onSearchChange = onSearchChange)
     }
 }
 
@@ -133,5 +144,8 @@ fun CourseBoxPreview (
 fun SearchBoxPreview (
 
 ) {
-    SearchBox()
+    SearchBox(
+        userSearch = "",
+        onSearchChange = { }
+    )
 }

@@ -24,3 +24,6 @@ fun Modifier.basicRow(): Modifier {
             shape = RoundedCornerShape(size = 20.dp)
         )
 }
+fun Modifier.smallSpacer(): Modifier {
+    return this.padding(10.dp)
+}

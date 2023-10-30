@@ -10,14 +10,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
 import com.sluglet.slugletapp.common.composables.CourseBox
+import com.sluglet.slugletapp.common.composables.SearchTextField
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.screens.search.Search
 import com.sluglet.slugletapp.screens.search.SearchScreenContent
+import com.sluglet.slugletapp.screens.search.SearchViewModel
 import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +38,7 @@ class MainActivity : ComponentActivity() {
                     }
                     else LightMode()
                 }
+                // val appState = rememberAppState()
 
                 // FIXME(CAMDEN): Testing to END needs removed eventually
                 val test = CourseData(
@@ -42,29 +48,21 @@ class MainActivity : ComponentActivity() {
                     dateTime = "MWF 8:00am - 9:05am",
                     location = "Baskin Auditorium 1"
                 )
+                val test2 = CourseData (
+                    courseNum = "ANTH 101",
+                    courseName = "Anthropology",
+                    profName = "Some Prof",
+                    dateTime = "MWF 8:00am - 9:05am",
+                    location = "Somewhere"
+                )
                 var testList = mutableListOf<CourseData>()
                 for (i in 1..100) {
                     testList.add(test)
                 }
-                SearchScreenContent(courses = testList)
+                testList.add(test2)
+                SearchScreenContent(courses = testList, onSearchChange = {}, userSearch = "")
                 // FIXME(CAMDEN): END
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SlugletAppTheme {
-        Greeting("Android")
     }
 }

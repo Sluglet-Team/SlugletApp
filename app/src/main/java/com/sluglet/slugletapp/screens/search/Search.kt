@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,15 +27,23 @@ Uses a CourseBox composable along with a SearchTextField
 @Composable
 fun Search (
     //FIXME: openScreen: (String) -> Unit,
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel() // FIXME(CAMDEN): This line breaks the app
 ) {
     // this should get all the courses from the DB
     // IDK if this will actually do that
-    // FIXME: it doesn't
     val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
+    val test = CourseData(
+        courseNum = "CSE 115A",
+        courseName = "Introduction to Software Engineering",
+        profName = "Richard Julig",
+        dateTime = "MWF 8:00am - 9:05am",
+        location = "Baskin Auditorium 1"
+    )
 
     SearchScreenContent(
-        courses = courses.value
+        courses = listOf(test),
+        userSearch = viewModel.userSearch,
+        onSearchChange = { viewModel.updateSearch(it) }
     )
 
 }
@@ -43,6 +52,8 @@ fun Search (
 fun SearchScreenContent (
     modifier: Modifier = Modifier,
     courses: List<CourseData>,
+    onSearchChange: (String) -> Unit,
+    userSearch: String
     // FIXME: the following two take the wrong arguments
     /*
     onAddClick: ((String) -> Unit) -> Unit, wrong
@@ -55,7 +66,10 @@ fun SearchScreenContent (
     Column (modifier = Modifier
 
     ) {
-        SearchBox()
+        SearchBox(
+            onSearchChange = onSearchChange,
+            userSearch = userSearch
+        )
         // LazyColumn with courses
         LazyColumn (
             state = rememberLazyListState(),
@@ -86,7 +100,11 @@ fun SearchPreview (
         testList.add(testCourse)
     }
     SlugletAppTheme {
-        SearchScreenContent(courses = testList)
+        SearchScreenContent(
+            courses = testList,
+            onSearchChange = { },
+            userSearch = ""
+        )
     }
 
 
