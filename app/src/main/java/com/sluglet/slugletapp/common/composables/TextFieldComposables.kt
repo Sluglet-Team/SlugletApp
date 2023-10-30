@@ -51,12 +51,11 @@ fun SearchTextField (
         modifier = Modifier.basicRow(),
         colors = TextFieldDefaults.textFieldColors(
             containerColor = Color.White,
-            disabledLabelColor = Color.Black,
-            disabledLeadingIconColor = Color.Black,
-            disabledTrailingIconColor = Color.Black,
-            disabledTextColor = Color.Black,
             unfocusedIndicatorColor = Color.White,
-            focusedIndicatorColor = Color.White
+            focusedIndicatorColor = Color.White,
+            unfocusedLeadingIconColor = Color.Black,
+            unfocusedTrailingIconColor = Color.Black,
+            textColor = Color.Black
         ),
         leadingIcon = {
             Icon(
