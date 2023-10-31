@@ -1,15 +1,11 @@
 package com.sluglet.slugletapp.screens.search
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,8 +21,8 @@ A composable that renders the Search Screen
 Uses a CourseBox composable along with a SearchTextField
  */
 @Composable
-fun Search (
-    //FIXME: openScreen: (String) -> Unit,
+fun SearchScreen (
+    openScreen: (String) -> Unit,
     viewModel: SearchViewModel = hiltViewModel() // FIXME(CAMDEN): This line breaks the app
 ) {
     // this should get all the courses from the DB
@@ -41,7 +37,7 @@ fun Search (
     )
 
     SearchScreenContent(
-        courses = listOf(test),
+        courses = courses.value,
         userSearch = viewModel.userSearch,
         onSearchChange = { viewModel.updateSearch(it) }
     )

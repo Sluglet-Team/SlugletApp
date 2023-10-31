@@ -14,17 +14,24 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.sluglet.slugletapp.common.ext.basicRow
 import com.sluglet.slugletapp.common.ext.smallSpacer
+import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
 
 /*
@@ -121,6 +128,50 @@ fun SearchBox (
         modifier = Modifier.padding(top = 15.dp, bottom = 20.dp)
     ) {
         SearchTextField(userSearch = userSearch, onSearchChange = onSearchChange)
+    }
+}
+
+@Composable
+fun BottomNavBar(
+    modifier: Modifier = Modifier,
+    items: List<BottomNavItem>,
+    navController: NavController,
+    onItemClick: (BottomNavItem) -> Unit
+) {
+    val backStackEntry = navController.currentBackStackEntryAsState()
+    NavigationBar (
+        modifier = Modifier
+            .smallSpacer(),
+        contentColor = Color.White,
+        tonalElevation = 10.dp,
+    ){
+        items.forEach() {item ->
+            val selected = item.route == backStackEntry.value?.destination?.route
+            NavigationBarItem(
+                selected = selected,
+                onClick = { onItemClick(item) },
+                icon = {
+                    Column ( horizontalAlignment = CenterHorizontally ){
+                        if (selected) {
+                            Icon(
+                                item.selectedIcon,
+                                contentDescription = item.name
+                            )
+                            Text(
+                                text = item.name
+                            )
+                        }
+                        else {
+                            Icon(
+                                item.unselectedIcon,
+                                contentDescription = item.name
+                            )
+                        }
+                    }
+                }
+            )
+        }
+
     }
 }
 
