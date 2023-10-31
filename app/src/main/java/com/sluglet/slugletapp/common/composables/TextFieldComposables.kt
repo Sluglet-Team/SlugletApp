@@ -1,12 +1,32 @@
 package com.sluglet.slugletapp.common.composables
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import com.sluglet.slugletapp.common.ext.basicRow
 
 /*
 This is where composables for all textfields will go
@@ -16,10 +36,53 @@ Search bar text fields
 etc.
  */
 
+@OptIn(ExperimentalMaterial3Api::class) // for TextField
 @Composable
+// TODO(CAMDEN): needs to work with ViewModel
 fun SearchTextField (
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
+    onSearchChange: (String) -> Unit,
+    userSearch: String
 ) {
+    var text by remember { mutableStateOf(TextFieldValue("")) }
+    val focusManager = LocalFocusManager.current
+    TextField(
+        value = userSearch,
+        onValueChange = onSearchChange,
+        label = { Text(text = "Search") },
+        modifier = Modifier.basicRow(),
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = Color.White,
+            unfocusedIndicatorColor = Color.White,
+            focusedIndicatorColor = Color.White,
+            unfocusedLeadingIconColor = Color.Black,
+            unfocusedTrailingIconColor = Color.Black,
+            textColor = Color.Black
+        ),
+        leadingIcon = {
+            Icon(
+                Icons.Rounded.Search,
+                contentDescription = "search icon"
+            )
+        },
+        trailingIcon = {
+            Icon(
+                Icons.Rounded.Clear,
+                contentDescription = "clear content icon",
+                modifier = Modifier
+                    .clickable(
+                        // FIXME(CAMDEN): needs to take state from button click
+                        onClick = {  }
+                    )
+            )
+        },
+        singleLine = true,
+        keyboardActions = KeyboardActions(
+            onDone = {
+                focusManager.clearFocus()
+            }
+        )
+    )
 
 }
 
@@ -46,4 +109,12 @@ fun CourseNumTextPreview() {
         color = Color.Black,
         style = MaterialTheme.typography.displayLarge
     )
+}
+
+@Preview (showBackground = true)
+@Composable
+fun SearchTextFieldPreview(
+
+) {
+    SearchTextField(userSearch = "", onSearchChange = { })
 }
