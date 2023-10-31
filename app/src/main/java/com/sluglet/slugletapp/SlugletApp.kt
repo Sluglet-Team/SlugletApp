@@ -39,11 +39,6 @@ fun SlugletApp () {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Anything in here will fill the max size of the screen
-            if (isSystemInDarkTheme()) {
-                DarkMode()
-            }
-            else LightMode()
 
             val appState = rememberAppState()
             val snackbarHostState = remember { SnackbarHostState() }
@@ -67,11 +62,17 @@ fun SlugletApp () {
                                 unselectedIcon = Icons.Default.Search
                             )
                         ),
-                        navController = navController,
-                        onItemClick = { navController.navigate(it.route) }
+                        navController = appState.navController,
+                        onItemClick = { appState.navController.navigate(it.route) }
                     )
                 }
             ) {innerPadding ->
+                // Anything in here will fill the max size of the screen
+                if (isSystemInDarkTheme()) {
+                    DarkMode()
+                }
+                else LightMode()
+
                 NavHost(
                     navController = appState.navController,
                     startDestination = SEARCH_SCREEN,
@@ -80,8 +81,6 @@ fun SlugletApp () {
                     slugletGraph(appState)
                 }
             }
-
-
         }
     }
 }

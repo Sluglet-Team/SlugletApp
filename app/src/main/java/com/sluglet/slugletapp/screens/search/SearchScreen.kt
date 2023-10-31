@@ -27,14 +27,8 @@ fun SearchScreen (
 ) {
     // this should get all the courses from the DB
     // IDK if this will actually do that
+    // FIXME: Isn't getting courses atm
     val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
-    val test = CourseData(
-        courseNum = "CSE 115A",
-        courseName = "Introduction to Software Engineering",
-        profName = "Richard Julig",
-        dateTime = "MWF 8:00am - 9:05am",
-        location = "Baskin Auditorium 1"
-    )
 
     SearchScreenContent(
         courses = courses.value,
