@@ -71,7 +71,8 @@ fun SearchTextField (
                 contentDescription = "clear content icon",
                 modifier = Modifier
                     .clickable(
-                        onClick = { text = TextFieldValue("") }
+                        // FIXME(CAMDEN): needs to take state from button click
+                        onClick = {  }
                     )
             )
         },
