@@ -28,10 +28,29 @@ fun SearchScreen (
     // this should get all the courses from the DB
     // IDK if this will actually do that
     // FIXME: Isn't getting courses atm
-    val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
+    // val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
+    val test = CourseData (
+        courseName = "Intro to Soft",
+        courseNum = "CSE 115A",
+        location = "Aud 1",
+        dateTime = "MWF 8-9am",
+        profName = "Julig"
+    )
+    val test2 = CourseData (
+        courseName = "Intro to Anth",
+        courseNum = "ANTH 101",
+        location = "Aud 1",
+        dateTime = "MWF 8-9am",
+        profName = "Julig"
+    )
+    var testList = mutableListOf<CourseData>()
+    for (i in 1..100) {
+        testList.add(test)
+    }
+    testList.add(test2)
 
     SearchScreenContent(
-        courses = courses.value,
+        courses = testList,
         userSearch = viewModel.userSearch,
         onSearchChange = { viewModel.updateSearch(it) }
     )
@@ -66,7 +85,9 @@ fun SearchScreenContent (
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             items(
-                items = courses
+                items = courses.filter {
+                    it.courseNum.contains(userSearch.trim(), ignoreCase = true)
+                }
             ) { courseItem ->
                 CourseBox(coursedata = courseItem)
             }

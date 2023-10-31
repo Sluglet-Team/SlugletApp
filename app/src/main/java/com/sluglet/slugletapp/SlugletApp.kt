@@ -6,6 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -60,6 +61,13 @@ fun SlugletApp () {
                                 route = SEARCH_SCREEN,
                                 selectedIcon = Icons.Filled.Search,
                                 unselectedIcon = Icons.Default.Search
+                            ),
+                            // FIXME(CAMDEN): This crashes the app becuase there is not screen for this
+                            BottomNavItem(
+                                name = "Schedule",
+                                route = SCHEDULE_SCREEN,
+                                selectedIcon = Icons.Filled.DateRange,
+                                unselectedIcon = Icons.Default.DateRange
                             )
                         ),
                         navController = appState.navController,

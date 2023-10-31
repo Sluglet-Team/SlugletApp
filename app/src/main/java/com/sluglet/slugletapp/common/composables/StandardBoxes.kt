@@ -22,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
@@ -141,7 +142,8 @@ fun BottomNavBar(
     val backStackEntry = navController.currentBackStackEntryAsState()
     NavigationBar (
         modifier = Modifier
-            .smallSpacer(),
+            .smallSpacer()
+            .clip(shape = RoundedCornerShape(10.dp)),
         contentColor = Color.White,
         tonalElevation = 10.dp,
     ){
