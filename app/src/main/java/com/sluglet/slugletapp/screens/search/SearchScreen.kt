@@ -28,7 +28,7 @@ fun SearchScreen (
     // this should get all the courses from the DB
     // IDK if this will actually do that
     // FIXME: Isn't getting courses atm
-    // val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
+    val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
     val test = CourseData (
         courseName = "Intro to Soft",
         courseNum = "CSE 115A",
@@ -50,7 +50,7 @@ fun SearchScreen (
     testList.add(test2)
 
     SearchScreenContent(
-        courses = testList,
+        courses = courses.value,
         userSearch = viewModel.userSearch,
         onSearchChange = { viewModel.updateSearch(it) }
     )
