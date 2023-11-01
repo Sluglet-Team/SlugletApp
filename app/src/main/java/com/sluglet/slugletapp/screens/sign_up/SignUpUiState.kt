@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.sluglet.slugletapp.common.composables.CourseText
+import com.sluglet.slugletapp.model.service.AccountService
 
 data class SignUpUiState(
     val email: String = "",
@@ -31,53 +32,3 @@ data class SignUpUiState(
     val repeatPassword: String = ""
 )
 
-@Composable
-fun UserLogin(modifier: Modifier = Modifier) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .requiredWidth(width = 322.dp)
-            .requiredHeight(height = 300.dp)
-            .clip(shape = RoundedCornerShape(20.dp))
-            .background(color = Color(0xfffbfdfb))
-
-    ) {
-        val email = rememberSaveable { mutableStateOf("Email") }
-        val password = rememberSaveable { mutableStateOf("Password") }
-        BasicTextField(
-            value = email.value,
-            onValueChange = { email.value = it }
-        )
-        BasicTextField(
-            value = password.value,
-            onValueChange = { password.value = it },
-            modifier = Modifier
-                .offset(y = (35).dp)
-        )
-        Text(
-            text = "Welcome!\nPlease Enter Your Username and Password",
-            modifier = Modifier
-                .offset(y = (-50).dp)
-        )
-        OutlinedButton(
-            onClick = { /*TODO*/ },
-            modifier = Modifier
-                .offset (y = (85).dp))
-        {
-            Text("Login")
-        }
-    }
-
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun UserLoginPreview() {
-    val input = rememberSaveable { mutableStateOf("") }
-    BasicTextField(
-        value = input.value,
-        onValueChange = { input.value = it }
-    )
-    Text(input.value)
-}
