@@ -26,6 +26,6 @@ class StorageServiceImpl @Inject constructor(
 
 
     companion object {
-        private const val COURSE_COLLECTION = "data_full"
+        private const val COURSE_COLLECTION = "courses"
     }
 }

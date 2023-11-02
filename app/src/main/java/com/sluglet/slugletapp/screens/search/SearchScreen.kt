@@ -30,18 +30,18 @@ fun SearchScreen (
     // FIXME: Isn't getting courses atm
     val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
     val test = CourseData (
-        courseName = "Intro to Soft",
-        courseNum = "CSE 115A",
+        course_name = "Intro to Soft",
+        course_number = "CSE 115A",
         location = "Aud 1",
-        dateTime = "MWF 8-9am",
-        profName = "Julig"
+        date_time = "MWF 8-9am",
+        prof_name = "Julig"
     )
     val test2 = CourseData (
-        courseName = "Intro to Anth",
-        courseNum = "ANTH 101",
+        course_name = "Intro to Anth",
+        course_number = "ANTH 101",
         location = "Aud 1",
-        dateTime = "MWF 8-9am",
-        profName = "Julig"
+        date_time = "MWF 8-9am",
+        prof_name = "Julig"
     )
     var testList = mutableListOf<CourseData>()
     for (i in 1..100) {
@@ -50,7 +50,7 @@ fun SearchScreen (
     testList.add(test2)
 
     SearchScreenContent(
-        courses = courses.value,
+        courses = courses.value.sortedBy { it.course_number },
         userSearch = viewModel.userSearch,
         onSearchChange = { viewModel.updateSearch(it) }
     )
@@ -86,7 +86,8 @@ fun SearchScreenContent (
         ) {
             items(
                 items = courses.filter {
-                    it.courseNum.contains(userSearch.trim(), ignoreCase = true)
+                    it.course_number.contains(userSearch.trim(), ignoreCase = true)
+                            || it.course_name.contains(userSearch.trim(), ignoreCase = true)
                 }
             ) { courseItem ->
                 CourseBox(coursedata = courseItem)
@@ -101,11 +102,11 @@ fun SearchPreview (
 ) {
     val testList = mutableListOf<CourseData>()
     val testCourse = CourseData (
-        courseNum = "CSE 115A",
-        courseName = "Intro to Software Engineering",
+        course_number = "CSE 115A",
+        course_name = "Intro to Software Engineering",
         location = "Basking Auditorium 1",
-        dateTime = "MWF 8:00am-9:00am",
-        profName = "Julig"
+        date_time = "MWF 8:00am-9:00am",
+        prof_name = "Julig"
     )
     for (i in 1..10) {
         testList.add(testCourse)
