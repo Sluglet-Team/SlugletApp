@@ -70,7 +70,6 @@ fun SearchScreenContent (
     openScreen: (String) -> Unit
      */
 ) {
-    // TODO(CAMDEN): Need a column with search at the top
     // with a LazyColumn underneath with all the courses
     Column (modifier = Modifier
 
