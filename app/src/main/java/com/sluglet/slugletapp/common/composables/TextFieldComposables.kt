@@ -57,7 +57,7 @@ fun SearchTextField (
             focusedIndicatorColor = Color.White,
             unfocusedLeadingIconColor = Color.Black,
             unfocusedTrailingIconColor = Color.Black,
-            textColor = Color.Black
+            unfocusedTextColor = Color.Gray
         ),
         leadingIcon = {
             Icon(
