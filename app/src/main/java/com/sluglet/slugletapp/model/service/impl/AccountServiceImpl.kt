@@ -40,14 +40,12 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
         auth.signInAnonymously().await()
     }
 
-    override suspend fun linkAccount(email: String, password: String) {
-        /*
-        As soon as the user creates an account, by typing an email and a password,
-        you need to ask the Firebase Authentication API for an email credential,
-        then link the new credential to the anonymous account.
-         */
-        val credential = EmailAuthProvider.getCredential(email, password)
-        auth.currentUser!!.linkWithCredential(credential).await()
+    override suspend fun createAccount(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password).await()
+    }
+
+    override suspend fun logIn(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password).await()
     }
 
     override suspend fun deleteAccount() {

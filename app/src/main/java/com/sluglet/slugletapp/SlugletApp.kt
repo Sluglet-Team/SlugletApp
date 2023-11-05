@@ -27,6 +27,7 @@ import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.screens.search.SearchScreen
 import com.sluglet.slugletapp.screens.search.SearchScreenContent
+import com.sluglet.slugletapp.screens.sign_up.SignUpScreen
 import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
@@ -40,7 +41,6 @@ fun SlugletApp () {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-
             val appState = rememberAppState()
             val snackbarHostState = remember { SnackbarHostState() }
             val navController = rememberNavController()
@@ -89,7 +89,9 @@ fun SlugletApp () {
                     slugletGraph(appState)
                 }
             }
+
         }
+        SignUpScreen()
     }
 }
 @Composable

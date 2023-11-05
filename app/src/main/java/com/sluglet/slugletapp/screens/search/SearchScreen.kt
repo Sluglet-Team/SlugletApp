@@ -14,6 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.common.composables.SearchBox
 import com.sluglet.slugletapp.model.CourseData
+import com.sluglet.slugletapp.screens.sign_up.SignUpScreen
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
 
 /*
@@ -54,7 +55,6 @@ fun SearchScreen (
         userSearch = viewModel.userSearch,
         onSearchChange = { viewModel.updateSearch(it) }
     )
-
 }
 
 @Composable
