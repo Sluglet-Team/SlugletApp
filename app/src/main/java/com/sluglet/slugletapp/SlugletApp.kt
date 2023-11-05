@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -68,6 +69,12 @@ fun SlugletApp () {
                                 route = SCHEDULE_SCREEN,
                                 selectedIcon = Icons.Filled.DateRange,
                                 unselectedIcon = Icons.Default.DateRange
+                            ),
+                            BottomNavItem(
+                                name = "Sign Up",
+                                route = SIGNUP_SCREEN,
+                                selectedIcon = Icons.Filled.Settings,
+                                unselectedIcon = Icons.Default.Settings
                             )
                         ),
                         navController = appState.navController,
@@ -91,7 +98,6 @@ fun SlugletApp () {
             }
 
         }
-        SignUpScreen()
     }
 }
 @Composable
@@ -114,5 +120,8 @@ fun resources(): Resources {
 fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     composable(SEARCH_SCREEN) {
         SearchScreen(openScreen = { route -> appState.navigate(route) })
+    }
+    composable(SIGNUP_SCREEN) {
+        SignUpScreen()
     }
 }
