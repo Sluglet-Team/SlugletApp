@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sluglet.slugletapp.model.service.AccountService
+import com.sluglet.slugletapp.model.service.StorageService
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,14 +37,14 @@ fun SignUpScreen(
 
 ) {
     val uiState by viewModel.uiState
-    val uid =
     SignUpScreenContent(
         uiState = uiState,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
         onSignUpClick = { viewModel.onSignUpClick() },
-        onSignInClick = { viewModel.onSignInClick() }
+        onSignInClick = { viewModel.onSignInClick() },
+        onTestClick = { viewModel.onTestClick() }
     )
 
 }
@@ -56,11 +57,14 @@ fun SignUpScreenContent(
     onPasswordChange: (String) -> Unit,
     onRepeatPasswordChange: (String) -> Unit,
     onSignUpClick: () -> Unit,
-    onSignInClick: () -> Unit)
+    onSignInClick: () -> Unit,
+    onTestClick: () -> Unit
+)
 {
         val localConfig = LocalConfiguration.current
         val sHeight = localConfig.screenHeightDp.dp
         val sWidth = localConfig.screenWidthDp.dp
+
 
         Box(
             contentAlignment = Alignment.Center,
@@ -101,30 +105,24 @@ fun SignUpScreenContent(
                 modifier = Modifier
                     .offset(x = (50).dp, y = (100).dp)
             )
+
             {
                 Text("Register")
+            }
+            OutlinedButton(
+                onClick = {
+                    onTestClick()
+                },
+                modifier = Modifier
+                    .offset(x = (50).dp, y = (150).dp)
+            )
+
+            {
+                Text("TestButton")
             }
 
     }
 
-}
-
-@Composable
-fun RedBox ()
-{
-    val localConfig = LocalConfiguration.current
-    val sHeight = localConfig.screenHeightDp.dp
-    val sWidth = localConfig.screenWidthDp.dp
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .requiredWidth(width = sWidth)
-            .requiredHeight(height = sHeight)
-            .clip(shape = RoundedCornerShape(20.dp))
-            .background(color = Color(0xff0000cc)))
-    {
-
-    }
 }
 
 @Preview(showBackground = true)

@@ -15,12 +15,15 @@ import com.sluglet.slugletapp.model.service.AccountService
 import com.sluglet.slugletapp.screens.SlugletViewModel
 import com.sluglet.slugletapp.screens.sign_up.SignUpUiState
 import com.sluglet.slugletapp.SlugletAppState
+import com.sluglet.slugletapp.model.User
+import com.sluglet.slugletapp.model.service.StorageService
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     logService: LogService,
     savedStateHandle: SavedStateHandle,
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val storageService: StorageService
 ) : SlugletViewModel(logService) {
 
     private var _uiState = mutableStateOf(SignUpUiState())
@@ -81,6 +84,24 @@ class SignUpViewModel @Inject constructor(
         launchCatching {
             accountService.logIn("madplatt@ucsc.edu", "TestPassword123456")
             //TODO Navigate Away from Login Page
+        }
+    }
+    fun onTestClick() {
+        /*
+        Tries to authenticate, and if the call succeeds,
+        it proceeds to the next screen (the SettingsScreen).
+        As you are executing these calls inside a launchCatching block,
+        if an error happens on the first line,
+        the exception will be caught and handled,
+        and the second line will not be reached at all.
+         */
+        val user = User(
+            email = _uiState.value.email,
+            name = "",
+            uid = "testUID",
+            classes = emptyList())
+        launchCatching {
+            storageService.storeUserData(user)
         }
     }
 }

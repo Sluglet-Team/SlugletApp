@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirestoreRegistrar
 import com.google.firebase.firestore.ktx.dataObjects
 import com.google.firebase.firestore.ktx.toObject
 import com.sluglet.slugletapp.model.CourseData
+import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
 import com.sluglet.slugletapp.model.service.StorageService
 import kotlinx.coroutines.flow.Flow
@@ -19,13 +20,25 @@ class StorageServiceImpl @Inject constructor(
     override val courses: Flow<List<CourseData>>
         get() =
             firestore.collection(COURSE_COLLECTION).dataObjects()
-     override suspend fun getCourse(courseID: String): CourseData? =
+    override suspend fun getCourse(courseID: String): CourseData? =
         firestore.collection(COURSE_COLLECTION).document(courseID).get().await().toObject()
-
-
-
+    override suspend fun storeUserData(user: User)
+    {
+        val userMap = hashMapOf(
+            "email" to user.email,
+            "name" to user.name,
+            "uid" to user.uid,
+            "classes" to user.classes
+        )
+        firestore.collection(USER_COLLECTION).document(user.uid).set(userMap)
+    }
+    override suspend fun retrieveUserData(id: String)
+    {
+        firestore.collection(USER_COLLECTION).document(id).get().await().toObject<User>()
+    }
 
     companion object {
         private const val COURSE_COLLECTION = "data"
+        private const val USER_COLLECTION = "user"
     }
 }
