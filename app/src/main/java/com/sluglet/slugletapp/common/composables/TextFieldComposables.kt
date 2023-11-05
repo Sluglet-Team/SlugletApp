@@ -51,13 +51,13 @@ fun SearchTextField (
         onValueChange = onSearchChange,
         label = { Text(text = "Search") },
         modifier = Modifier.basicRow(),
+        // FIXME(CAMDEN): textFieldColors is deprecated
         colors = TextFieldDefaults.textFieldColors(
             containerColor = Color.White,
             unfocusedIndicatorColor = Color.White,
             focusedIndicatorColor = Color.White,
             unfocusedLeadingIconColor = Color.Black,
             unfocusedTrailingIconColor = Color.Black,
-            unfocusedTextColor = Color.Gray
         ),
         leadingIcon = {
             Icon(
