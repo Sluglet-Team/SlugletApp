@@ -2,6 +2,7 @@ package com.sluglet.slugletapp.model.service.impl
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
@@ -12,25 +13,16 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+var mainUser = User()
+
 class AccountServiceImpl @Inject constructor(
-    private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore) : AccountService {
+    private val auth: FirebaseAuth) : AccountService {
 
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
 
     override val hasUser: Boolean
         get() = auth.currentUser != null
-
-    override val currentUser: Flow<User>
-        get() = callbackFlow {}
-        //    val listener =
-       //         FirebaseAuth.AuthStateListener { auth ->
-        //            this.trySend(auth.currentUser?.let { User(it.uid, it.isAnonymous) } ?: User())
-        //        }
-         //   auth.addAuthStateListener(listener)
-        //    awaitClose { auth.removeAuthStateListener(listener) }
-        //}
 
     override suspend fun authenticate(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).await()
@@ -45,9 +37,12 @@ class AccountServiceImpl @Inject constructor(
     }
 
     override suspend fun createAccount(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password).await()
-        val user = User(email = email, name = "", uid = (auth.currentUser!!).uid, classes = emptyList())
-        firestore.collection(AccountServiceImpl.USER_COLLECTION).document(user.uid).set(user)
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                // TODO: Add error handling
+                }
+            }
     }
 
     override suspend fun logIn(email: String, password: String) {

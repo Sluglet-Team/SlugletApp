@@ -15,6 +15,7 @@ import com.sluglet.slugletapp.model.service.AccountService
 import com.sluglet.slugletapp.screens.SlugletViewModel
 import com.sluglet.slugletapp.screens.sign_up.SignUpUiState
 import com.sluglet.slugletapp.SlugletAppState
+import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.StorageService
 
@@ -68,6 +69,12 @@ class SignUpViewModel @Inject constructor(
          */
         launchCatching {
             accountService.createAccount(_uiState.value.email, _uiState.value.password)
+            val user = User(
+                email = _uiState.value.email,
+                name = "",
+                uid = accountService.currentUserId,
+                classes = ArrayList<String>() )
+            storageService.storeUserData(user)
             //TODO Navigate Away from Login Page
         }
     }
@@ -95,13 +102,5 @@ class SignUpViewModel @Inject constructor(
         the exception will be caught and handled,
         and the second line will not be reached at all.
          */
-        val user = User(
-            email = _uiState.value.email,
-            name = "",
-            uid = "testUID",
-            classes = emptyList())
-        launchCatching {
-            storageService.storeUserData(user)
-        }
     }
 }

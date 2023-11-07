@@ -24,10 +24,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import com.sluglet.slugletapp.model.service.AccountService
 import com.sluglet.slugletapp.model.service.StorageService
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
@@ -77,18 +81,21 @@ fun SignUpScreenContent(
         ) {
             OutlinedTextField(
                 value = uiState.email,
-                onValueChange = onEmailChange
+                onValueChange = onEmailChange,
+                modifier = Modifier
+                    .offset(y = (10).dp)
             )
             OutlinedTextField(
                 value = uiState.password,
                 onValueChange = onPasswordChange,
                 modifier = Modifier
-                    .offset(y = (50).dp)
+                    .offset(y = (70).dp)
             )
             Text(
                 text = "Welcome!\nPlease Enter Your Username and Password",
+                fontSize = 100.em,
                 modifier = Modifier
-                    .offset(y = (-50).dp)
+                    .offset(y = (-350).dp)
             )
             OutlinedButton(
                 onClick = { onSignInClick() },
@@ -125,22 +132,67 @@ fun SignUpScreenContent(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun UserLoginPreview() {
+    val localConfig = LocalConfiguration.current
+    val sHeight = localConfig.screenHeightDp.dp
+    val sWidth = localConfig.screenWidthDp.dp
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .requiredWidth(width = 500.dp)
-            .requiredHeight(height = 500.dp)
+            .requiredWidth(width = sWidth)
+            .requiredHeight(height = sHeight)
             .clip(shape = RoundedCornerShape(20.dp))
             .background(color = Color(0xfffbfdfb))
-    )
-    {
-        val input = rememberSaveable { mutableStateOf("") }
-        BasicTextField(
-            value = input.value,
-            onValueChange = { input.value = it }
+
+    ) {
+        OutlinedTextField(
+            value = "email",
+            onValueChange = {},
+            modifier = Modifier
+                .offset(y = (10).dp)
         )
+        OutlinedTextField(
+            value = "uiState.password",
+            onValueChange = { },
+            modifier = Modifier
+                .offset(y = (70).dp)
+        )
+        Text(
+            text = "Welcome to Sluglet!",
+            fontSize = 11.em,
+            fontFamily = FontFamily.Cursive,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .offset(y = (-250).dp)
+        )
+        Text(
+            text = "Please Enter Your Username and Password",
+            fontSize = 5.em,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .offset(y = (-100).dp)
+        )
+        OutlinedButton(
+            onClick = {  },
+            modifier = Modifier
+                .offset(x = (-70).dp, y = (150).dp)
+        )
+        {
+            Text("Login")
+        }
+        OutlinedButton(
+            onClick = {
+
+            },
+            modifier = Modifier
+                .offset(x = (70).dp, y = (150).dp)
+        )
+        {
+            Text("Register")
+        }
     }
 }

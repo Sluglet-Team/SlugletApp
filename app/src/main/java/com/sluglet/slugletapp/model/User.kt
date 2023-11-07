@@ -5,5 +5,5 @@ data class User(
     val email: String = "",
     val name: String = "",
     val uid: String = "",
-    val classes : List<CourseData>
+    val classes : MutableList<String> = ArrayList()
 )

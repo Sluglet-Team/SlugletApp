@@ -14,7 +14,6 @@ import javax.inject.Inject
 
 class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val auth: AccountService
 ) : StorageService {
     // TODO: get data from firestore
     override val courses: Flow<List<CourseData>>
@@ -30,7 +29,7 @@ class StorageServiceImpl @Inject constructor(
             "uid" to user.uid,
             "classes" to user.classes
         )
-        firestore.collection(USER_COLLECTION).document(user.uid).set(userMap)
+        firestore.collection(USER_COLLECTION).document(user.uid).set(userMap).await()
     }
     override suspend fun retrieveUserData(id: String)
     {
@@ -39,6 +38,6 @@ class StorageServiceImpl @Inject constructor(
 
     companion object {
         private const val COURSE_COLLECTION = "data"
-        private const val USER_COLLECTION = "user"
+        private const val USER_COLLECTION = "users"
     }
 }

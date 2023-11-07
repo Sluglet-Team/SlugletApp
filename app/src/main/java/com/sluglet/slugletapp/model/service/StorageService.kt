@@ -9,7 +9,7 @@ interface StorageService {
     val courses: Flow<List<CourseData>>
 
     // get specific course
-    suspend fun getCourse(courseId: String): CourseData?
+    suspend fun getCourse(courseID: String): CourseData?
     suspend fun storeUserData(user: User)
     suspend fun retrieveUserData(id: String)
     /*
