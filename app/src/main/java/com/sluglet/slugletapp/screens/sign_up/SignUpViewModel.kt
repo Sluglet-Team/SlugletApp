@@ -73,7 +73,7 @@ class SignUpViewModel @Inject constructor(
                 email = _uiState.value.email,
                 name = "",
                 uid = accountService.currentUserId,
-                classes = ArrayList<String>() )
+                courses = ArrayList<String>() )
             storageService.storeUserData(user)
             //TODO Navigate Away from Login Page
         }

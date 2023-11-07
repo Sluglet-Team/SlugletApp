@@ -34,6 +34,9 @@ import com.sluglet.slugletapp.common.ext.basicRow
 import com.sluglet.slugletapp.common.ext.smallSpacer
 import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
+import com.sluglet.slugletapp.model.service.AccountService
+import com.sluglet.slugletapp.model.service.StorageService
+import javax.inject.Inject
 
 /*
 This is where composables for box-like items go
@@ -42,10 +45,11 @@ Course information composables
 Calendars
 etc.
  */
+
 @Composable
 fun CourseBox(
     coursedata: CourseData,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var isExpanded by remember {mutableStateOf(false)}
     // Define a row: Left side will be the course info, right side the loc and add icons
@@ -113,7 +117,11 @@ fun CourseBox(
             )
             Icon(
                 Icons.Rounded.Add,
-                "add"
+                "add",
+                modifier = Modifier
+                    .clickable {
+                        //storageService.retrieveUserData()
+                    }
             )
         }
     }

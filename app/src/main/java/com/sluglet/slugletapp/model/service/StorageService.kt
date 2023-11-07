@@ -11,7 +11,7 @@ interface StorageService {
     // get specific course
     suspend fun getCourse(courseID: String): CourseData?
     suspend fun storeUserData(user: User)
-    suspend fun retrieveUserData(id: String)
+    suspend fun retrieveUserData(id: String): User?
     /*
     // FIXME: I don't think we need these since user shouldn't be able to manipulate courses
     suspend fun save(course: CourseData): String

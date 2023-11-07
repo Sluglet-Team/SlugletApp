@@ -81,26 +81,38 @@ fun SignUpScreenContent(
         ) {
             OutlinedTextField(
                 value = uiState.email,
+                placeholder = { Text(text = "Email") },
                 onValueChange = onEmailChange,
                 modifier = Modifier
                     .offset(y = (10).dp)
             )
             OutlinedTextField(
                 value = uiState.password,
+                placeholder = { Text(text = "Password") },
                 onValueChange = onPasswordChange,
                 modifier = Modifier
                     .offset(y = (70).dp)
             )
             Text(
-                text = "Welcome!\nPlease Enter Your Username and Password",
-                fontSize = 100.em,
+                text = "Welcome to Sluglet!",
+                fontSize = 11.em,
+                fontFamily = FontFamily.Cursive,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .offset(y = (-350).dp)
+                    .offset(y = (-250).dp)
+            )
+            Text(
+                text = "Please Enter Your Username and Password",
+                fontSize = 5.em,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .offset(y = (-100).dp)
             )
             OutlinedButton(
                 onClick = { onSignInClick() },
                 modifier = Modifier
-                    .offset(x = (-50).dp, y = (100).dp)
+                    .offset(x = (-70).dp, y = (150).dp)
             )
             {
                 Text("Login")
@@ -110,26 +122,12 @@ fun SignUpScreenContent(
                     onSignUpClick()
                           },
                 modifier = Modifier
-                    .offset(x = (50).dp, y = (100).dp)
+                    .offset(x = (70).dp, y = (150).dp)
             )
-
             {
                 Text("Register")
             }
-            OutlinedButton(
-                onClick = {
-                    onTestClick()
-                },
-                modifier = Modifier
-                    .offset(x = (50).dp, y = (150).dp)
-            )
-
-            {
-                Text("TestButton")
-            }
-
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -145,7 +143,7 @@ fun UserLoginPreview() {
             .requiredWidth(width = sWidth)
             .requiredHeight(height = sHeight)
             .clip(shape = RoundedCornerShape(20.dp))
-            .background(color = Color(0xfffbfdfb))
+            .background(color = Color(0xffe6e6fa))
 
     ) {
         OutlinedTextField(

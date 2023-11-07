@@ -27,14 +27,12 @@ class StorageServiceImpl @Inject constructor(
             "email" to user.email,
             "name" to user.name,
             "uid" to user.uid,
-            "classes" to user.classes
+            "courses" to user.courses
         )
         firestore.collection(USER_COLLECTION).document(user.uid).set(userMap).await()
     }
-    override suspend fun retrieveUserData(id: String)
-    {
-        firestore.collection(USER_COLLECTION).document(id).get().await().toObject<User>()
-    }
+    override suspend fun retrieveUserData(id: String): User? =
+        firestore.collection(USER_COLLECTION).document(id).get().await().toObject()
 
     companion object {
         private const val COURSE_COLLECTION = "data"
