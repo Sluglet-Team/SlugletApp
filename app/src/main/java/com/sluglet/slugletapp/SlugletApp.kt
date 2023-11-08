@@ -156,6 +156,7 @@ fun getCourseData(courseId: String, firestore: FirebaseFirestore, onSuccess: (Co
     })
 }
 
+// Combines the above modular functions
 fun getUserCourses(uid: String, onSuccess: (List<CourseData>) -> Unit, onError: (String) -> Unit) {
     val firestore = FirebaseFirestore.getInstance()
 
