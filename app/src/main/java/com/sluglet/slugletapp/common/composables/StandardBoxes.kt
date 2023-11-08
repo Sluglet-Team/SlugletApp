@@ -1,12 +1,10 @@
 package com.sluglet.slugletapp.common.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -23,9 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -66,34 +62,29 @@ fun CourseBox(
         ){
             // Course Prefix and Number
             CourseText(
-                modifier = Modifier,
-                text = coursedata.courseNum,
+                text = coursedata.course_number,
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black
             )
             // Only show this data if the box is clicked
             if (isExpanded) {
                 CourseText(
-                    modifier = Modifier,
-                    text = coursedata.courseName,
+                    text = coursedata.course_name,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
                 CourseText(
-                    modifier = Modifier,
-                    text = coursedata.profName,
+                    text = coursedata.prof_name,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
                 CourseText(
-                    modifier = Modifier,
                     text = coursedata.location,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
                 CourseText(
-                    modifier = Modifier,
-                    text = coursedata.dateTime,
+                    text = coursedata.date_time,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
@@ -109,11 +100,13 @@ fun CourseBox(
             // TODO(CAMDEN): add clickables for icons that do the things
             Icon(
                 Icons.Rounded.LocationOn,
-                "map"
+                "map",
+                tint = Color.Black
             )
             Icon(
                 Icons.Rounded.Add,
-                "add"
+                "add",
+                tint = Color.Black
             )
         }
     }
@@ -121,7 +114,6 @@ fun CourseBox(
 
 @Composable
 fun SearchBox (
-    modifier: Modifier = Modifier,
     onSearchChange: (String) -> Unit,
     userSearch: String
 ) {
@@ -134,7 +126,6 @@ fun SearchBox (
 
 @Composable
 fun BottomNavBar(
-    modifier: Modifier = Modifier,
     items: List<BottomNavItem>,
     navController: NavController,
     onItemClick: (BottomNavItem) -> Unit
@@ -147,7 +138,7 @@ fun BottomNavBar(
         contentColor = Color.White,
         tonalElevation = 10.dp,
     ){
-        items.forEach() {item ->
+        items.forEach {item ->
             val selected = item.route == backStackEntry.value?.destination?.route
             NavigationBarItem(
                 selected = selected,
@@ -183,10 +174,10 @@ fun BottomNavBar(
 fun CourseBoxPreview (
 ) {
     val test = CourseData(
-        courseNum = "CSE 115A",
-        courseName = "Introduction to Software Engineering",
-        profName = "Richard Julig",
-        dateTime = "MWF 8:00am - 9:05am",
+        course_number = "CSE 115A",
+        course_name = "Introduction to Software Engineering",
+        prof_name = "Richard Julig",
+        date_time = "MWF 8:00am - 9:05am",
         location = "Baskin Auditorium 1"
     )
     CourseBox(coursedata = test, modifier = Modifier)
