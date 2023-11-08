@@ -68,6 +68,12 @@ fun SlugletApp () {
                                 route = SCHEDULE_SCREEN,
                                 selectedIcon = Icons.Filled.DateRange,
                                 unselectedIcon = Icons.Default.DateRange
+                            ) ,
+                            BottomNavItem(
+                                name = "Settings",
+                                route = SETTINGS_SCREEN,
+                                selectedIcon = Icons.Filled.DateRange, // update for settings
+                                unselectedIcon = Icons.Default.DateRange // update for settings
                             )
                         ),
                         navController = appState.navController,
