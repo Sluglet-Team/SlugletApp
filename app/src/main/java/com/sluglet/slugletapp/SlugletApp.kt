@@ -21,6 +21,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.android.gms.tasks.Task
 import com.sluglet.slugletapp.common.composables.BottomNavBar
 import com.sluglet.slugletapp.common.snackbar.SnackbarManager
 import com.sluglet.slugletapp.model.BottomNavItem
@@ -113,4 +119,71 @@ fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     composable(SEARCH_SCREEN) {
         SearchScreen(openScreen = { route -> appState.navigate(route) })
     }
+}
+
+
+fun getUserDocument(uid: String, onSuccess: (DocumentSnapshot) -> Unit, onError: (String) -> Unit) {
+    val firestore = FirebaseFirestore.getInstance()
+    val userDocRef = firestore.collection("users").document(uid)
+
+    userDocRef.get().addOnCompleteListener(OnCompleteListener { task ->
+        if(task.isSuccessful) {
+            val userDocument = task.result
+            if(userDocument != null && userDocument.exists()){
+                onSuccess(userDocument)
+            } else {
+                onError("User document not found.")
+            }
+        } else {
+            onError("Error fetching user document: ${task.exception?.message}")
+        }
+    })
+}
+
+fun getCourseData(courseId: String, firestore: FirebaseFirestore, onSuccess: (CourseData) -> Unit, onError: (String) -> Unit) {
+    val courseDocRef = firestore.collection("courses").document(courseId)
+
+    courseDocRef.get().addOnCompleteListener(OnCompleteListener { courseTask ->
+        if(courseTask.isSuccessful) {
+            val courseSnapshot = courseTask.result
+            val courseData = courseSnapshot?.toObject(CourseData::class.java)
+            if(courseData != null) {
+                onSuccess(courseData)
+            }
+        } else {
+            onError("Error fetching course document: ${courseTask.exception?.message}")
+        }
+    })
+}
+
+fun getUserCourses(uid: String, onSuccess: (List<CourseData>) -> Unit, onError: (String) -> Unit) {
+    val firestore = FirebaseFirestore.getInstance()
+
+    getUserDocument(uid, { userDocument ->
+        val userCourses = userDocument.get("userCourses") as List<String>?
+        if(userCourses != null){
+            val courses = mutableListOf<CourseData>()
+            var coursesToFetch = userCourses.size
+
+            if(coursesToFetch == 0){
+                onSuccess(emptyList())
+            } else {
+                for(courseId in userCourses){
+                    getCourseData(courseId, firestore, { courseData ->
+                        courses.add(courseData)
+                        coursesToFetch--
+                        if(coursesToFetch == 0){
+                            onSuccess(courses)
+                        }
+                    }, {error ->
+                        onError(error)
+                    })
+                }
+            }
+        } else {
+            onSuccess(emptyList())
+        }
+    }, {error ->
+        onError(error)
+    })
 }
