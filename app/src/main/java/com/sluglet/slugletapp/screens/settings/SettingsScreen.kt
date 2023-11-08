@@ -22,7 +22,7 @@ Uses a CourseBox composable along with a SearchTextField
 @Composable
 fun SettingsScreen (
     openScreen: (String) -> Unit,
-     // viewModel: SettingsViewModel = hiltViewModel() // FIXME(CAMDEN): This line breaks the app
+     // viewModel: SettingsViewModel = hiltViewModel() //FIXME(CAMDEN): This line breaks the app
 ) {
     // this should get all the courses from the DB
     // IDK if this will actually do that

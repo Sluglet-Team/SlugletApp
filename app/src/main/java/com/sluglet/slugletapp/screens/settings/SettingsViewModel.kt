@@ -1,4 +1,4 @@
-package com.sluglet.slugletapp.screens.search
+package com.sluglet.slugletapp.screens.settings
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
@@ -15,6 +15,7 @@ class SettingsViewModel @Inject constructor(
     private val storageService: StorageService
 ) : SlugletViewModel(logService) {
     // get all courses from Firestore
+    // update for settings
     val courses = storageService.courses
 
     var userSearch by mutableStateOf("")
