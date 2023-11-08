@@ -29,7 +29,6 @@ etc.
 
 @OptIn(ExperimentalMaterial3Api::class) // for TextField
 @Composable
-// TODO(CAMDEN): needs to work with ViewModel
 fun SearchTextField (
     onSearchChange: (String) -> Unit,
     userSearch: String
