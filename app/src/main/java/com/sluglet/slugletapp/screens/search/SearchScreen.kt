@@ -23,32 +23,12 @@ Uses a CourseBox composable along with a SearchTextField
 @Composable
 fun SearchScreen (
     openScreen: (String) -> Unit,
-    viewModel: SearchViewModel = hiltViewModel() // FIXME(CAMDEN): This line breaks the app
+    viewModel: SearchViewModel = hiltViewModel()
 ) {
-    // this should get all the courses from the DB
-    // IDK if this will actually do that
-    // FIXME: Isn't getting courses atm
+    // Gets courses from firestore courses collection
     val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
-    val test = CourseData (
-        course_name = "Intro to Soft",
-        course_number = "CSE 115A",
-        location = "Aud 1",
-        date_time = "MWF 8-9am",
-        prof_name = "Julig"
-    )
-    val test2 = CourseData (
-        course_name = "Intro to Anth",
-        course_number = "ANTH 101",
-        location = "Aud 1",
-        date_time = "MWF 8-9am",
-        prof_name = "Julig"
-    )
-    var testList = mutableListOf<CourseData>()
-    for (i in 1..100) {
-        testList.add(test)
-    }
-    testList.add(test2)
 
+    // Sets the content for the screen
     SearchScreenContent(
         courses = courses.value.sortedBy { it.course_number },
         userSearch = viewModel.userSearch,
@@ -74,6 +54,7 @@ fun SearchScreenContent (
     Column (modifier = Modifier
 
     ) {
+        // Search Bar at the top
         SearchBox(
             onSearchChange = onSearchChange,
             userSearch = userSearch
@@ -83,6 +64,7 @@ fun SearchScreenContent (
             state = rememberLazyListState(),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
+            // For each item, filter if there is input, display CourseBox for each item
             items(
                 items = courses.filter {
                     it.course_number.contains(userSearch.trim(), ignoreCase = true)

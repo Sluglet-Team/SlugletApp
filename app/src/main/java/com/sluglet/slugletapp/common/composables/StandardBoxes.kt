@@ -62,7 +62,6 @@ fun CourseBox(
         ){
             // Course Prefix and Number
             CourseText(
-                modifier = Modifier,
                 text = coursedata.course_number,
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black
@@ -70,25 +69,21 @@ fun CourseBox(
             // Only show this data if the box is clicked
             if (isExpanded) {
                 CourseText(
-                    modifier = Modifier,
                     text = coursedata.course_name,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
                 CourseText(
-                    modifier = Modifier,
                     text = coursedata.prof_name,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
                 CourseText(
-                    modifier = Modifier,
                     text = coursedata.location,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
                 CourseText(
-                    modifier = Modifier,
                     text = coursedata.date_time,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
@@ -105,11 +100,13 @@ fun CourseBox(
             // TODO(CAMDEN): add clickables for icons that do the things
             Icon(
                 Icons.Rounded.LocationOn,
-                "map"
+                "map",
+                tint = Color.Black
             )
             Icon(
                 Icons.Rounded.Add,
-                "add"
+                "add",
+                tint = Color.Black
             )
         }
     }
@@ -117,7 +114,6 @@ fun CourseBox(
 
 @Composable
 fun SearchBox (
-    modifier: Modifier = Modifier,
     onSearchChange: (String) -> Unit,
     userSearch: String
 ) {
@@ -130,7 +126,6 @@ fun SearchBox (
 
 @Composable
 fun BottomNavBar(
-    modifier: Modifier = Modifier,
     items: List<BottomNavItem>,
     navController: NavController,
     onItemClick: (BottomNavItem) -> Unit
@@ -143,7 +138,7 @@ fun BottomNavBar(
         contentColor = Color.White,
         tonalElevation = 10.dp,
     ){
-        items.forEach() {item ->
+        items.forEach {item ->
             val selected = item.route == backStackEntry.value?.destination?.route
             NavigationBarItem(
                 selected = selected,
