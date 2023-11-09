@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -27,6 +28,7 @@ import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.screens.search.SearchScreen
 import com.sluglet.slugletapp.screens.search.SearchScreenContent
+import com.sluglet.slugletapp.screens.sign_up.SignUpScreen
 import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
@@ -40,7 +42,6 @@ fun SlugletApp () {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-
             val appState = rememberAppState()
             val snackbarHostState = remember { SnackbarHostState() }
             val navController = rememberNavController()
@@ -67,6 +68,12 @@ fun SlugletApp () {
                                 route = SCHEDULE_SCREEN,
                                 selectedIcon = Icons.Filled.DateRange,
                                 unselectedIcon = Icons.Default.DateRange
+                            ),
+                            BottomNavItem(
+                                name = "Sign Up",
+                                route = SIGNUP_SCREEN,
+                                selectedIcon = Icons.Filled.Settings,
+                                unselectedIcon = Icons.Default.Settings
                             )
                         ),
                         navController = appState.navController,
@@ -88,6 +95,7 @@ fun SlugletApp () {
                     slugletGraph(appState)
                 }
             }
+
         }
     }
 }
@@ -111,5 +119,8 @@ fun resources(): Resources {
 fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     composable(SEARCH_SCREEN) {
         SearchScreen(openScreen = { route -> appState.navigate(route) })
+    }
+    composable(SIGNUP_SCREEN) {
+        SignUpScreen()
     }
 }

@@ -11,9 +11,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.common.composables.SearchBox
 import com.sluglet.slugletapp.model.CourseData
+import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
 
 /*
@@ -32,7 +34,8 @@ fun SearchScreen (
     SearchScreenContent(
         courses = courses.value.sortedBy { it.course_number },
         userSearch = viewModel.userSearch,
-        onSearchChange = { viewModel.updateSearch(it) }
+        onSearchChange = { viewModel.updateSearch(it) },
+        onAddClick = (viewModel::onAddClick)
     )
 
 }
@@ -42,10 +45,10 @@ fun SearchScreenContent (
     modifier: Modifier = Modifier,
     courses: List<CourseData>,
     onSearchChange: (String) -> Unit,
-    userSearch: String
-    // FIXME: the following two take the wrong arguments
+    userSearch: String,
+    onAddClick: ((CourseData) -> Unit)?
     /*
-    onAddClick: ((String) -> Unit) -> Unit, wrong
+    // FIXME: the following two take the wrong arguments
     onMapClick: ((String) -> Unit) -> Unit, wrong
     openScreen: (String) -> Unit
      */
@@ -71,7 +74,7 @@ fun SearchScreenContent (
                             || it.course_name.contains(userSearch.trim(), ignoreCase = true)
                 }
             ) { courseItem ->
-                CourseBox(coursedata = courseItem)
+                CourseBox(coursedata = courseItem, onAddClick = onAddClick)
             }
         }
     }
@@ -96,7 +99,8 @@ fun SearchPreview (
         SearchScreenContent(
             courses = testList,
             onSearchChange = { },
-            userSearch = ""
+            userSearch = "",
+            onAddClick = null
         )
     }
 
