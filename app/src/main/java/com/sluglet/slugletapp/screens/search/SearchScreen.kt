@@ -23,34 +23,14 @@ Uses a CourseBox composable along with a SearchTextField
 @Composable
 fun SearchScreen (
     openScreen: (String) -> Unit,
-    viewModel: SearchViewModel = hiltViewModel() // FIXME(CAMDEN): This line breaks the app
+    viewModel: SearchViewModel = hiltViewModel()
 ) {
-    // this should get all the courses from the DB
-    // IDK if this will actually do that
-    // FIXME: Isn't getting courses atm
-    // val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
-    val test = CourseData (
-        courseName = "Intro to Soft",
-        courseNum = "CSE 115A",
-        location = "Aud 1",
-        dateTime = "MWF 8-9am",
-        profName = "Julig"
-    )
-    val test2 = CourseData (
-        courseName = "Intro to Anth",
-        courseNum = "ANTH 101",
-        location = "Aud 1",
-        dateTime = "MWF 8-9am",
-        profName = "Julig"
-    )
-    var testList = mutableListOf<CourseData>()
-    for (i in 1..100) {
-        testList.add(test)
-    }
-    testList.add(test2)
+    // Gets courses from firestore courses collection
+    val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
 
+    // Sets the content for the screen
     SearchScreenContent(
-        courses = testList,
+        courses = courses.value.sortedBy { it.course_number },
         userSearch = viewModel.userSearch,
         onSearchChange = { viewModel.updateSearch(it) }
     )
@@ -70,11 +50,11 @@ fun SearchScreenContent (
     openScreen: (String) -> Unit
      */
 ) {
-    // TODO(CAMDEN): Need a column with search at the top
     // with a LazyColumn underneath with all the courses
     Column (modifier = Modifier
 
     ) {
+        // Search Bar at the top
         SearchBox(
             onSearchChange = onSearchChange,
             userSearch = userSearch
@@ -84,9 +64,11 @@ fun SearchScreenContent (
             state = rememberLazyListState(),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
+            // For each item, filter if there is input, display CourseBox for each item
             items(
                 items = courses.filter {
-                    it.courseNum.contains(userSearch.trim(), ignoreCase = true)
+                    it.course_number.contains(userSearch.trim(), ignoreCase = true)
+                            || it.course_name.contains(userSearch.trim(), ignoreCase = true)
                 }
             ) { courseItem ->
                 CourseBox(coursedata = courseItem)
@@ -101,11 +83,11 @@ fun SearchPreview (
 ) {
     val testList = mutableListOf<CourseData>()
     val testCourse = CourseData (
-        courseNum = "CSE 115A",
-        courseName = "Intro to Software Engineering",
+        course_number = "CSE 115A",
+        course_name = "Intro to Software Engineering",
         location = "Basking Auditorium 1",
-        dateTime = "MWF 8:00am-9:00am",
-        profName = "Julig"
+        date_time = "MWF 8:00am-9:00am",
+        prof_name = "Julig"
     )
     for (i in 1..10) {
         testList.add(testCourse)
