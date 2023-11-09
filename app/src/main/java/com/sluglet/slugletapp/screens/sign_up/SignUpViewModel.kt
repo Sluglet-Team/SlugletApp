@@ -18,6 +18,7 @@ import com.sluglet.slugletapp.SlugletAppState
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.StorageService
+import android.util.Log
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -69,12 +70,7 @@ class SignUpViewModel @Inject constructor(
          */
         launchCatching {
             accountService.createAccount(_uiState.value.email, _uiState.value.password)
-            val user = User(
-                email = _uiState.value.email,
-                name = "",
-                uid = accountService.currentUserId,
-                courses = ArrayList<String>() )
-            storageService.storeUserData(user)
+            Log.v("onSignUpClick", "register button pressed")
             //TODO Navigate Away from Login Page
         }
     }
@@ -89,7 +85,7 @@ class SignUpViewModel @Inject constructor(
     and the second line will not be reached at all.
      */
         launchCatching {
-            accountService.logIn("madplatt@ucsc.edu", "TestPassword123456")
+            accountService.logIn(_uiState.value.email, _uiState.value.password)
             //TODO Navigate Away from Login Page
         }
     }

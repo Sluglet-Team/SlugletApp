@@ -34,6 +34,7 @@ import com.sluglet.slugletapp.common.ext.basicRow
 import com.sluglet.slugletapp.common.ext.smallSpacer
 import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
+import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
 import com.sluglet.slugletapp.model.service.StorageService
 import javax.inject.Inject
@@ -50,6 +51,7 @@ etc.
 fun CourseBox(
     coursedata: CourseData,
     modifier: Modifier = Modifier,
+    onAddClick: ((CourseData) -> Unit)?
 ) {
     var isExpanded by remember {mutableStateOf(false)}
     // Define a row: Left side will be the course info, right side the loc and add icons
@@ -120,7 +122,9 @@ fun CourseBox(
                 "add",
                 modifier = Modifier
                     .clickable {
-                        //storageService.retrieveUserData()
+                        if(onAddClick != null) {
+                            onAddClick(coursedata)
+                        }
                     }
             )
         }
@@ -197,7 +201,7 @@ fun CourseBoxPreview (
         dateTime = "MWF 8:00am - 9:05am",
         location = "Baskin Auditorium 1"
     )
-    CourseBox(coursedata = test, modifier = Modifier)
+    CourseBox(coursedata = test, modifier = Modifier, onAddClick = null)
 }
 
 @Preview(showBackground = true)
