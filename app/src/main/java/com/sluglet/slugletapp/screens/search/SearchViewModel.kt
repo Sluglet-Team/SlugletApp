@@ -21,8 +21,10 @@ class SearchViewModel @Inject constructor(
     // get all courses from Firestore
     val courses = storageService.courses
 
+    // What the user inputs into search bar
     var userSearch by mutableStateOf("")
 
+    // Updates the UI to reflect user input into search bar
     fun updateSearch (searched: String) {
         userSearch = searched
     }

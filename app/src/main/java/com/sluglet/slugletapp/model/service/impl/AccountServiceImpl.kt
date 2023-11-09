@@ -102,9 +102,7 @@ class AccountServiceImpl @Inject constructor(
                     var userMap = task.result.data
                     Log.v("addCourse", "User Map for " + (userMap)!!["email"].toString())
                     val courses = ((userMap)!!["courses"] as ArrayList<String>)
-                    //courses.add(course.id)
-                    courses.add("01dHd5XD0Z5FesxhMugZ")
-                    courses.add("01dHd5XD0Z5FesxhMugZ")
+                    courses.add(course.id)
                     (userMap)!!["courses"] = courses
                     firestore.collection(USER_COLLECTION).document(userID).set(userMap)
                         .addOnCompleteListener { task ->
@@ -137,8 +135,6 @@ class AccountServiceImpl @Inject constructor(
         createAnonymousAccount()
     }
     companion object {
-        private const val LINK_ACCOUNT_TRACE = "linkAccount"
-        private const val COURSE_COLLECTION = "data"
         private const val USER_COLLECTION = "users"
     }
 }

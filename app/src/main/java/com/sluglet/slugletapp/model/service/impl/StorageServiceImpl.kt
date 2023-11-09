@@ -16,7 +16,6 @@ import android.util.Log
 class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
 ) : StorageService {
-    // TODO: get data from firestore
     override val courses: Flow<List<CourseData>>
         get() =
             firestore.collection(COURSE_COLLECTION).dataObjects()
@@ -77,7 +76,7 @@ class StorageServiceImpl @Inject constructor(
         }
 
     companion object {
-        private const val COURSE_COLLECTION = "data"
         private const val USER_COLLECTION = "users"
+        private const val COURSE_COLLECTION = "courses"
     }
 }

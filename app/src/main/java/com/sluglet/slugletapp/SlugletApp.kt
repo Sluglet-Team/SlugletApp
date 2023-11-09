@@ -63,7 +63,6 @@ fun SlugletApp () {
                                 selectedIcon = Icons.Filled.Search,
                                 unselectedIcon = Icons.Default.Search
                             ),
-                            // FIXME(CAMDEN): This crashes the app becuase there is not screen for this
                             BottomNavItem(
                                 name = "Schedule",
                                 route = SCHEDULE_SCREEN,
