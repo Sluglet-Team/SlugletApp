@@ -57,6 +57,7 @@ fun MapScreenView (
         mapKey = BuildConfig.TOMTOM_API_KEY
     )
     val mapView = remember { MapView(context, mapOptions) }
+    MapLifecycle(mapView = mapView)
     val mapFragment = MapFragment.newInstance(mapOptions)
 
     // AndroidView needed since TomTom is not compose compatible
