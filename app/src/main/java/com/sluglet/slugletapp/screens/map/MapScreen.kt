@@ -30,10 +30,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.type.LatLng
 import kotlinx.coroutines.awaitCancellation
-import org.osmdroid.util.GeoPoint
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import org.osmdroid.views.MapView as OSMapView
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.events.MapListener
+import org.osmdroid.tileprovider.MapTileProviderBasic
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.MapTileIndex
+import org.osmdroid.views.CustomZoomButtonsController
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.TilesOverlay
 
 @Composable
 fun MapScreenView (
@@ -60,6 +68,7 @@ fun MapScreenView (
 
     // AndroidView needed since OSM is not compose compatible
     // ie this makes it interoperable
+    // This is what composes the map.
     AndroidView(
         factory = {
             osMapView
@@ -91,10 +100,11 @@ fun MapScreenView (
     val parentComposition = rememberCompositionContext()
     val currentContent by rememberUpdatedState(content)
 
+    // TODO: This currently doesn't do anything
     LaunchedEffect(Unit) {
         disposingComposition {
             osMapView.newComposition(osMapView, parentComposition) {
-
+                // TODO: Need a MapUpdater.kt to handle MapUpdates
                 currentContent?.invoke()
             }
         }
