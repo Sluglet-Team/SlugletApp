@@ -1,6 +1,7 @@
 package com.sluglet.slugletapp.screens.map
 
 import android.content.ComponentCallbacks
+import android.content.Context
 import android.content.res.Configuration
 import android.location.Location
 import android.view.View
@@ -28,21 +29,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.type.LatLng
-import com.sluglet.slugletapp.BuildConfig
-import com.sluglet.slugletapp.screens.search.SearchViewModel
-import com.tomtom.sdk.map.display.MapOptions
-import com.tomtom.sdk.map.display.camera.CameraOptions
-import com.tomtom.sdk.map.display.ui.MapFragment
-import com.tomtom.sdk.map.display.ui.MapReadyCallback
-import com.tomtom.sdk.map.display.ui.MapView
-import com.sluglet.slugletapp.R
-import com.tomtom.sdk.common.Bundle
-import com.tomtom.sdk.map.display.TomTomMap
-import com.tomtom.sdk.map.display.gesture.MapClickListener
-import com.tomtom.sdk.map.display.ui.LifecycleAware
 import kotlinx.coroutines.awaitCancellation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import org.osmdroid.views.MapView as OSMapView
 
 @Composable
 fun MapScreenView (
@@ -57,18 +47,14 @@ fun MapScreenView (
     content: (@Composable () -> Unit)? = null,
 ) {
     val context = LocalContext.current
-    val mapOptions = MapOptions(
-        mapKey = BuildConfig.TOMTOM_API_KEY
-    )
-    val mapView = remember { MapView(context, mapOptions) }
-    MapLifecycle(mapView = mapView)
-    val mapFragment = MapFragment.newInstance(mapOptions)
+    val osMapView = remember { OSMapView(context) }
+    MapLifecycle(mapView = osMapView)
 
     // AndroidView needed since TomTom is not compose compatible
     // ie this makes it interoperable
     AndroidView(
         factory = {
-            mapView
+            osMapView
         },
         modifier = Modifier
             .padding(10.dp)
@@ -99,7 +85,7 @@ fun MapScreenView (
 
     LaunchedEffect(Unit) {
         disposingComposition {
-            mapView.newComposition(mapView, parentComposition) {
+            osMapView.newComposition(osMapView, parentComposition) {
 
                 currentContent?.invoke()
             }
@@ -114,37 +100,23 @@ private suspend inline fun disposingComposition(factory: () -> Composition) {
         composition.dispose()
     }
 }
-private suspend inline fun MapView.newComposition(
-    mapView: MapView,
+private suspend inline fun OSMapView.newComposition(
+    mapView: OSMapView,
     parent: CompositionContext,
     noinline content: @Composable () -> Unit
 ): Composition {
-    val map = awaitMap()
     return Composition(
-        MapApplier(map, this), parent
+        MapApplier(mapView), parent
     ).apply {
         setContent(content)
     }
 }
-/**
- * A suspending function that provides an instance of [TomTomMap] from this [MapView]. This is
- * an alternative to [MapView.getMapAsync] by using coroutines to obtain the [TomTomMap].
- *
- * @return the [TomTomMap] instance
- */
-public suspend inline fun MapView.awaitMap(): TomTomMap =
-    suspendCoroutine { continuation ->
-        getMapAsync {
-            continuation.resume(it)
-        }
-    }
-
 
 /**
- * Registers lifecycle observers to the local [MapView].
+ * Registers lifecycle observers to the local [OSMapView].
  */
 @Composable
-private fun MapLifecycle(mapView: MapView) {
+private fun MapLifecycle(mapView: OSMapView) {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     DisposableEffect(context, lifecycle, mapView) {
@@ -161,20 +133,21 @@ private fun MapLifecycle(mapView: MapView) {
     }
 }
 
-private fun MapView.lifecycleObserver(): LifecycleEventObserver =
+private fun OSMapView.lifecycleObserver(): LifecycleEventObserver =
     LifecycleEventObserver { _, event ->
         when (event) {
-            Lifecycle.Event.ON_CREATE -> this.onCreate(Bundle())
-            Lifecycle.Event.ON_START -> this.onStart()
+            Lifecycle.Event.ON_CREATE -> this.onCreate(context)
+            // Lifecycle.Event.ON_START -> this.onStart()
             Lifecycle.Event.ON_RESUME -> this.onResume()
             Lifecycle.Event.ON_PAUSE -> this.onPause()
-            Lifecycle.Event.ON_STOP -> this.onStop()
-            Lifecycle.Event.ON_DESTROY -> this.onDestroy()
-            else -> throw IllegalStateException()
+            //Lifecycle.Event.ON_STOP -> this.onStop()
+            // TODO: Implemement onDestroy()
+            //Lifecycle.Event.ON_DESTROY -> this.onDestroy()
+            else -> {}
         }
     }
 
-private fun MapView.componentCallbacks(): ComponentCallbacks =
+private fun OSMapView.componentCallbacks(): ComponentCallbacks =
     object : ComponentCallbacks {
         override fun onConfigurationChanged(config: Configuration) {}
 
@@ -183,6 +156,11 @@ private fun MapView.componentCallbacks(): ComponentCallbacks =
         }
     }
 
-private fun MapView.onLowMemory() {
+private fun OSMapView.onLowMemory() {
     TODO("needs to check if app is about to run out of memory")
+}
+
+private fun OSMapView.onCreate(context: Context) {
+    org.osmdroid.config.Configuration.getInstance()
+        .load(context, context.getSharedPreferences("osm", Context.MODE_PRIVATE))
 }

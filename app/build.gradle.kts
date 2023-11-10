@@ -33,9 +33,6 @@ android {
             )
         }
     }
-    buildTypes.configureEach {
-        buildConfigField("String", "TOMTOM_API_KEY", "\"2fZFgobQCAjMYhDJtRsgbA10GoJ5KoWb\"")
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -54,8 +51,6 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-        // tomtom requirement
-        jniLibs.pickFirsts.add("lib/**/libc++_shared.so")
     }
 }
 
@@ -100,6 +95,6 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:2.47")
     kspAndroidTest("com.google.dagger:hilt-compiler:2.47")
 
-    // tomtom
-    implementation("com.tomtom.sdk.maps:map-display:0.36.0")
+    // OSM
+    implementation("org.osmdroid:osmdroid-android:6.1.17")
 }

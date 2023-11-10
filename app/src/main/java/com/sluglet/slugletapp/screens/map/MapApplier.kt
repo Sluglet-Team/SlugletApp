@@ -1,12 +1,7 @@
 package com.sluglet.slugletapp.screens.map
 
 import androidx.compose.runtime.AbstractApplier
-import com.tomtom.sdk.map.display.TomTomMap
-import com.tomtom.sdk.map.display.circle.Circle
-import com.tomtom.sdk.map.display.marker.Marker
-import com.tomtom.sdk.map.display.polygon.Polygon
-import com.tomtom.sdk.map.display.polyline.Polyline
-import com.tomtom.sdk.map.display.ui.MapView
+import org.osmdroid.views.MapView as OSMapView
 
 internal interface MapNode {
     fun onAttached() {}
@@ -16,8 +11,7 @@ internal interface MapNode {
 private object MapNodeRoot : MapNode
 
 internal class MapApplier(
-    val map: TomTomMap,
-    private val mapView: MapView,
+    private val mapView: OSMapView,
 ) : AbstractApplier<MapNode>(MapNodeRoot) {
 
     private val decorations = mutableListOf<MapNode>()
@@ -27,7 +21,7 @@ internal class MapApplier(
     }
 
     override fun onClear() {
-        map.clear()
+        mapView.overlayManager.clear()
     }
 
     override fun insertBottomUp(index: Int, instance: MapNode) {
