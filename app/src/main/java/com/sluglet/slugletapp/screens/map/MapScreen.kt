@@ -4,6 +4,8 @@ import android.content.ComponentCallbacks
 import android.content.res.Configuration
 import android.location.Location
 import android.view.View
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Applier
 import androidx.compose.runtime.Composable
@@ -16,8 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentManager
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -65,7 +69,10 @@ fun MapScreenView (
     AndroidView(
         factory = {
             mapView
-        }
+        },
+        modifier = Modifier
+            .padding(10.dp)
+            .clip(RoundedCornerShape(10.dp))
     )
     // rememberUpdatedState and friends are used here to make these values observable to
     // the subcomposition without providing a new content function each recomposition
