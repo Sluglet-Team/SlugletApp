@@ -30,6 +30,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.type.LatLng
 import kotlinx.coroutines.awaitCancellation
+import org.osmdroid.util.GeoPoint
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import org.osmdroid.views.MapView as OSMapView
@@ -48,9 +49,16 @@ fun MapScreenView (
 ) {
     val context = LocalContext.current
     val osMapView = remember { OSMapView(context) }
+    // Allow pinch zoom
+    osMapView.setMultiTouchControls(true)
+    // Set to UCSC
+    osMapView.controller.animateTo(GeoPoint(36.99762806599007, -122.05596073804293))
+    // Zoom
+    osMapView.controller.setZoom(12.0)
+    // LifeCycle Control
     MapLifecycle(mapView = osMapView)
 
-    // AndroidView needed since TomTom is not compose compatible
+    // AndroidView needed since OSM is not compose compatible
     // ie this makes it interoperable
     AndroidView(
         factory = {
