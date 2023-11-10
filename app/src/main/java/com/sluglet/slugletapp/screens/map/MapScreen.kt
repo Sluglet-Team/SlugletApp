@@ -20,6 +20,7 @@ import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
@@ -76,6 +77,7 @@ fun MapScreenView (
         modifier = Modifier
             .padding(10.dp)
             .clip(RoundedCornerShape(10.dp))
+            .shadow(elevation = 10.dp)
     )
     // rememberUpdatedState and friends are used here to make these values observable to
     // the subcomposition without providing a new content function each recomposition
