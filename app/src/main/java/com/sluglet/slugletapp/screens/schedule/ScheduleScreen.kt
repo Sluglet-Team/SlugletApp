@@ -1,8 +1,14 @@
 package com.sluglet.slugletapp.screens.schedule
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,11 +77,12 @@ fun ScheduleScreen (
 
 @Composable
 fun ScheduleScreenContent(
+    modifier: Modifier = Modifier,
     currentDate: LocalDate,
     events:   KalendarEvents,
    // kalendarColors: KalendarColors
 ) {
-    Column(
+    Column(modifier = Modifier
 
     ) {
         Kalendar(
@@ -84,8 +91,9 @@ fun ScheduleScreenContent(
             events = events,
            // kalendarColors = kalendarColors,
             modifier = Modifier
-                .padding(10.dp)
-                .clip(shape = RoundedCornerShape(10.dp))
+                .padding(5.dp)
+                .clip(shape = RoundedCornerShape(10.dp)),
+            //onDayClick = {day, _ -> SelectedDate(day) }
 
         ) {
 
@@ -99,7 +107,7 @@ fun ScheduleScreenContent(
             profName = "Julig"
         )
 
-        /*val testCourse2 = CourseData(
+        val testCourse2 = CourseData(
             courseNum = "JPN 103",
             courseName = "Advanced Japanese",
             location = "Oakes Academy 222",
@@ -120,8 +128,10 @@ fun ScheduleScreenContent(
         testList.add(testCourse2)
         testList.add(testCourseTTh)
 
-        DisplayCourses(courseList = testList, day = "")*/
-        CourseBox(coursedata = testCourse)
+        DisplayCourses(courses = testList, day = "")
+        //DisplayCourses(courseList = testList, day = "M")
+        //DisplayCourses(courseList = testList, day = "Th")
+        //CourseBox(coursedata = testCourse)
     }
 
 }
@@ -181,20 +191,26 @@ These values are in accordance to the symbols for days on the firebase csv,
 so if these symbols for the days were to be changed, then the argument
 standards for this function should also be changed.
 
-TODO: allow scrollability for the classes shown so allow visibility for course info
+TODO: find Kalendar state to be able to pass day of the week to eliminate hard coding (ask tanuj)
+TODO: implement user's course List as argument to eliminate hard coding of user's classes (ask max p)
 */
 @Composable fun DisplayCourses (
-    courseList: List<CourseData>,
+    courses: List<CourseData>,
     day: String = ""
 ) {
-    Column {
-        for (course in courseList) {
-            if (day in course.dateTime || day == "") {
-                CourseBox(coursedata = course,
-                          modifier = Modifier
-                              .padding(2.dp)
-                )
+    LazyColumn (
+        state = rememberLazyListState(),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        items(
+            items = courses.filter {
+                it.courseNum.contains(day.trim(), ignoreCase = true)
             }
+        ) {courseItem ->
+            CourseBox(coursedata = courseItem)
         }
+
     }
 }
+
+//val SelectedDate = {selectedDay: LocalDate -> selectedDay.dayOfWeek}
