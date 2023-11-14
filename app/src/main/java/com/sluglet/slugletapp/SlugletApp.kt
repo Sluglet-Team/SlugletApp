@@ -33,6 +33,7 @@ import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
 import kotlinx.coroutines.CoroutineScope
+import com.sluglet.slugletapp.screens.schedule.ScheduleScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,6 +121,10 @@ fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     composable(SEARCH_SCREEN) {
         SearchScreen(openScreen = { route -> appState.navigate(route) })
     }
+
+    composable(SCHEDULE_SCREEN) {
+        ScheduleScreen(openScreen = { route -> appState.navigate(route) })
+
     composable(SIGNUP_SCREEN) {
         SignUpScreen()
     }
