@@ -40,6 +40,8 @@ import com.google.type.LatLng
 import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.common.composables.CourseMarker
 import com.sluglet.slugletapp.common.composables.SearchBox
+import com.sluglet.slugletapp.common.ext.roundedCorner
+import com.sluglet.slugletapp.common.ext.smallSpacer
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.screens.search.SearchViewModel
 import com.sluglet.slugletapp.screens.sign_up.SignUpScreenContent
@@ -72,6 +74,7 @@ fun MapScreen (
     openScreen: (String) -> Unit,
     viewModel: MapViewModel = hiltViewModel()
 ) {
+    val modifier = Modifier.smallSpacer().roundedCorner()
     val testCourse = CourseData (
         course_number = "CSE 115A",
         course_name = "Intro to Software Engineering",
@@ -85,6 +88,7 @@ fun MapScreen (
     MapScreenContent(
         markerList = viewModel.markerList,
         cameraState = viewModel.cameraState.value,
+        modifier = modifier
     )
 
 }
@@ -104,7 +108,8 @@ fun MapScreenContent (
 ) {
     // Create Map
     OpenStreetMap(
-        cameraState = cameraState
+        cameraState = cameraState,
+        modifier = modifier
     ) {
         // Create Markers
         val iter = markerList.iterator()
