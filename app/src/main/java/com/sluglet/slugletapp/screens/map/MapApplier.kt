@@ -2,7 +2,7 @@ package com.sluglet.slugletapp.screens.map
 
 import androidx.compose.runtime.AbstractApplier
 import org.osmdroid.views.MapView as OSMapView
-
+/*
 internal interface MapNode {
     fun onAttached() {}
     fun onRemoved() {}
@@ -45,7 +45,7 @@ internal class MapApplier(
     }
 }
 
-    /*
+
     private fun attachClickListeners() {
         map.addCircleClickListener {
             decorations.nodeForCircle(it)
