@@ -2,15 +2,22 @@ package com.sluglet.slugletapp.model.service.impl
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
+import com.sluglet.slugletapp.model.service.StorageService
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import android.util.Log
+import com.sluglet.slugletapp.model.CourseData
 
-class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AccountService {
+class AccountServiceImpl @Inject constructor(
+    private val auth: FirebaseAuth,
+    private val firestore: FirebaseFirestore) : AccountService {
 
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
@@ -22,7 +29,7 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
         get() = callbackFlow {
             val listener =
                 FirebaseAuth.AuthStateListener { auth ->
-                    this.trySend(auth.currentUser?.let { User(it.uid, it.isAnonymous) } ?: User())
+                    this.trySend(auth.currentUser?.let { User(uid = it.uid) } ?: User())
                 }
             auth.addAuthStateListener(listener)
             awaitClose { auth.removeAuthStateListener(listener) }
@@ -40,16 +47,80 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
         auth.signInAnonymously().await()
     }
 
-    override suspend fun linkAccount(email: String, password: String) {
-        /*
-        As soon as the user creates an account, by typing an email and a password,
-        you need to ask the Firebase Authentication API for an email credential,
-        then link the new credential to the anonymous account.
-         */
-        val credential = EmailAuthProvider.getCredential(email, password)
-        auth.currentUser!!.linkWithCredential(credential).await()
+    override suspend fun createAccount(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.v("createAccount", "createAccount success")
+                    val userMap = hashMapOf(
+                        "email" to email,
+                        "name" to "",
+                        "uid" to auth.currentUser!!.uid,
+                        "courses" to ArrayList<String>()
+                    )
+                    firestore.collection(USER_COLLECTION).document(auth.currentUser!!.uid).set(userMap)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Log.v("createAccount", "new account storage success")
+                                Log.v("createAccount", "stored data at " + auth.currentUser!!.uid)
+                            } else {
+                                Log.v("createAccount", "new account storage failure")
+                            }
+                        }
+                }
+                else
+                {
+                    Log.v("createAccount", "createAccount failure")
+                    Log.v("createAccount", "Email: -$email- Password: -$password-")
+                }
+            }
     }
 
+    override suspend fun logIn(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.v("logIn", "createAccount success")
+                }
+                else
+                {
+                    Log.v("logIn", "logIn failure")
+                    Log.v("logIn", "Email: -$email- Password: -$password-")
+                }
+            }
+    }
+
+    override suspend fun addCourse(course: CourseData)
+    {
+        var userID = auth.currentUser!!.uid
+        Log.v("addCourse", "Accessing Firestore User $userID")
+        val userRef = firestore.collection(USER_COLLECTION).document(userID)
+        userRef.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.v("addCourse", "retrieved user data")
+                    var userMap = task.result.data
+                    Log.v("addCourse", "User Map for " + (userMap)!!["email"].toString())
+                    val courses = ((userMap)!!["courses"] as ArrayList<String>)
+                    courses.add(course.id)
+                    (userMap)!!["courses"] = courses
+                    firestore.collection(USER_COLLECTION).document(userID).set(userMap)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Log.v("addCourse", "store success")
+                                Log.v("addCourse", "added " + course.id + " to $userID")
+                            } else {
+                                Log.v("addCourse", "store failure for $userID")
+                            }
+                        }
+                }
+                else
+                {
+                    Log.v("addCourse", "retrieveUserData failure")
+                    Log.v("addCourse", "id: $userID")
+                }
+            }
+    }
     override suspend fun deleteAccount() {
         auth.currentUser!!.delete().await()
     }
@@ -63,8 +134,7 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
         // Sign the user back in anonymously.
         createAnonymousAccount()
     }
-
     companion object {
-        private const val LINK_ACCOUNT_TRACE = "linkAccount"
+        private const val USER_COLLECTION = "users"
     }
 }
