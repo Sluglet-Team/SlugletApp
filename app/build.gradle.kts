@@ -98,4 +98,8 @@ dependencies {
     // OSM
     implementation("org.osmdroid:osmdroid-android:6.1.17")
     implementation("tech.utsmankece:osm-android-compose:0.0.5")
+
+    // calendar
+    implementation("com.himanshoe:kalendar:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
 }

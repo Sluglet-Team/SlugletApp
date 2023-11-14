@@ -50,6 +50,7 @@ fun SearchTextField (
         label = { Text(text = "Search") },
         modifier = Modifier.basicRow(),
         colors = colors,
+
         leadingIcon = {
             Icon(
                 Icons.Rounded.Search,
