@@ -131,6 +131,7 @@ fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
 
     composable(SCHEDULE_SCREEN) {
         ScheduleScreen(openScreen = { route -> appState.navigate(route) })
+    }
 
     composable(SIGNUP_SCREEN) {
         SignUpScreen()
