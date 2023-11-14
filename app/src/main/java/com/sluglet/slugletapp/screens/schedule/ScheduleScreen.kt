@@ -1,8 +1,14 @@
 package com.sluglet.slugletapp.screens.schedule
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,11 +77,12 @@ fun ScheduleScreen (
 
 @Composable
 fun ScheduleScreenContent(
+    modifier: Modifier = Modifier,
     currentDate: LocalDate,
     events:   KalendarEvents,
    // kalendarColors: KalendarColors
 ) {
-    Column(
+    Column(modifier = Modifier
 
     ) {
         Kalendar(
@@ -84,8 +91,9 @@ fun ScheduleScreenContent(
             events = events,
            // kalendarColors = kalendarColors,
             modifier = Modifier
-                .padding(10.dp)
-                .clip(shape = RoundedCornerShape(10.dp))
+                .padding(5.dp)
+                .clip(shape = RoundedCornerShape(10.dp)),
+            //onDayClick = {day, _ -> SelectedDate(day) }
 
         ) {
 
@@ -98,7 +106,33 @@ fun ScheduleScreenContent(
             dateTime = "MWF 8:00am-9:00am",
             profName = "Julig"
         )
-        CourseBox(coursedata = testCourse)
+
+        val testCourse2 = CourseData(
+            courseNum = "JPN 103",
+            courseName = "Advanced Japanese",
+            location = "Oakes Academy 222",
+            dateTime = "MWF 4:00pm-5:05pm",
+            profName = "Hoshi"
+        )
+
+        val testCourseTTh = CourseData(
+            courseNum = "LING 100",
+            courseName = "Phonetic World Langs",
+            location = "Soc Sci 075",
+            dateTime = "TuTh 11:40am-1:15pm",
+            profName = "Rysling"
+        )
+
+        var testList = mutableListOf<CourseData>()
+        testList.add(testCourse)
+        testList.add(testCourse2)
+        testList.add(testCourseTTh)
+
+        DisplayCourses(courses = testList, day = "")
+        //DisplayCourses(courses = testList, day = "M")
+        //DisplayCourses(courses = testList, day = "")
+        //CourseBox(coursedata = testCourse)
+        // Display Courses to replace CourseBox to show all classes a user has
     }
 
 }
@@ -140,3 +174,45 @@ fun ScheduleScreenContent(
 
     ScheduleScreenContent(currentDate = currentDate, events = events)
 }
+
+
+/*
+DisplayCourses takes in a List of user's classes in the CourseData class,
+as the parameter courseList, as well as the day of the selected date on the
+calendar, as the parameter day, and iterates through user's classes, parsing
+through each course's dateTime value to find if the class is on that day. The
+values that should be passed to day should be:
+""   - For an unselected date, as this will show all courses the user has
+"M"  - To show classes that have times on Monday
+"Tu" - To show classes that have times on Tuesday
+"W"  - To show classes that have times on Wednesday
+"Th" - To show classes that have times on Thursday
+"F"  - To show classes that have times on Friday
+These values are in accordance to the symbols for days on the firebase csv,
+so if these symbols for the days were to be changed, then the argument
+standards for this function should also be changed.
+
+TODO: find Kalendar state to be able to pass day of the week to eliminate hard coding (ask tanuj)
+// ok i feel this one is like impossible istg ive been working on this nonstop and i still cant figure it out
+TODO: implement user's course List as argument to eliminate hard coding of user's classes (ask max p)
+*/
+@Composable fun DisplayCourses (
+    courses: List<CourseData>,
+    day: String = ""
+) {
+    LazyColumn (
+        state = rememberLazyListState(),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        items(
+            items = courses.filter {
+                it.dateTime.contains(day, ignoreCase = false)
+            }
+        ) {courseItem ->
+            CourseBox(coursedata = courseItem)
+        }
+
+    }
+}
+
+//val SelectedDate = {selectedDay: LocalDate -> selectedDay.dayOfWeek}
