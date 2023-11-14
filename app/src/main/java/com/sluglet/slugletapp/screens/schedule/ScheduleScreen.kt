@@ -129,9 +129,10 @@ fun ScheduleScreenContent(
         testList.add(testCourseTTh)
 
         DisplayCourses(courses = testList, day = "")
-        //DisplayCourses(courseList = testList, day = "M")
-        //DisplayCourses(courseList = testList, day = "Th")
+        //DisplayCourses(courses = testList, day = "M")
+        //DisplayCourses(courses = testList, day = "")
         //CourseBox(coursedata = testCourse)
+        // Display Courses to replace CourseBox to show all classes a user has
     }
 
 }
@@ -192,6 +193,7 @@ so if these symbols for the days were to be changed, then the argument
 standards for this function should also be changed.
 
 TODO: find Kalendar state to be able to pass day of the week to eliminate hard coding (ask tanuj)
+// ok i feel this one is like impossible istg ive been working on this nonstop and i still cant figure it out
 TODO: implement user's course List as argument to eliminate hard coding of user's classes (ask max p)
 */
 @Composable fun DisplayCourses (
@@ -204,7 +206,7 @@ TODO: implement user's course List as argument to eliminate hard coding of user'
     ) {
         items(
             items = courses.filter {
-                it.courseNum.contains(day.trim(), ignoreCase = true)
+                it.dateTime.contains(day, ignoreCase = false)
             }
         ) {courseItem ->
             CourseBox(coursedata = courseItem)
