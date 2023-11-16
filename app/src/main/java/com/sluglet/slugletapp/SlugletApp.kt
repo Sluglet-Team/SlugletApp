@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -26,6 +27,8 @@ import com.sluglet.slugletapp.common.snackbar.SnackbarManager
 import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.screens.search.SearchScreen
+import com.sluglet.slugletapp.screens.settings.SettingsScreen
+import com.sluglet.slugletapp.screens.settings.SettingsScreenContent
 import com.sluglet.slugletapp.screens.search.SearchScreenContent
 import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
@@ -68,12 +71,12 @@ fun SlugletApp () {
                                 route = SCHEDULE_SCREEN,
                                 selectedIcon = Icons.Filled.DateRange,
                                 unselectedIcon = Icons.Default.DateRange
-                            ) ,
+                            ),
                             BottomNavItem(
                                 name = "Settings",
                                 route = SETTINGS_SCREEN,
-                                selectedIcon = Icons.Filled.DateRange, // update for setting
-                                unselectedIcon = Icons.Default.DateRange // update for setting
+                                selectedIcon = Icons.Filled.Settings, // update for setting
+                                unselectedIcon = Icons.Default.Settings // update for setting
                             )
                         ),
                         navController = appState.navController,
@@ -118,5 +121,8 @@ fun resources(): Resources {
 fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     composable(SEARCH_SCREEN) {
         SearchScreen(openScreen = { route -> appState.navigate(route) })
+    }
+    composable(SETTINGS_SCREEN) {
+        SettingsScreen(openScreen = { route -> appState.navigate(route) })
     }
 }
