@@ -49,6 +49,7 @@ import org.osmdroid.views.MapController
 
 @Composable
 fun OSMaps (
+    cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     modifier: Modifier = Modifier,
     onMapClick: (LatLng) -> Unit = {},
     onMapLongClick: (LatLng) -> Unit = {},
@@ -59,12 +60,14 @@ fun OSMaps (
 ) {
     val context = LocalContext.current
     val osMapView = remember { OSMapView(context) }
+    /*
     // Allow pinch zoom
     osMapView.setMultiTouchControls(true)
     // Set to UCSC
     osMapView.controller.animateTo(GeoPoint(36.99762806599007, -122.05596073804293))
     // Zoom
     osMapView.controller.setZoom(16.0)
+     */
     // LifeCycle Control
     MapLifecycle(mapView = osMapView)
 
@@ -161,9 +164,8 @@ private fun OSMapView.lifecycleObserver(): LifecycleEventObserver =
             // Lifecycle.Event.ON_START -> this.onStart()
             Lifecycle.Event.ON_RESUME -> this.onResume()
             Lifecycle.Event.ON_PAUSE -> this.onPause()
-            //Lifecycle.Event.ON_STOP -> this.onStop()
-            // TODO: Implemement onDestroy()
-            //Lifecycle.Event.ON_DESTROY -> this.onDestroy()
+            // Lifecycle.Event.ON_STOP -> this.onStop()
+            Lifecycle.Event.ON_DESTROY -> this.onDetach()
             else -> {}
         }
     }
