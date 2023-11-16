@@ -1,16 +1,11 @@
 package com.sluglet.slugletapp.OSMaps
 
-import com.sluglet.slugletapp.screens.map.MapApplier
-import com.sluglet.slugletapp.screens.map.MapViewModel
 import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.res.Configuration
 import android.location.Location
-import android.view.View
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.Applier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionContext
@@ -27,32 +22,25 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.fragment.app.FragmentManager
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.type.LatLng
 import kotlinx.coroutines.awaitCancellation
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
-import org.osmdroid.views.MapView as OSMapView
 import org.osmdroid.util.GeoPoint
-import org.osmdroid.events.MapListener
-import org.osmdroid.tileprovider.MapTileProviderBasic
-import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.util.MapTileIndex
-import org.osmdroid.views.CustomZoomButtonsController
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.TilesOverlay
-import org.osmdroid.views.MapController
+import org.osmdroid.views.MapView as OSMapView
 
+enum class ZoomButtonVisibility {
+    ALWAYS, NEVER, SHOW_AND_FADEOUT
+}
 @Composable
 fun OSMaps (
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
+    overlayManagerState: OverlayManagerState = rememberOverlayManagerState(),
+    mapProperties: MapProperties = DefaultMapProperties,
     modifier: Modifier = Modifier,
-    onMapClick: (LatLng) -> Unit = {},
-    onMapLongClick: (LatLng) -> Unit = {},
+    onMapClick: (GeoPoint) -> Unit = {},
+    onMapLongClick: (GeoPoint) -> Unit = {},
+    onFirstLoadListener: () -> Unit = {},
     onMapLoaded: () -> Unit = {},
     onMyLocationButtonClick: () -> Boolean = { false },
     onMyLocationClick: (Location) -> Unit = {},
@@ -60,6 +48,15 @@ fun OSMaps (
 ) {
     val context = LocalContext.current
     val osMapView = remember { OSMapView(context) }
+    val mapListeners = remember {
+        MapListeners()
+    }.also {
+        it.onMapClick = onMapClick
+        it.onMapLongClick = onMapLongClick
+        it.onFirstLoadListener = {
+            onFirstLoadListener.invoke()
+        }
+    }
     /*
     // Allow pinch zoom
     osMapView.setMultiTouchControls(true)
@@ -78,6 +75,17 @@ fun OSMaps (
         factory = {
             osMapView
         },
+        // FIXME: This is the weird zoom bug right here!
+        /*
+        update = {
+            it.controller.animateTo(
+                cameraPositionState.geoPoint,
+                cameraPositionState.zoom,
+                cameraPositionState.speed
+            )
+        },
+
+         */
         modifier = Modifier
             .padding(10.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -111,6 +119,12 @@ fun OSMaps (
         disposingComposition {
             osMapView.newComposition(osMapView, parentComposition) {
                 // TODO: Need a MapUpdater.kt to handle MapUpdates
+                MapUpdater(
+                    mapProperties = mapProperties,
+                    mapListeners = mapListeners,
+                    cameraPositionState = cameraPositionState,
+                    overlayManagerState = overlayManagerState
+                )
                 currentContent?.invoke()
             }
         }

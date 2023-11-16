@@ -14,9 +14,9 @@ fun MapScreen (
     openScreen: (String) -> Unit,
     viewModel: MapViewModel = hiltViewModel()
 ) {
-
+    val cameraPositionState = viewModel.cameraState.value
     OSMaps (
-
+        cameraPositionState = cameraPositionState
     ) {
 
     }
