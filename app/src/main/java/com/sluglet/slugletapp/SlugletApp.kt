@@ -27,7 +27,7 @@ import com.sluglet.slugletapp.common.composables.BottomNavBar
 import com.sluglet.slugletapp.common.snackbar.SnackbarManager
 import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
-import com.sluglet.slugletapp.screens.map.MapScreenView
+import com.sluglet.slugletapp.screens.map.MapScreen
 import com.sluglet.slugletapp.screens.search.SearchScreen
 import com.sluglet.slugletapp.screens.search.SearchScreenContent
 import com.sluglet.slugletapp.screens.sign_up.SignUpScreen
@@ -131,6 +131,6 @@ fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
         SignUpScreen()
     }
     composable(MAP_SCREEN) {
-        MapScreenView(openScreen = { route -> appState.navigate(route) })
+        MapScreen(openScreen = { route -> appState.navigate(route) })
     }
 }
