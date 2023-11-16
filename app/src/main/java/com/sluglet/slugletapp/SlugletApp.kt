@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
@@ -26,6 +27,7 @@ import com.sluglet.slugletapp.common.composables.BottomNavBar
 import com.sluglet.slugletapp.common.snackbar.SnackbarManager
 import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
+import com.sluglet.slugletapp.screens.home.HomeScreen
 import com.sluglet.slugletapp.screens.search.SearchScreen
 import com.sluglet.slugletapp.screens.search.SearchScreenContent
 import com.sluglet.slugletapp.screens.sign_up.SignUpScreen
@@ -58,6 +60,12 @@ fun SlugletApp () {
                     BottomNavBar(
                         items = listOf(
                             BottomNavItem(
+                                name = "Home",
+                                route = HOME_SCREEN,
+                                selectedIcon = Icons.Filled.Home,
+                                unselectedIcon = Icons.Default.Home
+                            ),
+                            BottomNavItem(
                                 name = "Search",
                                 route = SEARCH_SCREEN,
                                 selectedIcon = Icons.Filled.Search,
@@ -89,7 +97,7 @@ fun SlugletApp () {
 
                 NavHost(
                     navController = appState.navController,
-                    startDestination = SEARCH_SCREEN,
+                    startDestination = HOME_SCREEN,
                     modifier = Modifier.padding(innerPadding)
                 ) {
                     slugletGraph(appState)
@@ -117,6 +125,9 @@ fun resources(): Resources {
 }
 
 fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
+    composable(HOME_SCREEN) {
+        HomeScreen(openScreen = { route -> appState.navigate(route) })
+    }
     composable(SEARCH_SCREEN) {
         SearchScreen(openScreen = { route -> appState.navigate(route) })
     }
