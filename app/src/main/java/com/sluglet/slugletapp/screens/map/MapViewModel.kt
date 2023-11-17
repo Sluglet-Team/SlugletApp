@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import com.sluglet.slugletapp.OSMaps.CameraPositionState
 import com.sluglet.slugletapp.OSMaps.CameraProperty
 import com.sluglet.slugletapp.model.service.LogService
+import com.sluglet.slugletapp.model.service.MapService
 import com.sluglet.slugletapp.screens.SlugletViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.osmdroid.util.GeoPoint
@@ -13,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     logService: LogService,
-
+    mapService: MapService
 ) : SlugletViewModel(logService) {
     // FIXME: Would be ideal to keep the state of the map
     //        so that when navigating away and coming back
@@ -29,4 +30,5 @@ class MapViewModel @Inject constructor(
         )
     )
     val cameraState: State<CameraPositionState> = _cameraState
+    val courseToDisplay = mapService.CourseToDisplay
 }

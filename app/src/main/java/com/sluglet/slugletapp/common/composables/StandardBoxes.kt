@@ -48,7 +48,9 @@ etc.
 fun CourseBox(
     coursedata: CourseData,
     modifier: Modifier = Modifier,
-    onAddClick: ((CourseData) -> Unit)?
+    onAddClick: ((CourseData) -> Unit)?,
+    onMapClick: (((String) -> Unit, CourseData) -> Unit)?,
+    openScreen: (String) -> Unit = {}
 ) {
     var isExpanded by remember {mutableStateOf(false)}
     // Define a row: Left side will be the course info, right side the loc and add icons
@@ -108,6 +110,12 @@ fun CourseBox(
             Icon(
                 Icons.Rounded.LocationOn,
                 "map",
+                modifier = Modifier
+                    .clickable {
+                       if (onMapClick != null) {
+                           onMapClick(openScreen, coursedata)
+                       }
+                    },
                 tint = Color.Black
             )
             Icon(
@@ -194,7 +202,7 @@ fun CourseBoxPreview (
         location = "Baskin Auditorium 1",
         coord = null
     )
-    CourseBox(coursedata = test, modifier = Modifier, onAddClick = null)
+    CourseBox(coursedata = test, modifier = Modifier, onAddClick = null, onMapClick = null)
 }
 
 @Preview(showBackground = true)

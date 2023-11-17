@@ -32,6 +32,7 @@ fun MapScreen (
 ) {
     // Gets state from the view model for the camera position
     val cameraPositionState = viewModel.cameraState.value
+    val courseToDisplay = viewModel.courseToDisplay
     // Use this modifier to modify the look of the map
     val mapModifier = Modifier
         .padding(start = 10.dp, top = 10.dp, end = 10.dp)
@@ -51,7 +52,7 @@ fun MapScreen (
         modifier = mapModifier
     ) {
         CourseMarker(
-            course = test,
+            course = courseToDisplay,
             // custom marker
             markerIcon = ResourcesCompat.getDrawable(resources(), R.drawable.edu_map_pin, null)
         )
