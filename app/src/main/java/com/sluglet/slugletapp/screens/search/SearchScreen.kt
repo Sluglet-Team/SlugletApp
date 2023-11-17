@@ -90,7 +90,8 @@ fun SearchPreview (
         course_name = "Intro to Software Engineering",
         location = "Basking Auditorium 1",
         date_time = "MWF 8:00am-9:00am",
-        prof_name = "Julig"
+        prof_name = "Julig",
+        coord = null
     )
     for (i in 1..10) {
         testList.add(testCourse)

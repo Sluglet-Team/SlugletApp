@@ -75,17 +75,6 @@ fun OSMaps (
         factory = {
             osMapView
         },
-        // FIXME: This is the weird zoom bug right here!
-        /*
-        update = {
-            it.controller.animateTo(
-                cameraPositionState.geoPoint,
-                cameraPositionState.zoom,
-                cameraPositionState.speed
-            )
-        },
-
-         */
         modifier = Modifier
             .padding(10.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -114,11 +103,9 @@ fun OSMaps (
     val parentComposition = rememberCompositionContext()
     val currentContent by rememberUpdatedState(content)
 
-    // TODO: This currently doesn't do anything
     LaunchedEffect(Unit) {
         disposingComposition {
             osMapView.newComposition(osMapView, parentComposition) {
-                // TODO: Need a MapUpdater.kt to handle MapUpdates
                 MapUpdater(
                     mapProperties = mapProperties,
                     mapListeners = mapListeners,

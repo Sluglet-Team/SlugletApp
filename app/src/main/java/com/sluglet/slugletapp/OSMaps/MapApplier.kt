@@ -43,6 +43,8 @@ internal class MapApplier(
         }
         decorations.remove(index, count)
     }
+
+    internal fun invalidate() = mapView.postInvalidate()
 }
 
     /*

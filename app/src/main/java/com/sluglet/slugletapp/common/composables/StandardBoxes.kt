@@ -33,6 +33,7 @@ import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
 import com.sluglet.slugletapp.model.service.StorageService
+import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
 
 /*
@@ -190,7 +191,8 @@ fun CourseBoxPreview (
         course_name = "Introduction to Software Engineering",
         prof_name = "Richard Julig",
         date_time = "MWF 8:00am - 9:05am",
-        location = "Baskin Auditorium 1"
+        location = "Baskin Auditorium 1",
+        coord = null
     )
     CourseBox(coursedata = test, modifier = Modifier, onAddClick = null)
 }
