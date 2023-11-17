@@ -75,10 +75,7 @@ fun OSMaps (
         factory = {
             osMapView
         },
-        modifier = Modifier
-            .padding(10.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .shadow(elevation = 10.dp)
+        modifier = modifier
     )
     // rememberUpdatedState and friends are used here to make these values observable to
     // the subcomposition without providing a new content function each recomposition
