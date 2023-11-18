@@ -1,6 +1,7 @@
 package com.sluglet.slugletapp.screens.home
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,6 +40,19 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
+    val isAnonymous = viewModel.isUserAnonymous()
+
+    var toastShown by remember { mutableStateOf(false) }
+
+    if(isAnonymous) {
+        Toast.makeText(
+            LocalContext.current,
+            "You're not signed in. Register to save your info!",
+            Toast.LENGTH_LONG
+        ).show()
+        toastShown = true
+    }
+
     HomeScreenContent(
         courses = courses,
     )
