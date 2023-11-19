@@ -42,15 +42,12 @@ fun HomeScreen(
     val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
     val isAnonymous = viewModel.isUserAnonymous()
 
-    var toastShown by remember { mutableStateOf(false) }
-
     if(isAnonymous) {
         Toast.makeText(
             LocalContext.current,
-            "You're not signed in. Register to save your info!",
+            "You're not signed in. Register to save your information!",
             Toast.LENGTH_LONG
         ).show()
-        toastShown = true
     }
 
     HomeScreenContent(

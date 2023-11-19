@@ -1,6 +1,7 @@
 package com.sluglet.slugletapp.screens.home
 
 import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -14,9 +15,13 @@ import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.StorageService
 import com.sluglet.slugletapp.screens.SlugletViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -64,20 +69,7 @@ class HomeViewModel @Inject constructor(
             }
 
             try {
-                // FIXME temp data: val userData = storageService.retrieveUserData(accountService.currentUserId)
-                // val userData = storageService.retrieveUserData("UJ4GiIyQ5vuwKKvpTOhL")
-
-                val listOfCourses = ArrayList<String>()
-                listOfCourses.add("aqWMc7dO68Gxe8gickMS")
-                listOfCourses.add("09nihTtaL2PLdkMACxnF")
-                listOfCourses.add("7ZCCuQL6pyYi8lNLJURd")
-
-                val userData = User(
-                    email = "alecnavapanich@gmail.com",
-                    name = "Alec Navapanich",
-                    uid = "xtTyD1FBo6MXqaf9r1mhDqZFUNP2",
-                    courses = listOfCourses
-                )
+                val userData = storageService.retrieveUserData(accountService.currentUserId)
 
                 Log.v("UserData", "userData: $userData")
                 if(userData != null) {
