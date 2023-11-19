@@ -39,6 +39,14 @@ class HomeViewModel @Inject constructor(
             if(!accountService.hasUser) {
                 try {
                     createAnonymousAccount()
+                    var anonymousUser = User()
+                    anonymousUser = anonymousUser.copy(
+                        email = "",
+                        name = "",
+                        uid = accountService.currentUserId,
+                        courses = ArrayList<String>()
+                    )
+                    storageService.storeUserData(anonymousUser)
 
                     Log.v("AnonymousAuth", "User signed in anonymously")
                 } catch (ex: FirebaseAuthException){
