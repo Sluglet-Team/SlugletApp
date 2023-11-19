@@ -30,5 +30,5 @@ class MapViewModel @Inject constructor(
         )
     )
     val cameraState: State<CameraPositionState> = _cameraState
-    val courseToDisplay = mapService.CourseToDisplay
+    val courseToDisplay = mapService.courseToDisplay
 }

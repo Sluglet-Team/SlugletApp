@@ -1,5 +1,6 @@
 package com.sluglet.slugletapp.common.composables
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,11 +31,6 @@ import com.sluglet.slugletapp.common.ext.basicRow
 import com.sluglet.slugletapp.common.ext.smallSpacer
 import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
-import com.sluglet.slugletapp.model.User
-import com.sluglet.slugletapp.model.service.AccountService
-import com.sluglet.slugletapp.model.service.StorageService
-import org.osmdroid.util.GeoPoint
-import javax.inject.Inject
 
 /*
 This is where composables for box-like items go
@@ -106,13 +102,13 @@ fun CourseBox(
                 .padding(end = 15.dp),
             Arrangement.SpaceEvenly
         ){
-            // TODO(CAMDEN): add clickables for icons that do the things
             Icon(
                 Icons.Rounded.LocationOn,
                 "map",
                 modifier = Modifier
                     .clickable {
                        if (onMapClick != null) {
+                           Log.v("Course Name", "${coursedata.course_name}")
                            onMapClick(openScreen, coursedata)
                        }
                     },
@@ -200,7 +196,7 @@ fun CourseBoxPreview (
         prof_name = "Richard Julig",
         date_time = "MWF 8:00am - 9:05am",
         location = "Baskin Auditorium 1",
-        coord = null
+        coordinate = null
     )
     CourseBox(coursedata = test, modifier = Modifier, onAddClick = null, onMapClick = null)
 }

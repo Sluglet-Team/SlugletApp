@@ -5,5 +5,5 @@ import com.sluglet.slugletapp.model.service.MapService
 import javax.inject.Inject
 
 class MapServiceImpl @Inject constructor(): MapService {
-    override val CourseToDisplay: CourseData = CourseData()
+    override val courseToDisplay: CourseData? = null
 }

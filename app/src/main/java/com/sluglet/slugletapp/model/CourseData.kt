@@ -2,7 +2,6 @@ package com.sluglet.slugletapp.model
 
 import com.google.firebase.firestore.DocumentId
 import org.osmdroid.util.GeoPoint
-
 /*
 This is a data class which is kind of like a struct in C
 It will likely be used to store data retrieved from the database

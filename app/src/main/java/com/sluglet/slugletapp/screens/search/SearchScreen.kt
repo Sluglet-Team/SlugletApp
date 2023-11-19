@@ -11,11 +11,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.common.composables.SearchBox
 import com.sluglet.slugletapp.model.CourseData
-import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
 
 /*
@@ -95,7 +93,7 @@ fun SearchPreview (
         location = "Basking Auditorium 1",
         date_time = "MWF 8:00am-9:00am",
         prof_name = "Julig",
-        coord = null
+        coordinate = null
     )
     for (i in 1..10) {
         testList.add(testCourse)
