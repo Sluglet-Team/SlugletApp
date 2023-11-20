@@ -1,7 +1,9 @@
 package com.sluglet.slugletapp
 
 import android.content.res.Resources
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -110,6 +112,7 @@ fun resources(): Resources {
     return LocalContext.current.resources
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     composable(SEARCH_SCREEN) {
         SearchScreen(openScreen = { route -> appState.navigate(route) })
