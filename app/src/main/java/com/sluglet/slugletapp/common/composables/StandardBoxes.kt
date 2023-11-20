@@ -108,7 +108,6 @@ fun CourseBox(
                 modifier = Modifier
                     .clickable {
                        if (onMapClick != null) {
-                           Log.v("Course Name", "${coursedata.course_name}")
                            onMapClick(openScreen, coursedata)
                        }
                     },
@@ -195,8 +194,7 @@ fun CourseBoxPreview (
         course_name = "Introduction to Software Engineering",
         prof_name = "Richard Julig",
         date_time = "MWF 8:00am - 9:05am",
-        location = "Baskin Auditorium 1",
-        coordinate = null
+        location = "Baskin Auditorium 1"
     )
     CourseBox(coursedata = test, modifier = Modifier, onAddClick = null, onMapClick = null)
 }

@@ -1,5 +1,6 @@
 package com.sluglet.slugletapp.screens.search
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import com.sluglet.slugletapp.model.CourseData
@@ -16,7 +17,7 @@ import com.sluglet.slugletapp.model.service.MapService
 class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     logService: LogService,
-    mapService: MapService,
+    private val mapService: MapService,
     private val storageService: StorageService,
     private val accountService: AccountService
 ) : SlugletViewModel(logService) {
@@ -25,7 +26,7 @@ class SearchViewModel @Inject constructor(
     // What the user inputs into search bar
     var userSearch by mutableStateOf("")
 
-    var courseToDisplay = mapService.courseToDisplay
+    var courseToDisplay = mapService.course
 
     // Updates the UI to reflect user input into search bar
     fun updateSearch (searched: String) {
@@ -42,7 +43,7 @@ class SearchViewModel @Inject constructor(
 
     }
     fun onMapClick(openScreen: (String) -> Unit, data: CourseData) {
-        courseToDisplay = data
+        courseToDisplay.value = data
         openScreen(MAP_SCREEN)
     }
 

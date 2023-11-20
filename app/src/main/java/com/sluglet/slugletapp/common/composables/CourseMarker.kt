@@ -15,7 +15,9 @@ import androidx.compose.ui.unit.sp
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.OSMaps.Marker
 import com.sluglet.slugletapp.OSMaps.MarkerState
+import com.sluglet.slugletapp.OSMaps.rememberMarkerState
 import com.sluglet.slugletapp.common.ext.smallSpacer
+import org.osmdroid.util.GeoPoint
 
 // Composable for a map marker
 @Composable
@@ -23,8 +25,13 @@ fun CourseMarker (
     course: CourseData,
     markerIcon: Drawable? = null
 ) {
+    val geoPoint = GeoPoint(course.latitude, course.longitude)
+    val markerState = rememberMarkerState(
+        geoPoint = geoPoint,
+        rotation = 90f
+    )
     Marker(
-        state = MarkerState(geoPoint = course.coordinate!!, rotation = 90f),
+        state = markerState,
         title = "Title", // add title
         snippet = "Snippet", // add snippet
         icon = markerIcon

@@ -17,5 +17,6 @@ data class CourseData(
     var prof_name: String = "",
     var date_time: String = "",
     var location: String = "",
-    val coord: GeoPoint? = null
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0
 )
