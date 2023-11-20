@@ -89,6 +89,7 @@ fun ScheduleScreen (
     testList.add(testCourse2)
     testList.add(testCourseTTh)
 
+
     val januaryFifth = LocalDate(2024, Month.JANUARY, 5)
     val juneLast = LocalDate(2024, Month.JUNE, 15)
 
