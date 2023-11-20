@@ -45,6 +45,7 @@ import com.himanshoe.kalendar.*
 import kotlinx.datetime.DateTimeUnit
 
 
+
 // Use https://github.com/hi-manshu/Kalendar for documentation on using the library
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -168,6 +169,24 @@ fun getDayOfWeekFromString(day: String): DayOfWeek {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun dayOfWeekParam(day: LocalDate?): String {
+    if (day != null) {
+        return when (day.dayOfWeek) {
+            DayOfWeek.MONDAY -> "M"
+            DayOfWeek.TUESDAY -> "Tu"
+            DayOfWeek.WEDNESDAY -> "W"
+            DayOfWeek.THURSDAY -> "Th"
+            DayOfWeek.FRIDAY -> "F"
+            else -> ""
+        }
+    }
+    else {
+        return ""
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleScreenContent(
     modifier: Modifier = Modifier,
@@ -179,13 +198,14 @@ fun ScheduleScreenContent(
    // kalendarColors: KalendarColors
 ) {
     val selectedEvents = remember { mutableStateOf<List<KalendarEvent>>(emptyList()) }
-    Column(modifier = Modifier
+    Column(
+        modifier = Modifier
     ) {
         Kalendar(
             currentDay = currentDate,
             kalendarType = KalendarType.Firey,
             events = events,
-           // kalendarColors = kalendarColors,
+            // kalendarColors = kalendarColors,
             modifier = Modifier
                 .padding(5.dp)
                 .clip(shape = RoundedCornerShape(10.dp)),
@@ -196,13 +216,12 @@ fun ScheduleScreenContent(
 
         }
 
-        selectedDate.value?.let { selectedDay ->
-            DisplayCourses(courses = testList, day= selectedDay.toString())
-        }
+        DisplayCourses(courses = testList, day = dayOfWeekParam(selectedDate.value) )
 
     }
-
 }
+
+
 /*
 DisplayCourses takes in a List of user's classes in the CourseData class,
 as the parameter courseList, as well as the day of the selected date on the
@@ -219,8 +238,6 @@ These values are in accordance to the symbols for days on the firebase csv,
 so if these symbols for the days were to be changed, then the argument
 standards for this function should also be changed.
 
-TODO: find Kalendar state to be able to pass day of the week to eliminate hard coding (ask tanuj)
-// ok i feel this one is like impossible istg ive been working on this nonstop and i still cant figure it out
 TODO: implement user's course List as argument to eliminate hard coding of user's classes (ask max p)
 */
 @Composable fun DisplayCourses (
@@ -242,7 +259,6 @@ TODO: implement user's course List as argument to eliminate hard coding of user'
     }
 }
 
-//val SelectedDate = {selectedDay: LocalDate -> selectedDay.dayOfWeek}
 
 @Preview(showBackground = true)
 @Composable fun ScheduleScreenPreview(
