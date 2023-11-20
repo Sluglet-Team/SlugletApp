@@ -1,5 +1,6 @@
 package com.sluglet.slugletapp.screens.home
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,7 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -43,6 +52,8 @@ fun HomeScreen(
     )
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
@@ -50,7 +61,44 @@ fun HomeScreenContent(
 ) {
     var error by remember { mutableStateOf<String?>(null) }
 
-    Column(
+    Scaffold (
+        containerColor = Color.Transparent
+    ) {
+        Column (
+            modifier = modifier.fillMaxSize()
+        ) {
+            TopAppBar(
+                title = { /*TODO*/ },
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Filled.Settings, null)
+                    }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Transparent)
+            )
+            error?.let { errorMessage ->
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
+            LazyColumn(
+                state = rememberLazyListState(),
+                verticalArrangement = Arrangement.spacedBy(15.dp)
+            ) {
+                items(courses.value) {courseItem ->
+                    CourseBox(coursedata = courseItem, onAddClick = null)
+                }
+            }
+
+        }
+
+
+    }
+
+    /*Column(
         modifier = modifier.fillMaxSize()
     ) {
         error?.let { errorMessage ->
@@ -70,5 +118,5 @@ fun HomeScreenContent(
             }
         }
 
-    }
+    }*/
 }
