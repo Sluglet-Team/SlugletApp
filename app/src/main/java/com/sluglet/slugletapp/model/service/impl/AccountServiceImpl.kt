@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import android.util.Log
+import com.google.firebase.auth.AuthCredential
 import com.sluglet.slugletapp.model.CourseData
 
 class AccountServiceImpl @Inject constructor(
@@ -133,6 +134,27 @@ class AccountServiceImpl @Inject constructor(
         // Sign the user back in anonymously.
         createAnonymousAccount()
     }
+
+    override suspend fun linkAccounts(
+        credential: AuthCredential,
+        onComplete: (Boolean, FirebaseUser?) -> Unit
+    ) {
+        if(auth.currentUser != null && auth.currentUser!!.isAnonymous){
+            auth.currentUser!!.linkWithCredential(credential)
+                .addOnCompleteListener { task ->
+                    if(task.isSuccessful) {
+                        val linkedUser = task.result?.user
+                        onComplete(true, linkedUser)
+                    } else {
+                        // Linking failed
+                        onComplete(false, null)
+                    }
+                }
+        } else {
+            onComplete(false, null)
+        }
+    }
+
     companion object {
         private const val USER_COLLECTION = "users"
     }
