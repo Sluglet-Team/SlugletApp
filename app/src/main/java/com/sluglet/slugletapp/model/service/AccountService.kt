@@ -22,7 +22,7 @@ interface AccountService {
     suspend fun addCourse(course: CourseData)
     suspend fun deleteAccount()
     suspend fun signOut()
-    suspend fun linkAccounts(credential: AuthCredential, onComplete: (Boolean, FirebaseUser?) -> Unit)
+    suspend fun linkAccounts(email: String, password: String): Boolean
 
 
 }

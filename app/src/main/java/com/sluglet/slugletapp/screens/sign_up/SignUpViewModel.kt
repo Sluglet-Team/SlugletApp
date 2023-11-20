@@ -69,6 +69,9 @@ class SignUpViewModel @Inject constructor(
         and the second line will not be reached at all.
          */
         launchCatching {
+            if(accountService.linkAccounts(email, password)) {
+                Log.v("onSignUpClick", "Anonymous account linked")
+            }
             accountService.createAccount(_uiState.value.email, _uiState.value.password)
             Log.v("onSignUpClick", "register button pressed")
             //TODO Navigate Away from Login Page

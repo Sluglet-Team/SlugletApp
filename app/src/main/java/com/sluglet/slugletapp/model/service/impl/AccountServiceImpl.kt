@@ -136,22 +136,27 @@ class AccountServiceImpl @Inject constructor(
     }
 
     override suspend fun linkAccounts(
-        credential: AuthCredential,
-        onComplete: (Boolean, FirebaseUser?) -> Unit
-    ) {
-        if(auth.currentUser != null && auth.currentUser!!.isAnonymous){
-            auth.currentUser!!.linkWithCredential(credential)
-                .addOnCompleteListener { task ->
-                    if(task.isSuccessful) {
-                        val linkedUser = task.result?.user
-                        onComplete(true, linkedUser)
-                    } else {
-                        // Linking failed
-                        onComplete(false, null)
-                    }
+        email: String,
+        password: String,
+    ): Boolean {
+        val credential = EmailAuthProvider.getCredential(email, password)
+        auth.currentUser!!.linkWithCredential(credential)
+        return if (auth.currentUser != null && auth.currentUser!!.isAnonymous) {
+            try {
+                val result = auth.currentUser!!.linkWithCredential(credential).isSuccessful
+                if(result) {
+                    Log.v("linkAccount", "linkWithCredential:success")
+                    true
+                } else {
+                    Log.v("linkAccount", "linkwithCredential:failure")
+                    false
                 }
+            } catch (e: Exception){
+                false
+            }
         } else {
-            onComplete(false, null)
+            Log.v("linkAccount", "No currently signed in user")
+            false
         }
     }
 
