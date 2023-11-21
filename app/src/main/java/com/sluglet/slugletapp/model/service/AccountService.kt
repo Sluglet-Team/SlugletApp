@@ -22,7 +22,7 @@ interface AccountService {
     suspend fun addCourse(course: CourseData)
     suspend fun deleteAccount()
     suspend fun signOut()
-    suspend fun linkAccounts(email: String, password: String): Boolean
+    suspend fun linkAccounts(email: String, password: String)
 
 
 }

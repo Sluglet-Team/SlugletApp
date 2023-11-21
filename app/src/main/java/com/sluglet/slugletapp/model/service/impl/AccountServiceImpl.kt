@@ -135,29 +135,18 @@ class AccountServiceImpl @Inject constructor(
         createAnonymousAccount()
     }
 
+    /**
+     * Links the current account to the provided matching parameters
+     *
+     * @param email The email associated with the account to be linked to
+     * @param password The password associated with the account to be linked to
+     */
     override suspend fun linkAccounts(
         email: String,
         password: String,
-    ): Boolean {
+    ) {
         val credential = EmailAuthProvider.getCredential(email, password)
-        auth.currentUser!!.linkWithCredential(credential)
-        return if (auth.currentUser != null && auth.currentUser!!.isAnonymous) {
-            try {
-                val result = auth.currentUser!!.linkWithCredential(credential).isSuccessful
-                if(result) {
-                    Log.v("linkAccount", "linkWithCredential:success")
-                    true
-                } else {
-                    Log.v("linkAccount", "linkwithCredential:failure")
-                    false
-                }
-            } catch (e: Exception){
-                false
-            }
-        } else {
-            Log.v("linkAccount", "No currently signed in user")
-            false
-        }
+        auth.currentUser!!.linkWithCredential(credential).await()
     }
 
     companion object {
