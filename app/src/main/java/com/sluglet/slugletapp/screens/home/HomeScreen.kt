@@ -98,25 +98,4 @@ fun HomeScreenContent(
 
     }
 
-    /*Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        error?.let { errorMessage ->
-            Text(
-                text = errorMessage,
-                color = Color.Red,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-
-        LazyColumn(
-            state = rememberLazyListState(),
-            verticalArrangement = Arrangement.spacedBy(15.dp)
-        ) {
-            items(courses.value) { courseItem ->
-                CourseBox(coursedata = courseItem, onAddClick = null)
-            }
-        }
-
-    }*/
 }
