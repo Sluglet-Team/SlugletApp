@@ -5,6 +5,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
     id("com.google.firebase.crashlytics")
+    id("kotlin-parcelize")
 }
 
 android {

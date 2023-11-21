@@ -8,6 +8,8 @@ import com.sluglet.slugletapp.model.User
 interface StorageService {
     // list of courses
     val courses: Flow<List<CourseData>>
+    // list of user specific courses
+    val userCourses: Flow<List<CourseData>>
 
     // get specific course
     suspend fun getCourse(courseID: String): CourseData?

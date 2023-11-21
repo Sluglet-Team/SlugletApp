@@ -1,8 +1,7 @@
-package com.sluglet.slugletapp.screens.map
+package com.sluglet.slugletapp.OSMaps
 
 import androidx.compose.runtime.AbstractApplier
 import org.osmdroid.views.MapView as OSMapView
-/*
 internal interface MapNode {
     fun onAttached() {}
     fun onRemoved() {}
@@ -11,7 +10,7 @@ internal interface MapNode {
 private object MapNodeRoot : MapNode
 
 internal class MapApplier(
-    private val mapView: OSMapView,
+    val mapView: OSMapView,
 ) : AbstractApplier<MapNode>(MapNodeRoot) {
 
     private val decorations = mutableListOf<MapNode>()
@@ -43,8 +42,10 @@ internal class MapApplier(
         }
         decorations.remove(index, count)
     }
-}
 
+    internal fun invalidate() = mapView.postInvalidate()
+}
+/*
 
     private fun attachClickListeners() {
         map.addCircleClickListener {
