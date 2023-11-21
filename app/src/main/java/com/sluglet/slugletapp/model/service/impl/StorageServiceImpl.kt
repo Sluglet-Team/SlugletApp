@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import android.util.Log
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
@@ -32,18 +33,31 @@ class StorageServiceImpl @Inject constructor(
         get() =
             // Grab the current user
             auth.currentUser.flatMapLatest {user ->
-                // Get this users doc
-                val userRef = firestore.collection(USER_COLLECTION).document(user.uid).get().await()
-                // Get their courses, cast to any Array type
-                val courses = userRef.get(USER_COURSES) as ArrayList<*>
-                // If no courses, return an empty list, can't call firestore with empty list
-                if (courses.isEmpty()) {
+                var userRef: DocumentSnapshot? = null
+                try {
+                    userRef = firestore.collection(USER_COLLECTION).document(user.uid).get().await()
+                } catch (e: Exception) {
+                    // Error thrown by firestore, likely quota exceeded
+                    Log.e("Error: override val userCourses", "$e")
+                }
+                // If firestore call succeeded, this should not be null
+                if (userRef != null) {
+                    // Get their courses, cast to any Array type
+                    val courses = userRef.get(USER_COURSES) as ArrayList<*>
+                    // If no courses, return an empty list, can't call firestore with empty list
+                    if (courses.isEmpty()) {
+                        emptyFlow()
+                    }
+                    // Else return the list of courses as a list of CourseData objects --> .dataObjects()
+                    else {
+                        firestore.collection(COURSE_COLLECTION).whereIn(FieldPath.documentId(), courses).dataObjects()
+                    }
+                }
+                // Return an empty flow, worst case scenario
+                else {
                     emptyFlow()
                 }
-                // Else return the list of courses as a list of CourseData objects --> .dataObjects()
-                else {
-                    firestore.collection(COURSE_COLLECTION).whereIn(FieldPath.documentId(), courses).dataObjects()
-                }
+
             }
 
     override suspend fun getCourse(courseID: String): CourseData? =
