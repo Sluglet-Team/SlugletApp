@@ -103,22 +103,22 @@ fun SettingPreview (
 ) {
     val testList = mutableListOf<CourseData>()
     val testCourse = CourseData (
-        courseNum = "CSE 115A",
-        courseName = "Intro to Software Engineering",
+        course_number = "CSE 115A",
+        course_name = "Intro to Software Engineering",
         location = "Basking Auditorium 1",
-        dateTime = "MWF 8:00am-9:00am",
-        profName = "Julig"
+        date_time = "MWF 8:00am-9:00am",
+        prof_name = "Julig"
     )
     for (i in 1..10) {
         testList.add(testCourse)
     }
     CourseBox(coursedata = testCourse, onAddClick = null)
-    SlugletAppTheme {
-        SettingsScreenContent(
-            courses = testList,
-            userSearch = ""
-        )
-    }
+    //SlugletAppTheme {
+    //    SettingsScreenContent(
+    //        courses = testList,
+    //        userSearch = ""
+    //    )
+    //}
 }
 @Composable
 fun SwitchWithIconExample() {
@@ -171,7 +171,7 @@ fun ThemeSwitchSetting(
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
-            text = stringResource(id = R.string.theme_switch_label),
+            text = "Switch Theme",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
