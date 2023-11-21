@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import android.util.Log
+import com.google.firebase.auth.AuthCredential
 import com.sluglet.slugletapp.model.CourseData
 
 class AccountServiceImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore) : AccountService {
-
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
 
@@ -134,6 +134,21 @@ class AccountServiceImpl @Inject constructor(
         // Sign the user back in anonymously.
         createAnonymousAccount()
     }
+
+    /**
+     * Links the current account to the provided matching parameters
+     *
+     * @param email The email associated with the account to be linked to
+     * @param password The password associated with the account to be linked to
+     */
+    override suspend fun linkAccounts(
+        email: String,
+        password: String,
+    ) {
+        val credential = EmailAuthProvider.getCredential(email, password)
+        auth.currentUser!!.linkWithCredential(credential).await()
+    }
+
     companion object {
         private const val USER_COLLECTION = "users"
     }
