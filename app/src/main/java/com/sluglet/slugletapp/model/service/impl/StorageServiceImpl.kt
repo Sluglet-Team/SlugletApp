@@ -12,13 +12,42 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import android.util.Log
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import com.google.firebase.firestore.FieldPath
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 
 class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
+    private val auth: AccountService
 ) : StorageService {
+    // Get all courses
     override val courses: Flow<List<CourseData>>
         get() =
             firestore.collection(COURSE_COLLECTION).dataObjects()
+
+    // Get user specific courses as a Flow List
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val userCourses: Flow<List<CourseData>>
+        get() =
+            // Grab the current user
+            auth.currentUser.flatMapLatest {user ->
+                // Get this users doc
+                val userRef = firestore.collection(USER_COLLECTION).document(user.uid).get().await()
+                // Get their courses, cast to any Array type
+                val courses = userRef.get(USER_COURSES) as ArrayList<*>
+                // If no courses, return an empty list, can't call firestore with empty list
+                if (courses.isEmpty()) {
+                    emptyFlow()
+                }
+                // Else return the list of courses as a list of CourseData objects --> .dataObjects()
+                else {
+                    firestore.collection(COURSE_COLLECTION).whereIn(FieldPath.documentId(), courses).dataObjects()
+                }
+            }
+
     override suspend fun getCourse(courseID: String): CourseData? =
         firestore.collection(COURSE_COLLECTION).document(courseID).get().await().toObject()
     override suspend fun storeUserData(user: User)
@@ -40,12 +69,11 @@ class StorageServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun retrieveUserData(id: String): User?
-        {
+    override suspend fun retrieveUserData(id: String): User? = suspendCoroutine { continuation ->
             Log.v("retrieveUserData", "Accessing Firestore User $id")
             //TODO: Make this function draw from local values if available
             val userRef = firestore.collection(USER_COLLECTION).document(id)
-            var user : User? = null
+
             userRef.get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -59,20 +87,21 @@ class StorageServiceImpl @Inject constructor(
                             Log.v("retrieveUserData", "Course $i: $course")
                             i += 1
                         }
-                        user = User(
+                        val user = User(
                             email = (doc.data)!!["email"].toString(),
                             name = (doc.data)!!["name"].toString(),
                             uid = (doc.data)!!["uid"].toString(),
                             courses = courses
                         )
+                        continuation.resume(user)
                     }
                     else
                     {
                         Log.v("retrieveUserData", "retrieveUserData failure")
                         Log.v("retrieveUserData", "id: $id")
+                        continuation.resume(null)
                     }
                 }
-            return user
         }
 
     /**
@@ -110,6 +139,8 @@ class StorageServiceImpl @Inject constructor(
 
     companion object {
         private const val USER_COLLECTION = "users"
-        private const val COURSE_COLLECTION = "courses"
+        private const val COURSE_COLLECTION = "courses2023"
+        private const val USER_COURSES = "courses"
+        private const val TEST_COURSE_COLLECTION3 = "courses3"
     }
 }

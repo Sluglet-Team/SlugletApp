@@ -295,5 +295,47 @@ TODO: implement user's course List as argument to eliminate hard coding of user'
         )
     )
 
-    //ScheduleScreenContent(currentDate = currentDate, events = events)
+    // ScheduleScreenContent(currentDate = currentDate, events = events)
 }
+
+
+/*
+DisplayCourses takes in a List of user's classes in the CourseData class,
+as the parameter courseList, as well as the day of the selected date on the
+calendar, as the parameter day, and iterates through user's classes, parsing
+through each course's dateTime value to find if the class is on that day. The
+values that should be passed to day should be:
+""   - For an unselected date, as this will show all courses the user has
+"M"  - To show classes that have times on Monday
+"Tu" - To show classes that have times on Tuesday
+"W"  - To show classes that have times on Wednesday
+"Th" - To show classes that have times on Thursday
+"F"  - To show classes that have times on Friday
+These values are in accordance to the symbols for days on the firebase csv,
+so if these symbols for the days were to be changed, then the argument
+standards for this function should also be changed.
+
+TODO: find Kalendar state to be able to pass day of the week to eliminate hard coding (ask tanuj)
+// ok i feel this one is like impossible istg ive been working on this nonstop and i still cant figure it out
+TODO: implement user's course List as argument to eliminate hard coding of user's classes (ask max p)
+*/
+@Composable fun DisplayCourses (
+    courses: List<CourseData>,
+    day: String = ""
+) {
+    LazyColumn (
+        state = rememberLazyListState(),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        items(
+            items = courses.filter {
+                it.date_time.contains(day, ignoreCase = false)
+            }
+        ) {courseItem ->
+            CourseBox(coursedata = courseItem, onAddClick = null, onMapClick = null)
+        }
+
+    }
+}
+
+//val SelectedDate = {selectedDay: LocalDate -> selectedDay.dayOfWeek}
