@@ -107,5 +107,6 @@ class HomeViewModel @Inject constructor(
     }
     fun onSettingsClick(openScreen: (String) -> Unit) {
         openScreen(SETTINGS_SCREEN)
+    }
 
 }

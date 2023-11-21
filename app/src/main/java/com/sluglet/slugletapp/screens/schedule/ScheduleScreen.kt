@@ -61,27 +61,27 @@ fun ScheduleScreen (
     //val currentDate: LocalDate = currentLocalDateTime.date
 
     val testCourse = CourseData (
-        courseNum = "CSE 115A",
-        courseName = "Intro to Software Engineering",
+        course_number = "CSE 115A",
+        course_name = "Intro to Software Engineering",
         location = "Basking Auditorium 1",
-        dateTime = "MWF 8:00am-9:00am",
-        profName = "Julig"
+        date_time = "MWF 8:00am-9:00am",
+        prof_name = "Julig"
     )
 
     val testCourse2 = CourseData(
-        courseNum = "JPN 103",
-        courseName = "Advanced Japanese",
+        course_number = "JPN 103",
+        course_name = "Advanced Japanese",
         location = "Oakes Academy 222",
-        dateTime = "MWF 4:00pm-5:05pm",
-        profName = "Hoshi"
+        date_time = "MWF 4:00pm-5:05pm",
+        prof_name = "Hoshi"
     )
 
     val testCourseTTh = CourseData(
-        courseNum = "LING 100",
-        courseName = "Phonetic World Langs",
+        course_number = "LING 100",
+        course_name = "Phonetic World Langs",
         location = "Soc Sci 075",
-        dateTime = "TuTh 11:40am-1:15pm",
-        profName = "Rysling"
+        date_time = "TuTh 11:40am-1:15pm",
+        prof_name = "Rysling"
     )
 
     var testList = mutableListOf<CourseData>()
@@ -97,9 +97,9 @@ fun ScheduleScreen (
     // Assuming testList is a List<CourseData> containing course information
 
     val events = KalendarEvents(testList.flatMap { course ->
-        val daysOfWeek = course.dateTime.split(" ")[0] // Take only the first part of the string
-        val courseName = course.courseName
-        val courseDetails = "${course.courseNum} - ${course.location}"
+        val daysOfWeek = course.date_time.split(" ")[0] // Take only the first part of the string
+        val courseName = course.course_name
+        val courseDetails = "${course.course_number} - ${course.location}"
 
         // Split the days by looking for capital letters
         val days = daysOfWeek.split(Regex("(?=[A-Z])")).filter { it.isNotBlank() }
@@ -239,24 +239,6 @@ standards for this function should also be changed.
 
 TODO: implement user's course List as argument to eliminate hard coding of user's classes (ask max p)
 */
-@Composable fun DisplayCourses (
-    courses: List<CourseData>,
-    day: String = ""
-) {
-    LazyColumn (
-        state = rememberLazyListState(),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        items(
-            items = courses.filter {
-                it.date_time.contains(day, ignoreCase = false)
-            }
-        ) {courseItem ->
-            CourseBox(coursedata = courseItem, onAddClick = null)
-        }
-
-    }
-}
 
 
 @Preview(showBackground = true)
