@@ -5,9 +5,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+
+//TODO: Migrate functionality using these to AccountService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+
+import com.sluglet.slugletapp.SETTINGS_SCREEN
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
@@ -89,8 +93,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-     fun isUserAnonymous(): Boolean {
+    fun isUserAnonymous(): Boolean {
         val auth = FirebaseAuth.getInstance()
         val currUser = auth.currentUser
         if(currUser?.isAnonymous == true){
@@ -102,4 +105,7 @@ class HomeViewModel @Inject constructor(
     private suspend fun createAnonymousAccount() {
         accountService.createAnonymousAccount()
     }
+    fun onSettingsClick(openScreen: (String) -> Unit) {
+        openScreen(SETTINGS_SCREEN)
+
 }

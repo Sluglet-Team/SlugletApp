@@ -1,6 +1,7 @@
 package com.sluglet.slugletapp.model
 
 import com.google.firebase.firestore.DocumentId
+import org.osmdroid.util.GeoPoint
 
 /*
 This is a data class which is kind of like a struct in C
@@ -16,5 +17,6 @@ data class CourseData(
     var course_name: String = "",
     var prof_name: String = "",
     var date_time: String = "",
-    var location: String = ""
+    var location: String = "",
+    var coord: GeoPoint? = null
 )
