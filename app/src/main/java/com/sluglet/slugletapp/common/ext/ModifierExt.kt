@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -26,4 +27,7 @@ fun Modifier.basicRow(): Modifier {
 }
 fun Modifier.smallSpacer(): Modifier {
     return this.padding(10.dp)
+}
+fun Modifier.roundedCorner(): Modifier {
+    return this.clip(RoundedCornerShape(10.dp))
 }
