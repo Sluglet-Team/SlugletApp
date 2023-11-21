@@ -1,6 +1,7 @@
 package com.sluglet.slugletapp.model
 
 import com.google.firebase.firestore.DocumentId
+import org.osmdroid.util.GeoPoint
 
 /*
 This is a data class which is kind of like a struct in C
@@ -12,9 +13,10 @@ Eventually, these will be stored in a Lazy Column that will represent
 data class CourseData(
     // gets the id of a specific course in the database
     @DocumentId val id: String = "",
-    var courseNum: String = "",
-    var courseName: String = "",
-    var profName: String = "",
-    var dateTime: String = "",
-    var location: String = ""
+    var course_number: String = "",
+    var course_name: String = "",
+    var prof_name: String = "",
+    var date_time: String = "",
+    var location: String = "",
+    var coord: GeoPoint? = null
 )

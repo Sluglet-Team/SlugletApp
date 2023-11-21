@@ -216,9 +216,7 @@ fun ScheduleScreenContent(
         ) {
 
         }
-
         DisplayCourses(courses = testList, day = dayOfWeekParam(selectedDate.value) )
-
     }
 }
 
@@ -251,10 +249,10 @@ TODO: implement user's course List as argument to eliminate hard coding of user'
     ) {
         items(
             items = courses.filter {
-                it.dateTime.contains(day, ignoreCase = false)
+                it.date_time.contains(day, ignoreCase = false)
             }
         ) {courseItem ->
-            CourseBox(coursedata = courseItem)
+            CourseBox(coursedata = courseItem, onAddClick = null)
         }
 
     }
