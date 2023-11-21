@@ -15,6 +15,7 @@ import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.MapService
 import com.sluglet.slugletapp.model.service.StorageService
 import com.sluglet.slugletapp.screens.SlugletViewModel
+import com.sluglet.slugletapp.screens.sign_up.SignUpUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

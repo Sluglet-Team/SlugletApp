@@ -34,13 +34,14 @@ fun SearchTextField (
     userSearch: String
 ) {
     // Define any TextFieldColors that you don't want to be default here
-    val colors = TextFieldDefaults.textFieldColors(
-        containerColor = Color.White,
-        unfocusedIndicatorColor = Color.White,
+    val colors = TextFieldDefaults.colors(
+        focusedContainerColor = Color.White,
+        unfocusedContainerColor = Color.White,
+        disabledContainerColor = Color.White,
         focusedIndicatorColor = Color.White,
+        unfocusedIndicatorColor = Color.White,
         unfocusedLeadingIconColor = Color.Black,
         unfocusedTrailingIconColor = Color.Black,
-        textColor = Color.Black
     )
     // Keeps track of Keyboard focus
     val focusManager = LocalFocusManager.current
@@ -50,6 +51,7 @@ fun SearchTextField (
         label = { Text(text = "Search") },
         modifier = Modifier.basicRow(),
         colors = colors,
+
         leadingIcon = {
             Icon(
                 Icons.Rounded.Search,

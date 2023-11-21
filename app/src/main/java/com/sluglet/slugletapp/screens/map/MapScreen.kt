@@ -1,7 +1,9 @@
 package com.sluglet.slugletapp.screens.map
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
@@ -16,8 +18,10 @@ import com.sluglet.slugletapp.OSMaps.OSMaps
 import com.sluglet.slugletapp.R
 import com.sluglet.slugletapp.common.composables.CourseMarker
 import com.sluglet.slugletapp.resources
-
-
+/*
+A composable that renders the Search Screen
+Uses a CourseBox composable along with a SearchTextField
+ */
 @Composable
 fun MapScreen (
     openScreen: (String) -> Unit,
