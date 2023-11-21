@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import dagger.hilt.android.lifecycle.HiltViewModel
 
+
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
