@@ -3,6 +3,7 @@ package com.sluglet.slugletapp.screens.home
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.sluglet.slugletapp.SETTINGS_SCREEN
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
@@ -59,4 +60,8 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+    fun onSettingsClick(openScreen: (String) -> Unit) {
+        openScreen(SETTINGS_SCREEN)
+    }
+
 }

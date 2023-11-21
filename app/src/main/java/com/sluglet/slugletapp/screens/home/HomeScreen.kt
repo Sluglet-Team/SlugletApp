@@ -2,7 +2,9 @@ package com.sluglet.slugletapp.screens.home
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,16 +29,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sluglet.slugletapp.SETTINGS_SCREEN
 import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.screens.search.SearchScreenContent
+import com.sluglet.slugletapp.screens.settings.SettingsScreen
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 /**
  * Composable that renders Home screen
@@ -46,20 +57,26 @@ fun HomeScreen(
     openScreen: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+
     val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
     HomeScreenContent(
         courses = courses,
+        onSettingsClick = viewModel::onSettingsClick,
+        openScreen = openScreen
     )
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
     courses: State<List<CourseData>>,
+    onSettingsClick: (((String) -> Unit) -> Unit)?,
+    openScreen: (String) -> Unit = {}
 ) {
     var error by remember { mutableStateOf<String?>(null) }
+
 
     Scaffold (
         containerColor = Color.Transparent
@@ -68,11 +85,13 @@ fun HomeScreenContent(
             modifier = modifier.fillMaxSize()
         ) {
             TopAppBar(
-                title = { /*TODO*/ },
+                title = { /*avoiding the build yelling at me*/ },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Filled.Settings, null)
-                    }
+                    SettingsGear(
+                        modifier = Modifier,
+                        onSettingsClick = onSettingsClick,
+                        openScreen = openScreen
+                    )
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Transparent)
             )
@@ -94,8 +113,24 @@ fun HomeScreenContent(
             }
 
         }
-
-
     }
 
+}
+
+@Composable
+fun SettingsGear (
+    modifier: Modifier = Modifier,
+    onSettingsClick: (((String) -> Unit) -> Unit)?,
+    openScreen: (String) -> Unit = {}
+) {
+    Icon(
+        Icons.Filled.Settings,
+        contentDescription = "settings",
+        modifier = Modifier
+            .clickable {
+                if (onSettingsClick != null) {
+                    onSettingsClick(openScreen)
+                }
+            }
+    )
 }

@@ -30,6 +30,7 @@ import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.screens.home.HomeScreen
 import com.sluglet.slugletapp.screens.search.SearchScreen
 import com.sluglet.slugletapp.screens.search.SearchScreenContent
+import com.sluglet.slugletapp.screens.settings.SettingsScreen
 import com.sluglet.slugletapp.screens.sign_up.SignUpScreen
 import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
@@ -133,5 +134,8 @@ fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     }
     composable(SIGNUP_SCREEN) {
         SignUpScreen()
+    }
+    composable(SETTINGS_SCREEN) {
+        SettingsScreen(openScreen = { route -> appState.navigate(route) })
     }
 }
