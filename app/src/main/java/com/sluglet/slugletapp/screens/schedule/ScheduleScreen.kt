@@ -209,7 +209,7 @@ TODO: implement user's course List as argument to eliminate hard coding of user'
                 it.date_time.contains(day, ignoreCase = false)
             }
         ) {courseItem ->
-            CourseBox(coursedata = courseItem, onAddClick = null)
+            CourseBox(coursedata = courseItem, onAddClick = null, onMapClick = null)
         }
 
     }

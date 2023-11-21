@@ -112,7 +112,7 @@ fun SettingPreview (
     for (i in 1..10) {
         testList.add(testCourse)
     }
-    CourseBox(coursedata = testCourse, onAddClick = null)
+    CourseBox(coursedata = testCourse, onAddClick = null, onMapClick = null)
     //SlugletAppTheme {
     //    SettingsScreenContent(
     //        courses = testList,
