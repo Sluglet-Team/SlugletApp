@@ -47,7 +47,7 @@ fun SearchScreenContent (
     onSearchChange: (String) -> Unit,
     userSearch: String,
     onAddClick: ((CourseData) -> Unit)?,
-    onMapClick: (((String) -> Unit, CourseData) -> Unit)?,
+    onMapClick: (((String) -> Unit, CourseData) -> Boolean)?,
     openScreen: (String) -> Unit = {}
 ) {
     // with a LazyColumn underneath with all the courses

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 interface MapService {
+    val NO_ENTRY: Double
     val course: MutableStateFlow<CourseData?>
     val courseToDisplay: StateFlow<CourseData?>
     suspend fun update(course: CourseData)
