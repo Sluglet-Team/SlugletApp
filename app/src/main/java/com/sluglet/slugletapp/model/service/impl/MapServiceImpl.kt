@@ -13,6 +13,8 @@ import javax.inject.Singleton
 // composables, the values need to change for all composables.
 @Singleton
 class MapServiceImpl @Inject constructor(): MapService {
+    // TODO: Maybe should hold state for the map here?
+    //       That way changes to the state hold when the screen is navigated away and back?
     override val course: MutableStateFlow<CourseData?> = MutableStateFlow(null)
     override val courseToDisplay = course.asStateFlow()
     override suspend fun update(course: CourseData) {

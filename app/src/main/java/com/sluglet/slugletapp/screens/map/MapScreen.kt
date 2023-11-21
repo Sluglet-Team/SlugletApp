@@ -28,7 +28,7 @@ fun MapScreen (
     viewModel: MapViewModel = hiltViewModel()
 ) {
     // Gets state from the view model for the camera position
-    val cameraPositionState = viewModel.cameraState.value
+    val cameraPositionState = viewModel.cameraState
     val courseToDisplay = viewModel.courseToDisplay.collectAsStateWithLifecycle(null).value
     val markerList = viewModel.markerList.collectAsStateWithLifecycle(emptyList()).value
 
