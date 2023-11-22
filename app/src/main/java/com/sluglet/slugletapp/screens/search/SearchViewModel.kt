@@ -1,6 +1,7 @@
 package com.sluglet.slugletapp.screens.search
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import com.sluglet.slugletapp.model.CourseData
@@ -42,9 +43,14 @@ class SearchViewModel @Inject constructor(
     fun onDeleteClick() {
 
     }
-    fun onMapClick(openScreen: (String) -> Unit, data: CourseData) {
-        courseToDisplay.value = data
-        openScreen(MAP_SCREEN)
+    fun onMapClick(openScreen: (String) -> Unit, data: CourseData): Boolean {
+        return if (data.latitude == mapService.NO_ENTRY || data.longitude == mapService.NO_ENTRY) {
+            false
+        } else {
+            courseToDisplay.value = data
+            openScreen(MAP_SCREEN)
+            true
+        }
     }
 
 }

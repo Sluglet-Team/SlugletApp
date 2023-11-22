@@ -1,6 +1,7 @@
 package com.sluglet.slugletapp.common.composables
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.sluglet.slugletapp.common.ext.basicRow
@@ -45,10 +47,11 @@ fun CourseBox(
     coursedata: CourseData,
     modifier: Modifier = Modifier,
     onAddClick: ((CourseData) -> Unit)?,
-    onMapClick: (((String) -> Unit, CourseData) -> Unit)?,
+    onMapClick: (((String) -> Unit, CourseData) -> Boolean)?,
     openScreen: (String) -> Unit = {}
 ) {
     var isExpanded by remember {mutableStateOf(false)}
+    val context = LocalContext.current
     // Define a row: Left side will be the course info, right side the loc and add icons
     Row(
         modifier = modifier
@@ -108,7 +111,13 @@ fun CourseBox(
                 modifier = Modifier
                     .clickable {
                        if (onMapClick != null) {
-                           onMapClick(openScreen, coursedata)
+                           if(!onMapClick(openScreen, coursedata)) {
+                               Toast.makeText(
+                                   context,
+                                   "This course does not have a physical location",
+                                   Toast.LENGTH_LONG
+                               ).show()
+                           }
                        }
                     },
                 tint = Color.Black
