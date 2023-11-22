@@ -50,6 +50,8 @@ class StorageServiceImpl @Inject constructor(
                     }
                     // Else return the list of courses as a list of CourseData objects --> .dataObjects()
                     else {
+                        // This only listens to course collection which is why no recomposition occurs
+                        // when changing USER_COLLECTION.  Not ideal but not sure there is a work around.
                         firestore.collection(COURSE_COLLECTION).whereIn(FieldPath.documentId(), courses).dataObjects()
                     }
                 }
