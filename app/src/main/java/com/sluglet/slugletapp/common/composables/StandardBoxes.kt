@@ -1,5 +1,6 @@
 package com.sluglet.slugletapp.common.composables
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,10 +31,6 @@ import com.sluglet.slugletapp.common.ext.basicRow
 import com.sluglet.slugletapp.common.ext.smallSpacer
 import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
-import com.sluglet.slugletapp.model.User
-import com.sluglet.slugletapp.model.service.AccountService
-import com.sluglet.slugletapp.model.service.StorageService
-import javax.inject.Inject
 
 /*
 This is where composables for box-like items go
@@ -47,7 +44,9 @@ etc.
 fun CourseBox(
     coursedata: CourseData,
     modifier: Modifier = Modifier,
-    onAddClick: ((CourseData) -> Unit)?
+    onAddClick: ((CourseData) -> Unit)?,
+    onMapClick: (((String) -> Unit, CourseData) -> Unit)?,
+    openScreen: (String) -> Unit = {}
 ) {
     var isExpanded by remember {mutableStateOf(false)}
     // Define a row: Left side will be the course info, right side the loc and add icons
@@ -103,10 +102,15 @@ fun CourseBox(
                 .padding(end = 15.dp),
             Arrangement.SpaceEvenly
         ){
-            // TODO(CAMDEN): add clickables for icons that do the things
             Icon(
                 Icons.Rounded.LocationOn,
                 "map",
+                modifier = Modifier
+                    .clickable {
+                       if (onMapClick != null) {
+                           onMapClick(openScreen, coursedata)
+                       }
+                    },
                 tint = Color.Black
             )
             Icon(
@@ -192,7 +196,7 @@ fun CourseBoxPreview (
         date_time = "MWF 8:00am - 9:05am",
         location = "Baskin Auditorium 1"
     )
-    CourseBox(coursedata = test, modifier = Modifier, onAddClick = null)
+    CourseBox(coursedata = test, modifier = Modifier, onAddClick = null, onMapClick = null)
 }
 
 @Preview(showBackground = true)
