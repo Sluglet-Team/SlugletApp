@@ -64,7 +64,6 @@ class MapViewModel @Inject constructor(
 
     /* This function is responsible for updating the ViewState based
        on the event coming from the view */
-    @RequiresApi(Build.VERSION_CODES.S)
     fun handle(event: PermissionEvent) {
         when (event) {
             PermissionEvent.Granted -> {

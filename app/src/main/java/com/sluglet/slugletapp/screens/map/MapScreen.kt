@@ -45,6 +45,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.LatLng
+import com.sluglet.slugletapp.OSMaps.Marker
+import com.sluglet.slugletapp.OSMaps.MarkerState
 import com.sluglet.slugletapp.OSMaps.OSMaps
 import com.sluglet.slugletapp.R
 import com.sluglet.slugletapp.common.composables.CourseMarker
@@ -183,10 +185,9 @@ fun MapScreen (
                             )
                         }
                         // User Location
-                        CourseMarker(
-                            latitude = currentLoc.latitude,
-                            longitude = currentLoc.longitude,
-                            markerIcon = ResourcesCompat.getDrawable(
+                        Marker(
+                            state = MarkerState(GeoPoint(currentLoc.latitude, currentLoc.longitude)),
+                            icon = ResourcesCompat.getDrawable(
                                 resources(),
                                 R.drawable.user_loc_map_pin,
                                 null
