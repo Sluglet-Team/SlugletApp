@@ -60,16 +60,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
-    val isAnonymous = viewModel.isUserAnonymous()
-
-    if(isAnonymous) {
-        Toast.makeText(
-            LocalContext.current,
-            "You're not signed in. Register to save your information!",
-            Toast.LENGTH_LONG
-        ).show()
-    }
+    val courses by rememberUpdatedState(newValue = viewModel.courses.collectAsStateWithLifecycle(emptyList()))
 
     HomeScreenContent(
         courses = courses,
@@ -87,8 +78,7 @@ fun HomeScreenContent(
     onSettingsClick: (((String) -> Unit) -> Unit)?,
     openScreen: (String) -> Unit = {}
 ) {
-    var error by remember { mutableStateOf<String?>(null) }
-
+    val error by remember { mutableStateOf<String?>(null) }
 
     Scaffold (
         containerColor = Color.Transparent
@@ -126,7 +116,6 @@ fun HomeScreenContent(
 
         }
     }
-
 }
 
 @Composable

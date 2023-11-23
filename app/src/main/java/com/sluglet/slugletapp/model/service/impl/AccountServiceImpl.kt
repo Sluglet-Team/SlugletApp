@@ -149,6 +149,15 @@ class AccountServiceImpl @Inject constructor(
         auth.currentUser!!.linkWithCredential(credential).await()
     }
 
+    override fun isUserAnonymous(): Boolean {
+        val auth = FirebaseAuth.getInstance()
+        val currUser = auth.currentUser
+        if(currUser?.isAnonymous == true){
+            return true
+        }
+        return false
+    }
+
     companion object {
         private const val USER_COLLECTION = "users"
     }

@@ -23,6 +23,6 @@ interface AccountService {
     suspend fun deleteAccount()
     suspend fun signOut()
     suspend fun linkAccounts(email: String, password: String)
-
+    fun isUserAnonymous(): Boolean
 
 }
