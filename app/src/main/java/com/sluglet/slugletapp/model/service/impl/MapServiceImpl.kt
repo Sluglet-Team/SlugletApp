@@ -46,8 +46,8 @@ class MapServiceImpl @Inject constructor(
             return@callbackFlow
         }
 
-        val request = LocationRequest.Builder(10000L)
-            .setIntervalMillis(10000L)
+        val request = LocationRequest.Builder(LOCATION_REQUEST_INTERVAL)
+            .setIntervalMillis(LOCATION_REQUEST_INTERVAL)
             .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
             .build()
 
@@ -76,5 +76,9 @@ class MapServiceImpl @Inject constructor(
     override suspend fun update(course: CourseData) {
         this.course.value = course
         Log.v("In MapService", "${courseToDisplay.value}")
+    }
+
+    companion object {
+        private const val LOCATION_REQUEST_INTERVAL = 10000L
     }
 }
