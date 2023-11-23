@@ -1,5 +1,7 @@
 package com.sluglet.slugletapp.screens.map
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
@@ -31,6 +33,7 @@ class MapViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     logService: LogService,
     private val mapService: MapService,
+    private val getLocationUseCase: GetLocationUseCase,
     private val storageService: StorageService
 ) : SlugletViewModel(logService) {
     // FIXME(SPRINT 4): Would be ideal to keep the state of the map
@@ -61,11 +64,12 @@ class MapViewModel @Inject constructor(
 
     /* This function is responsible for updating the ViewState based
        on the event coming from the view */
+    @RequiresApi(Build.VERSION_CODES.S)
     fun handle(event: PermissionEvent) {
         when (event) {
             PermissionEvent.Granted -> {
                 viewModelScope.launch {
-                    mapService.requestLocationUpdates().collect() { location ->
+                    getLocationUseCase.invoke().collect() { location ->
                         _viewState.value = ViewState.Success(location)
                     }
                 }

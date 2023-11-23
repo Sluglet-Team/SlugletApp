@@ -13,7 +13,7 @@ interface MapService {
     val course: MutableStateFlow<CourseData?>
     val courseToDisplay: StateFlow<CourseData?>
 
-    suspend fun requestLocationUpdates(): Flow<LatLng?>
+    fun requestLocationUpdates(): Flow<LatLng?>
     suspend fun requestCurrentLocation(): Flow<LatLng?>
     suspend fun update(course: CourseData)
 }

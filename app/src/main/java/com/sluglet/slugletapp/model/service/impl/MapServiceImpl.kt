@@ -39,7 +39,7 @@ class MapServiceImpl @Inject constructor(
 
     @SuppressLint("MissingPermission")
     @RequiresApi(Build.VERSION_CODES.S)
-    override suspend fun requestLocationUpdates(): Flow<LatLng?> = callbackFlow {
+    override fun requestLocationUpdates(): Flow<LatLng?> = callbackFlow {
 
         if (!context.hasLocationPermission()) {
             trySend(null)
