@@ -71,7 +71,7 @@ class MapServiceImpl @Inject constructor(
     }
 
     override suspend fun requestCurrentLocation(): Flow<LatLng?> {
-        TODO()
+        TODO("Not Implemented")
     }
     override suspend fun update(course: CourseData) {
         this.course.value = course

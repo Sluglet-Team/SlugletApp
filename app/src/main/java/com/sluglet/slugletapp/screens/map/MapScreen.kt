@@ -4,6 +4,7 @@ import android.Manifest
 import android.provider.Settings
 import android.content.Intent
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +17,11 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -45,6 +50,7 @@ import com.sluglet.slugletapp.R
 import com.sluglet.slugletapp.common.composables.CourseMarker
 import com.sluglet.slugletapp.resources
 import com.sluglet.slugletapp.common.ext.hasLocationPermission
+import com.sluglet.slugletapp.common.ext.smallSpacer
 import org.osmdroid.util.GeoPoint
 
 
@@ -141,43 +147,70 @@ fun MapScreen (
                         location?.latitude ?: 0.0,
                         location?.longitude ?: 0.0
                     )
-
-                OSMaps (
-                    userLocation = currentLoc,
-                    cameraPositionState = cameraPositionState,
-                    modifier = mapModifier
-                ) {
-                    userCourses.forEach { course->
+                Box {
+                    OSMaps(
+                        userLocation = currentLoc,
+                        cameraPositionState = cameraPositionState.value,
+                        modifier = mapModifier
+                    ) {
+                        // Each course in User Profile
+                        userCourses.forEach { course ->
+                            CourseMarker(
+                                course = course,
+                                latitude = course.latitude,
+                                longitude = course.longitude,
+                                markerIcon = ResourcesCompat.getDrawable(
+                                    resources(),
+                                    R.drawable.edu_map_pin_red,
+                                    null
+                                )
+                            )
+                        }
+                        // Course to display is null until map button clicked on search screen
+                        if (courseToDisplay != null) {
+                            CourseMarker(
+                                course = courseToDisplay,
+                                latitude = courseToDisplay.latitude,
+                                longitude = courseToDisplay.longitude,
+                                markerIcon = ResourcesCompat.getDrawable(
+                                    resources(),
+                                    R.drawable.edu_map_pin_green,
+                                    null
+                                )
+                            )
+                        }
+                        // User Location
                         CourseMarker(
-                            course = course,
-                            latitude = course.latitude,
-                            longitude = course.longitude,
-                            markerIcon = ResourcesCompat.getDrawable(resources(), R.drawable.edu_map_pin_red, null)
+                            latitude = currentLoc.latitude,
+                            longitude = currentLoc.longitude,
+                            markerIcon = ResourcesCompat.getDrawable(
+                                resources(),
+                                R.drawable.user_loc_map_pin,
+                                null
+                            )
                         )
                     }
-                    // Course to display is null until map button clicked on search screen
-                    if (courseToDisplay != null) {
-                        CourseMarker(
-                            course = courseToDisplay,
-                            latitude = courseToDisplay.latitude,
-                            longitude = courseToDisplay.longitude,
-                            markerIcon = ResourcesCompat.getDrawable(resources(), R.drawable.edu_map_pin_green, null)
-                        )
-                    }
-                    CourseMarker(
-                        latitude = currentLoc.latitude,
-                        longitude = currentLoc.longitude,
-                        markerIcon = ResourcesCompat.getDrawable(resources(), R.drawable.user_loc_map_pin, null)
+                    Icon(
+                        painter = painterResource(id = R.drawable.my_loc_button),
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = "Animate to User Loc",
+                        modifier = Modifier
+                            .clickable {
+                                viewModel.onMyLocationClick(
+                                    GeoPoint(
+                                        currentLoc.latitude,
+                                        currentLoc.longitude
+                                    )
+                                )
+                            }
+                            .align(Alignment.BottomEnd)
+                            .smallSpacer()
+                            .padding(end = 10.dp)
                     )
                 }
             }
         }
     }
-
-
-
-
-
 }
 
 @Composable

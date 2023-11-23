@@ -35,18 +35,17 @@ class MapViewModel @Inject constructor(
     //        it doesn't revert to this starting state
     //        Below is an attempt at doing this but is maybe not implemented right
     @OptIn(SavedStateHandleSaveableApi::class)
-    var cameraState: CameraPositionState by savedStateHandle.saveable {
-        mutableStateOf(
-            CameraPositionState(
-                CameraProperty(
-                    // 36°59'44.5"N 122°03'35.5"W
-                    // Starting point and zoom for the map
-                    geoPoint = GeoPoint(36.99582810669116, -122.05824150361903),
-                    zoom = 15.5
-                )
+    private var _cameraState = mutableStateOf(
+        CameraPositionState(
+            CameraProperty(
+                // 36°59'44.5"N 122°03'35.5"W
+                // Starting point and zoom for the map
+                geoPoint = GeoPoint(36.99582810669116, -122.05824150361903),
+                zoom = 15.5
             )
         )
-    }
+    )
+    val cameraState: State<CameraPositionState> = _cameraState
     // FIXME(REMOVE): Previous impl used a more standard state handling mechanism
     //        See previous commits.
     // val cameraState: State<CameraPositionState> = _cameraState
@@ -77,6 +76,10 @@ class MapViewModel @Inject constructor(
             }
         }
     }
+    fun onMyLocationClick(geoPoint: GeoPoint) {
+        _cameraState.value.animateTo(geoPoint)
+    }
+
 
     // NOTE: removed markerlist because it isn't needed
     // userCourses can be used, and is automatically reflected

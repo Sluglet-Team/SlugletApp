@@ -44,7 +44,7 @@ fun OSMaps (
     onFirstLoadListener: () -> Unit = {},
     onMapLoaded: () -> Unit = {},
     onMyLocationButtonClick: () -> Boolean = { false },
-    onMyLocationClick: (Location) -> Unit = {},
+    onMyLocationClick: (GeoPoint) -> Unit = {},
     content: (@Composable () -> Unit)? = null,
 ) {
     val context = LocalContext.current
