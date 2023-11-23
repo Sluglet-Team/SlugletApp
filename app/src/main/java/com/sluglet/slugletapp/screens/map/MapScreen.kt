@@ -61,7 +61,7 @@ fun MapScreen (
     viewModel: MapViewModel = hiltViewModel()
 ) {
     // Gets state from the view model for the camera position
-    val cameraPositionState = viewModel.cameraState
+    val cameraPositionState = viewModel.cameraState.collectAsStateWithLifecycle()
     // Collect as state with lifecycle means that anytime the state of the flow changes
     // the value will change and cause recomposition
     val userCourses by viewModel.userCourses.collectAsStateWithLifecycle(emptyList())

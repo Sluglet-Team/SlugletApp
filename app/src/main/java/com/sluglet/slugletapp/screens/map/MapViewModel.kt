@@ -17,8 +17,11 @@ import com.sluglet.slugletapp.model.service.MapService
 import com.sluglet.slugletapp.model.service.StorageService
 import com.sluglet.slugletapp.screens.SlugletViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
@@ -34,18 +37,15 @@ class MapViewModel @Inject constructor(
     //        so that when navigating away and coming back
     //        it doesn't revert to this starting state
     //        Below is an attempt at doing this but is maybe not implemented right
-    @OptIn(SavedStateHandleSaveableApi::class)
-    private var _cameraState = mutableStateOf(
+    private var _cameraState: MutableStateFlow<CameraPositionState> = MutableStateFlow(
         CameraPositionState(
             CameraProperty(
-                // 36°59'44.5"N 122°03'35.5"W
-                // Starting point and zoom for the map
                 geoPoint = GeoPoint(36.99582810669116, -122.05824150361903),
                 zoom = 15.5
             )
         )
     )
-    val cameraState: State<CameraPositionState> = _cameraState
+    val cameraState = _cameraState.asStateFlow()
     // FIXME(REMOVE): Previous impl used a more standard state handling mechanism
     //        See previous commits.
     // val cameraState: State<CameraPositionState> = _cameraState
