@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import com.sluglet.slugletapp.OSMaps.CameraPositionState
@@ -18,6 +19,7 @@ import com.sluglet.slugletapp.screens.SlugletViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -54,6 +56,27 @@ class MapViewModel @Inject constructor(
     var courseToDisplay = mapService.courseToDisplay
     // Get user courses from firestore
     val userCourses = storageService.userCourses
+
+    private val _viewState: MutableStateFlow<ViewState> = MutableStateFlow(ViewState.Loading)
+    val viewState = _viewState.asStateFlow()
+
+    /* This function is responsible for updating the ViewState based
+       on the event coming from the view */
+    fun handle(event: PermissionEvent) {
+        when (event) {
+            PermissionEvent.Granted -> {
+                viewModelScope.launch {
+                    mapService.requestLocationUpdates().collect() { location ->
+                        _viewState.value = ViewState.Success(location)
+                    }
+                }
+            }
+
+            PermissionEvent.Revoked -> {
+                _viewState.value = ViewState.RevokedPermissions
+            }
+        }
+    }
 
     // NOTE: removed markerlist because it isn't needed
     // userCourses can be used, and is automatically reflected

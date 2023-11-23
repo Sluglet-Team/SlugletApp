@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.google.type.LatLng
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.awaitCancellation
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView as OSMapView
@@ -34,6 +34,7 @@ enum class ZoomButtonVisibility {
 }
 @Composable
 fun OSMaps (
+    userLocation: LatLng? = null,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     overlayManagerState: OverlayManagerState = rememberOverlayManagerState(),
     mapProperties: MapProperties = DefaultMapProperties,
