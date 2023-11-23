@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SlugletApp</string>
+    <string name="app_name">Sluglet</string>
 
     <!-- Common -->
     <string name="email">Email</string>
