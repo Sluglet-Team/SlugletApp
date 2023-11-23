@@ -124,7 +124,7 @@ fun MapScreen (
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("We need permissions to use this app")
+                    Text("Location permissions required")
                     Button(
                         onClick = {
                             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
@@ -136,7 +136,10 @@ fun MapScreen (
                             modifier = Modifier.size(14.dp),
                             color = Color.White
                         )
-                        else Text("Settings")
+                        else Text(
+                            text = "Click Here To Go To Settings",
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             }
