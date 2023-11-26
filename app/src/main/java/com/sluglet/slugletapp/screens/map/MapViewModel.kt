@@ -49,8 +49,12 @@ class MapViewModel @Inject constructor(
     private val _viewState: MutableStateFlow<ViewState> = MutableStateFlow(ViewState.Loading)
     val viewState = _viewState.asStateFlow()
 
-    /* This function is responsible for updating the ViewState based
-       on the event coming from the view */
+    /**
+     * This function is responsible for updating the ViewState based
+     * on the event coming from the view
+     *
+     * @param event the Permission event to handle
+     */
     fun handle(event: PermissionEvent) {
         when (event) {
             PermissionEvent.Granted -> {
@@ -66,6 +70,13 @@ class MapViewModel @Inject constructor(
             }
         }
     }
+
+    /**
+     * This function handles clicking of MyLocation Icon on the map
+     * On click, it animates to geoPoint
+     *
+     * @param geoPoint the geoPoint of the user's location
+     */
     fun onMyLocationClick(geoPoint: GeoPoint) {
         _cameraState.value.animateTo(geoPoint)
     }
