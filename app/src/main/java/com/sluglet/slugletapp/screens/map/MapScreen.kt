@@ -214,7 +214,7 @@ fun MapScreenContent(
                 )
             )
         }
-        UserLocationMarker(
+        MyLocationIcon(
             userLocation = userLocation,
             onMyLocationClick = onMyLocationCLick,
             modifier = Modifier.align(Alignment.BottomEnd)
@@ -223,7 +223,7 @@ fun MapScreenContent(
 }
 
 @Composable
-fun UserLocationMarker(
+fun MyLocationIcon(
     userLocation: LatLng,
     onMyLocationClick: (GeoPoint) -> Unit,
     modifier: Modifier
