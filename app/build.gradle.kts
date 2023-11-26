@@ -7,7 +7,6 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
 }
-
 android {
     namespace = "com.sluglet.slugletapp"
     compileSdk = 34
@@ -98,4 +97,7 @@ dependencies {
 
     // OSM
     implementation("org.osmdroid:osmdroid-android:6.1.17")
+
+    // OSMdroid Bonus (Navigation)
+    implementation("com.github.MKergall:osmbonuspack:6.9.0")
 }
