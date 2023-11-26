@@ -1,10 +1,7 @@
 package com.sluglet.slugletapp.screens.map
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.google.android.gms.maps.model.LatLng
 import com.sluglet.slugletapp.model.service.LocationService
-import com.sluglet.slugletapp.model.service.MapService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
