@@ -25,6 +25,9 @@ abstract class ServiceModule {
     @Binds
     abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
 
+    @Binds
+    abstract fun provideMapService(impl: MapServiceImpl): MapService
+
     /* FIXME(CAMDEN): implement configuration service if using remote config from firebase
     @Binds
     abstract fun provideConfigurationService(impl: ConfigurationServiceImpl): ConfigurationService

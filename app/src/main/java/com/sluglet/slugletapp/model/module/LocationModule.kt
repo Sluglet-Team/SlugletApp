@@ -2,7 +2,9 @@ package com.sluglet.slugletapp.model.module
 
 import android.content.Context
 import com.google.android.gms.location.LocationServices
+import com.sluglet.slugletapp.model.service.LocationService
 import com.sluglet.slugletapp.model.service.MapService
+import com.sluglet.slugletapp.model.service.impl.LocationServiceImpl
 import com.sluglet.slugletapp.model.service.impl.MapServiceImpl
 import dagger.Module
 import dagger.Provides
@@ -13,12 +15,12 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object MapModule {
+object LocationModule {
     @Singleton
     @Provides
-    fun provideMapClient (
+    fun provideLocationService (
         @ApplicationContext context: Context
-    ) : MapService = MapServiceImpl (
+    ) : LocationService = LocationServiceImpl (
         context = context,
         locationClient = LocationServices.getFusedLocationProviderClient(context)
     )

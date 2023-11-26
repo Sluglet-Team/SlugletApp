@@ -28,57 +28,16 @@ import javax.inject.Singleton
 // composables, the values need to change for all composables.
 @Singleton
 class MapServiceImpl @Inject constructor(
-    private val context: Context,
-    private val locationClient: FusedLocationProviderClient
+
 ): MapService {
     // TODO: Maybe should hold state for the map here?
     //       That way changes to the state hold when the screen is navigated away and back?
     override val course: MutableStateFlow<CourseData?> = MutableStateFlow(null)
     override val courseToDisplay = course.asStateFlow()
     override val NO_ENTRY = 0.0
-
-    @SuppressLint("MissingPermission")
-    @RequiresApi(Build.VERSION_CODES.S)
-    override fun requestLocationUpdates(): Flow<LatLng?> = callbackFlow {
-
-        if (!context.hasLocationPermission()) {
-            trySend(null)
-            return@callbackFlow
-        }
-
-        val request = LocationRequest.Builder(LOCATION_REQUEST_INTERVAL)
-            .setIntervalMillis(LOCATION_REQUEST_INTERVAL)
-            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-            .build()
-
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.locations.lastOrNull()?.let {
-                    trySend(LatLng(it.latitude, it.longitude))
-                }
-            }
-        }
-
-        locationClient.requestLocationUpdates(
-            request,
-            locationCallback,
-            Looper.getMainLooper()
-        )
-
-        awaitClose {
-            locationClient.removeLocationUpdates(locationCallback)
-        }
-    }
-
-    override suspend fun requestCurrentLocation(): Flow<LatLng?> {
-        TODO("Not Implemented")
-    }
     override suspend fun update(course: CourseData) {
         this.course.value = course
         Log.v("In MapService", "${courseToDisplay.value}")
     }
 
-    companion object {
-        private const val LOCATION_REQUEST_INTERVAL = 1000L // 1 second
-    }
 }
