@@ -12,9 +12,10 @@ Eventually, these will be stored in a Lazy Column that will represent
 data class CourseData(
     // gets the id of a specific course in the database
     @DocumentId val id: String = "",
-    var courseNum: String = "",
-    var courseName: String = "",
-    var profName: String = "",
-    var dateTime: String = "",
+    var course_number: String = "",
+    var course_name: String = "",
+    var prof_name: String = "",
+    var date_time: String = "",
     var location: String = ""
 )
+

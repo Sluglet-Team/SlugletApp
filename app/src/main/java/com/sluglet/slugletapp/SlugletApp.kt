@@ -86,7 +86,7 @@ fun SlugletApp () {
 
                 NavHost(
                     navController = appState.navController,
-                    startDestination = SEARCH_SCREEN,
+                    startDestination = SCHEDULE_SCREEN,
                     modifier = Modifier.padding(innerPadding)
                 ) {
                     slugletGraph(appState)
