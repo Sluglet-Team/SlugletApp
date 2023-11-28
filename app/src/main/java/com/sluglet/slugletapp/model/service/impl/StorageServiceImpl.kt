@@ -1,70 +1,24 @@
 package com.sluglet.slugletapp.model.service.impl
 
-import android.util.Log
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirestoreRegistrar
-import com.google.firebase.firestore.dataObjects
-import com.google.firebase.firestore.toObject
+import com.google.firebase.firestore.ktx.dataObjects
+import com.google.firebase.firestore.ktx.toObject
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
 import com.sluglet.slugletapp.model.service.StorageService
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import javax.inject.Inject
-
+import android.util.Log
 
 class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val auth: AccountService
 ) : StorageService {
-    // Get all courses
     override val courses: Flow<List<CourseData>>
         get() =
-            firestore.collection(COURSE_COLLECTION).dataObjects()
-
-    // Get user specific courses as a Flow List
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override val userCourses: Flow<List<CourseData>>
-        get() =
-            // Grab the current user
-            auth.currentUser.flatMapLatest {user ->
-                var userRef: DocumentSnapshot? = null
-                try {
-                    userRef = firestore.collection(USER_COLLECTION).document(user.uid).get().await()
-                } catch (e: Exception) {
-                    // Error thrown by firestore, likely quota exceeded
-                    Log.e("Error: override val userCourses", "$e")
-                }
-                // If firestore call succeeded, this should not be null
-                if (userRef != null) {
-                    // Get their courses, cast to any Array type
-                    val courses = userRef.get(USER_COURSES) as ArrayList<*>?
-                    // If no courses, return an empty list, can't call firestore with empty list
-                    if (courses == null) {
-                        emptyFlow()
-                    }
-                    // Else return the list of courses as a list of CourseData objects --> .dataObjects()
-                    else {
-                        // This only listens to course collection which is why no recomposition occurs
-                        // when changing USER_COLLECTION.  Not ideal but not sure there is a work around.
-                        firestore.collection(COURSE_COLLECTION).whereIn(FieldPath.documentId(), courses).dataObjects()
-                    }
-                }
-                // Return an empty flow, worst case scenario
-                else {
-                    emptyFlow()
-                }
-
-            }
-            
+            firestore.collection(COURSE_COLLECTION).limit(10).dataObjects()
     override suspend fun getCourse(courseID: String): CourseData? =
         firestore.collection(COURSE_COLLECTION).document(courseID).get().await().toObject()
     override suspend fun storeUserData(user: User)
@@ -86,11 +40,12 @@ class StorageServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun retrieveUserData(id: String): User? = suspendCoroutine { continuation ->
+    override suspend fun retrieveUserData(id: String): User?
+        {
             Log.v("retrieveUserData", "Accessing Firestore User $id")
             //TODO: Make this function draw from local values if available
             val userRef = firestore.collection(USER_COLLECTION).document(id)
-
+            var user : User? = null
             userRef.get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -104,57 +59,24 @@ class StorageServiceImpl @Inject constructor(
                             Log.v("retrieveUserData", "Course $i: $course")
                             i += 1
                         }
-                        val user = User(
+                        user = User(
                             email = (doc.data)!!["email"].toString(),
                             name = (doc.data)!!["name"].toString(),
                             uid = (doc.data)!!["uid"].toString(),
                             courses = courses
                         )
-                        continuation.resume(user)
                     }
                     else
                     {
                         Log.v("retrieveUserData", "retrieveUserData failure")
                         Log.v("retrieveUserData", "id: $id")
-                        continuation.resume(null)
                     }
                 }
-        }
-
-    /**
-     * Retrieves course data associated with a specified courseId as a CourseData object.
-     *
-     * @param courseId The unique identifier that identifies a certain course in Firestore
-     * @param onSuccess A callback function called when the course data is successfully retrieved.
-     *                  Receives the retrieved CourseData object as a parameter.
-     * @param onError A callback function called when an error occurs during data retrieval.
-     *                  Receives an error message (String) as a parameter.
-     */
-    override suspend fun getCourseData(
-        courseId: String,
-        onSuccess: (CourseData) -> Unit,
-        onError: (String) -> Unit)
-        {
-            // Get reference to the document of the passed courseId
-            val courseDocRef = firestore.collection(COURSE_COLLECTION).document(courseId)
-
-            // Cast the document to type CourseData
-            courseDocRef.get().addOnSuccessListener { courseSnapshot ->
-                val courseData = courseSnapshot.toObject<CourseData>()
-                if(courseData != null){
-                    onSuccess(courseData)
-                } else {
-                    onError("Course document not found.")
-                }
-            }.addOnFailureListener { exception ->
-                onError("Error fetching course document: ${exception.message ?: "Unknown error"}")
-            }
+            return user
         }
 
     companion object {
         private const val USER_COLLECTION = "users"
-        private const val COURSE_COLLECTION = "courses2023"
-        private const val USER_COURSES = "courses"
-        private const val TEST_COURSE_COLLECTION3 = "courses3"
+        private const val COURSE_COLLECTION = "courses"
     }
 }

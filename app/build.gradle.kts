@@ -5,7 +5,6 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
     id("com.google.firebase.crashlytics")
-    id("kotlin-parcelize")
 }
 
 android {
@@ -14,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.sluglet.slugletapp"
-        minSdk = 30
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -43,7 +42,6 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.0"
@@ -67,6 +65,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("com.google.firebase:firebase-messaging:23.3.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -76,14 +75,14 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
 
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
@@ -96,18 +95,6 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:2.47")
     kspAndroidTest("com.google.dagger:hilt-compiler:2.47")
 
-    // calendar
-    implementation("com.himanshoe:kalendar:1.3.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
-    
-    // OSM
-    implementation("org.osmdroid:osmdroid-android:6.1.17")
-
-    // Location services
-    implementation ("com.google.android.gms:play-services-location:21.0.1")
-    implementation ("com.google.android.gms:play-services-maps:18.1.0")
-
-
-    // Permission
-    implementation ("com.google.accompanist:accompanist-permissions:0.31.3-beta")
+    // work manager
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
 }

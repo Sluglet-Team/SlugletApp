@@ -1,5 +1,6 @@
 package com.sluglet.slugletapp.screens.search
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,9 +12,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.common.composables.SearchBox
 import com.sluglet.slugletapp.model.CourseData
+import com.sluglet.slugletapp.model.User
+import com.sluglet.slugletapp.model.service.impl.ClassNotification
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
 
 /*
@@ -33,11 +37,8 @@ fun SearchScreen (
         courses = courses.value.sortedBy { it.course_number },
         userSearch = viewModel.userSearch,
         onSearchChange = { viewModel.updateSearch(it) },
-        onAddClick = viewModel::onAddClick,
-        onMapClick = viewModel::onMapClick,
-        openScreen = openScreen
+        onAddClick = (viewModel::onAddClick)
     )
-
 }
 
 @Composable
@@ -46,9 +47,12 @@ fun SearchScreenContent (
     courses: List<CourseData>,
     onSearchChange: (String) -> Unit,
     userSearch: String,
-    onAddClick: ((CourseData) -> Unit)?,
-    onMapClick: (((String) -> Unit, CourseData) -> Boolean)?,
-    openScreen: (String) -> Unit = {}
+    onAddClick: ((CourseData) -> Unit)?
+    /*
+    // FIXME: the following two take the wrong arguments
+    onMapClick: ((String) -> Unit) -> Unit, wrong
+    openScreen: (String) -> Unit
+     */
 ) {
     // with a LazyColumn underneath with all the courses
     Column (modifier = Modifier
@@ -71,12 +75,7 @@ fun SearchScreenContent (
                             || it.course_name.contains(userSearch.trim(), ignoreCase = true)
                 }
             ) { courseItem ->
-                CourseBox(
-                    coursedata = courseItem,
-                    onAddClick = onAddClick,
-                    onMapClick = onMapClick,
-                    openScreen = openScreen
-                )
+                CourseBox(coursedata = courseItem, onAddClick = onAddClick)
             }
         }
     }
@@ -102,8 +101,7 @@ fun SearchPreview (
             courses = testList,
             onSearchChange = { },
             userSearch = "",
-            onAddClick = null,
-            onMapClick = null
+            onAddClick = null
         )
     }
 
