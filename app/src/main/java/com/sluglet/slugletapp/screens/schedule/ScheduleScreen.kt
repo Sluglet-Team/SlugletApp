@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -45,19 +46,28 @@ fun ScheduleScreen (
     viewModel: ScheduleViewModel = hiltViewModel()
 ) {
     // Getting the current date
-    val currentDate = viewModel.currentDate.toLocalDateTime(TimeZone.UTC)
+    val currentDate = viewModel.currentDate.toLocalDateTime(TimeZone.currentSystemDefault())
     Log.v("Date", "$currentDate")
     val userCourses = viewModel.userCourses.collectAsStateWithLifecycle(emptyList()).value
     Log.v("UserCourses", "$userCourses")
-    val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle()
+    val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle(currentDate.date)
     val quarterStart = viewModel.quarterStart
     val quarterEnd = viewModel.quarterEnd
-
-    // adding the events, still working on displaying it appropriately, currently shows up as dots below the dates
-    // Assuming testList is a List<CourseData> containing course information
+    val monthsInYear = 12
+    val kalColorList = List(monthsInYear) {
+        KalendarColor(
+            backgroundColor = Color.Transparent,
+            dayBackgroundColor = Color.Black,
+            headerTextColor = MaterialTheme.colorScheme.onBackground
+        )
+    }
+    val kalendarColors = KalendarColors(
+        color = kalColorList
+    )
 
     val events = KalendarEvents(userCourses.flatMap { course ->
-        val daysOfWeek = course.date_time.split(" ")[0] // Take only the first part of the string
+        // Take only the first part of the string
+        val daysOfWeek = course.date_time.split(" ")[0]
         val courseName = course.course_name
         val courseDetails = "${course.course_number} - ${course.location}"
 
@@ -68,12 +78,13 @@ fun ScheduleScreen (
             val dayOfWeek = getDayOfWeekFromString(day)
             val currentDayOfWeek = currentDate.dayOfWeek
             val daysToAdd = (dayOfWeek.ordinal - currentDayOfWeek.ordinal + 7) % 7
-
+            val weekIncrement = 7
             var date = currentDate.date.plus(daysToAdd, DateTimeUnit.DAY)
 
             val eventsList = mutableListOf<KalendarEvent>()
 
-            // Create events for all occurrences of the specific weekday between January 5th and June 15th
+            // Create events for all occurrences of the specific weekday between
+            // start of quarter to end of quarter
             while (date in quarterStart..quarterEnd) {
                 eventsList.add(
                     KalendarEvent(
@@ -82,7 +93,8 @@ fun ScheduleScreen (
                         eventDescription = courseDetails
                     )
                 )
-                date = date.plus(7, DateTimeUnit.DAY) // Move to the next occurrence of the same weekday
+                // Move to the next occurrence of the same weekday
+                date = date.plus(weekIncrement, DateTimeUnit.DAY)
             }
 
             eventsList
@@ -90,26 +102,14 @@ fun ScheduleScreen (
 
         eventsForCourse
     })
-
-    // broken crashes the app, working on it
-    val kalendarColors = KalendarColors(
-        listOf(
-            KalendarColor(
-                backgroundColor = Color.Blue, // Background color for selected dates
-                dayBackgroundColor = Color.White, // Background color for regular days
-                headerTextColor = Color.Black // Text color for the calendar header
-            )
-            // Add more KalendarColor objects as needed
-        )
-    )
-    // val selectedDate = remember { mutableStateOf<LocalDate?>(null) }
     ScheduleScreenContent(
         currentDate = currentDate.date,
         events = events,
         testList = userCourses,
         selectedDate = selectedDate,
-        onDateSelected = viewModel::onDateSelected
-    ) // Pass selectedDate here
+        onDateSelected = viewModel::onDateSelected,
+        kalendarColors = kalendarColors
+    )
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -155,8 +155,6 @@ values that should be passed to day should be:
 These values are in accordance to the symbols for days on the firebase csv,
 so if these symbols for the days were to be changed, then the argument
 standards for this function should also be changed.
-
-TODO: implement user's course List as argument to eliminate hard coding of user's classes (ask max p)
  */
 @Composable fun DisplayCourses (
     courses: List<CourseData>,
@@ -195,17 +193,14 @@ fun ScheduleScreenContent(
             currentDay = currentDate,
             kalendarType = KalendarType.Firey,
             events = events,
-            // kalendarColors = kalendarColors,
+            kalendarColors = kalendarColors,
             modifier = Modifier
                 .padding(5.dp)
                 .clip(shape = RoundedCornerShape(10.dp)),
-            onDayClick = { clickedDate, _ ->
-                onDateSelected(clickedDate) // Invoke the callback with the clicked date
+            onDayClick = { selectedDate, _ ->
+                    onDateSelected(selectedDate)
             }
-        ) {
-
-        }
-
+        )
         DisplayCourses(courses = testList, day = dayOfWeekParam(selectedDate) )
 
     }
