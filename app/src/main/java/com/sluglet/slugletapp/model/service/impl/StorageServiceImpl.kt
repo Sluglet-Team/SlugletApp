@@ -16,7 +16,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import javax.inject.Inject
+
+
 
 class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
@@ -83,12 +87,11 @@ class StorageServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun retrieveUserData(id: String): User?
-        {
+    override suspend fun retrieveUserData(id: String): User? = suspendCoroutine { continuation ->
             Log.v("retrieveUserData", "Accessing Firestore User $id")
             //TODO: Make this function draw from local values if available
             val userRef = firestore.collection(USER_COLLECTION).document(id)
-            var user : User? = null
+
             userRef.get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -102,27 +105,27 @@ class StorageServiceImpl @Inject constructor(
                             Log.v("retrieveUserData", "Course $i: $course")
                             i += 1
                         }
-                        user = User(
+                        val user = User(
                             email = (doc.data)!!["email"].toString(),
                             name = (doc.data)!!["name"].toString(),
                             uid = (doc.data)!!["uid"].toString(),
                             courses = courses
                         )
+                        continuation.resume(user)
                     }
                     else
                     {
                         Log.v("retrieveUserData", "retrieveUserData failure")
                         Log.v("retrieveUserData", "id: $id")
+                        continuation.resume(null)
                     }
                 }
-            return user
         }
 
     /**
      * Retrieves course data associated with a specified courseId as a CourseData object.
      *
      * @param courseId The unique identifier that identifies a certain course in Firestore
-     * @param firestore An instance of firestore for database operations
      * @param onSuccess A callback function called when the course data is successfully retrieved.
      *                  Receives the retrieved CourseData object as a parameter.
      * @param onError A callback function called when an error occurs during data retrieval.
@@ -134,7 +137,7 @@ class StorageServiceImpl @Inject constructor(
         onError: (String) -> Unit)
         {
             // Get reference to the document of the passed courseId
-            val courseDocRef = firestore.collection("courses").document(courseId)
+            val courseDocRef = firestore.collection(COURSE_COLLECTION).document(courseId)
 
             // Cast the document to type CourseData
             courseDocRef.get().addOnSuccessListener { courseSnapshot ->
@@ -148,8 +151,6 @@ class StorageServiceImpl @Inject constructor(
                 onError("Error fetching course document: ${exception.message ?: "Unknown error"}")
             }
         }
-
-
 
     companion object {
         private const val USER_COLLECTION = "users"

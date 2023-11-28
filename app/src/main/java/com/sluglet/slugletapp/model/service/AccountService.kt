@@ -1,6 +1,7 @@
 package com.sluglet.slugletapp.model.service
 
 import android.util.Log
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
@@ -21,6 +22,7 @@ interface AccountService {
     suspend fun addCourse(course: CourseData)
     suspend fun deleteAccount()
     suspend fun signOut()
-
+    suspend fun linkAccounts(email: String, password: String)
+    fun isUserAnonymous(): Boolean
 
 }

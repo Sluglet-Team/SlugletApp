@@ -1,5 +1,7 @@
 package com.sluglet.slugletapp.screens.home
 
+import android.accounts.Account
+import android.widget.Toast
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -32,10 +34,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Observer
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sluglet.slugletapp.SETTINGS_SCREEN
 import com.sluglet.slugletapp.common.composables.CourseBox
@@ -58,7 +62,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val courses = viewModel.userCourses.collectAsStateWithLifecycle(emptyList())
+    val courses by rememberUpdatedState(newValue = viewModel.courses.collectAsStateWithLifecycle(emptyList()))
+
     HomeScreenContent(
         courses = courses.value,
         onSettingsClick = viewModel::onSettingsClick,
@@ -75,7 +80,7 @@ fun HomeScreenContent(
     onSettingsClick: (((String) -> Unit) -> Unit)?,
     openScreen: (String) -> Unit = {}
 ) {
-    var error by remember { mutableStateOf<String?>(null) }
+    val error by remember { mutableStateOf<String?>(null) }
 
 
     Scaffold (
