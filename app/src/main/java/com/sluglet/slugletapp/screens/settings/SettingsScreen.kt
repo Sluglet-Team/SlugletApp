@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import com.sluglet.slugletapp.HOME_SCREEN
 import com.sluglet.slugletapp.R
 import com.sluglet.slugletapp.common.composables.CourseBox
+import com.sluglet.slugletapp.common.ext.smallSpacer
 
 /*
 A composable that renders the Search Screen
@@ -45,22 +46,9 @@ Uses a CourseBox composable along with a SearchTextField
 @Composable
 fun SettingsScreen (
     openScreen: (String) -> Unit,
-     viewModel: SettingsViewModel = hiltViewModel() //FIXME(CAMDEN): This line breaks the app
+     viewModel: SettingsViewModel = hiltViewModel()
 ) {
 
-    LazyColumn(
-        verticalArrangement = Arrangement.Center,
-        // modifier = modifier.padding(8.dp)
-    ) {
-        items(100) {
-            SwitchWithIconExample()
-            SwitchWithCustomColors()
-            Text(
-                text = "setting "
-            )
-        }
-
-    }
     SettingsScreenContent(
         onReturnClick = viewModel::onReturnClick,
         openScreen = openScreen
@@ -72,120 +60,15 @@ fun SettingsScreenContent (
     modifier: Modifier = Modifier,
     onReturnClick: (((String) -> Unit) -> Unit)?,
     openScreen: (String) -> Unit = {}
-    // FIXME: the following two take the wrong arguments
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         ReturnButton(
-            modifier = Modifier.align(Alignment.TopStart),
+            modifier = Modifier
+                .align(Alignment.TopStart),
             onReturnClick = onReturnClick,
             openScreen = openScreen
-        )
-
-        Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = modifier.padding(8.dp)
-        ) {
-            Text(
-                text = "happy birthday"
-            )
-            Text(
-                text = "from emma"
-            )
-        }
-
-    }
-}
-@Preview
-@Composable
-fun SettingPreview (
-) {
-    val testList = mutableListOf<CourseData>()
-    val testCourse = CourseData (
-        courseNum = "CSE 115A",
-        courseName = "Intro to Software Engineering",
-        location = "Basking Auditorium 1",
-        dateTime = "MWF 8:00am-9:00am",
-        profName = "Julig"
-    )
-    for (i in 1..10) {
-        testList.add(testCourse)
-    }
-    CourseBox(coursedata = testCourse, onAddClick = null)
-    SlugletAppTheme {
-        SettingsScreenContent(
-            courses = testList,
-            userSearch = ""
-        )
-    }
-}
-@Composable
-fun SwitchWithIconExample() {
-    var checked by remember { mutableStateOf(true) }
-
-    Switch(
-        checked = checked,
-        onCheckedChange = {
-            checked = it
-        },
-        thumbContent = if (checked) {
-            {
-                Icon(
-                    imageVector = Icons.Filled.Check,
-                    contentDescription = null,
-                    modifier = Modifier.size(SwitchDefaults.IconSize),
-                )
-            }
-        } else {
-            null
-        }
-    )
-}
-@Composable
-fun SwitchWithCustomColors() {
-    var checked by remember { mutableStateOf(true) }
-
-    Switch(
-        checked = checked,
-        onCheckedChange = {
-            checked = it
-        },
-        colors = SwitchDefaults.colors(
-            checkedThumbColor = MaterialTheme.colorScheme.inverseOnSurface,
-            checkedTrackColor = MaterialTheme.colorScheme.secondary,
-            uncheckedThumbColor = Color.Gray,
-            uncheckedTrackColor = MaterialTheme.colorScheme.inverseOnSurface,
-        )
-    )
-}
-
-
-
-@Composable
-fun ThemeSwitchSetting(
-    themeSwitchState: (Boolean) -> Unit,
-    isDarkTheme: Boolean
-) {
-    val switchState = remember { mutableStateOf(isDarkTheme) }
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = stringResource(id = R.string.theme_switch_label),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Switch(
-            checked = switchState.value,
-            onCheckedChange = { checked ->
-                switchState.value = checked
-                themeSwitchState(checked)
-            },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = MaterialTheme.colorScheme.secondary,
-                checkedTrackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
-            )
         )
     }
 }
@@ -205,5 +88,6 @@ fun ReturnButton(
                     onReturnClick(openScreen)
                 }
             }
+            .smallSpacer()
     )
 }

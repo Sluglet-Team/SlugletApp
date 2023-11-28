@@ -15,26 +15,6 @@ class SettingsViewModel @Inject constructor(
     logService: LogService,
     private val storageService: StorageService
 ) : SlugletViewModel(logService) {
-    // get all courses from Firestore
-    // update for settings
-    val courses = storageService.courses
-
-    var userSearch by mutableStateOf("")
-
-    fun updateSearch (searched: String) {
-        userSearch = searched
-    }
-
-    // TODO(UNASSIGNED): implement the following functions
-    fun onAddClick() {
-
-    }
-    fun onDeleteClick() {
-
-    }
-    fun onMapClick() {
-
-    }
 
     fun onReturnClick(openScreen: (String) -> Unit) {
         openScreen(HOME_SCREEN)

@@ -58,9 +58,9 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val courses = viewModel.courses.collectAsStateWithLifecycle(emptyList())
+    val courses = viewModel.userCourses.collectAsStateWithLifecycle(emptyList())
     HomeScreenContent(
-        courses = courses,
+        courses = courses.value,
         onSettingsClick = viewModel::onSettingsClick,
         openScreen = openScreen
     )
@@ -71,7 +71,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
-    courses: State<List<CourseData>>,
+    courses: List<CourseData>,
     onSettingsClick: (((String) -> Unit) -> Unit)?,
     openScreen: (String) -> Unit = {}
 ) {
@@ -88,7 +88,6 @@ fun HomeScreenContent(
                 title = { /*avoiding the build yelling at me*/ },
                 actions = {
                     SettingsGear(
-                        modifier = Modifier,
                         onSettingsClick = onSettingsClick,
                         openScreen = openScreen
                     )
@@ -107,19 +106,17 @@ fun HomeScreenContent(
                 state = rememberLazyListState(),
                 verticalArrangement = Arrangement.spacedBy(15.dp)
             ) {
-                items(courses.value) {courseItem ->
+                items(courses) {courseItem ->
                     CourseBox(coursedata = courseItem, onAddClick = null)
                 }
             }
 
         }
     }
-
 }
 
 @Composable
 fun SettingsGear (
-    modifier: Modifier = Modifier,
     onSettingsClick: (((String) -> Unit) -> Unit)?,
     openScreen: (String) -> Unit = {}
 ) {
