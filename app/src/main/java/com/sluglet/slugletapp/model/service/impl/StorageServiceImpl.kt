@@ -2,8 +2,8 @@ package com.sluglet.slugletapp.model.service.impl
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirestoreRegistrar
-import com.google.firebase.firestore.ktx.dataObjects
-import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.dataObjects
+import com.google.firebase.firestore.toObject
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
@@ -61,7 +61,7 @@ class StorageServiceImpl @Inject constructor(
                 }
 
             }
-
+            
     override suspend fun getCourse(courseID: String): CourseData? =
         firestore.collection(COURSE_COLLECTION).document(courseID).get().await().toObject()
     override suspend fun storeUserData(user: User)
@@ -117,6 +117,39 @@ class StorageServiceImpl @Inject constructor(
                 }
             return user
         }
+
+    /**
+     * Retrieves course data associated with a specified courseId as a CourseData object.
+     *
+     * @param courseId The unique identifier that identifies a certain course in Firestore
+     * @param firestore An instance of firestore for database operations
+     * @param onSuccess A callback function called when the course data is successfully retrieved.
+     *                  Receives the retrieved CourseData object as a parameter.
+     * @param onError A callback function called when an error occurs during data retrieval.
+     *                  Receives an error message (String) as a parameter.
+     */
+    override suspend fun getCourseData(
+        courseId: String,
+        onSuccess: (CourseData) -> Unit,
+        onError: (String) -> Unit)
+        {
+            // Get reference to the document of the passed courseId
+            val courseDocRef = firestore.collection("courses").document(courseId)
+
+            // Cast the document to type CourseData
+            courseDocRef.get().addOnSuccessListener { courseSnapshot ->
+                val courseData = courseSnapshot.toObject<CourseData>()
+                if(courseData != null){
+                    onSuccess(courseData)
+                } else {
+                    onError("Course document not found.")
+                }
+            }.addOnFailureListener { exception ->
+                onError("Error fetching course document: ${exception.message ?: "Unknown error"}")
+            }
+        }
+
+
 
     companion object {
         private const val USER_COLLECTION = "users"
