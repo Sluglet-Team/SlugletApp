@@ -122,6 +122,7 @@ class AccountServiceImpl @Inject constructor(
             }
     }
 
+    /* TODO: FINISH REMOVE COURSE
     override suspend fun removeCourse(course: CourseData)
     {
         var userID = auth.currentUser!!.uid
@@ -132,6 +133,7 @@ class AccountServiceImpl @Inject constructor(
     override suspend fun deleteAccount() {
         auth.currentUser!!.delete().await()
     }
+    */
 
     override suspend fun signOut() {
         if (auth.currentUser!!.isAnonymous) {
