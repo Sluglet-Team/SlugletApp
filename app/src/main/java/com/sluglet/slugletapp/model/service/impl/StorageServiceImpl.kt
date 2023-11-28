@@ -4,8 +4,9 @@ import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.dataObjects
-import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.FirestoreRegistrar
+import com.google.firebase.firestore.dataObjects
+import com.google.firebase.firestore.toObject
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
@@ -15,7 +16,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import javax.inject.Inject
+
 
 class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
@@ -60,7 +64,7 @@ class StorageServiceImpl @Inject constructor(
                 }
 
             }
-
+            
     override suspend fun getCourse(courseID: String): CourseData? =
         firestore.collection(COURSE_COLLECTION).document(courseID).get().await().toObject()
     override suspend fun storeUserData(user: User)
@@ -82,12 +86,11 @@ class StorageServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun retrieveUserData(id: String): User?
-        {
+    override suspend fun retrieveUserData(id: String): User? = suspendCoroutine { continuation ->
             Log.v("retrieveUserData", "Accessing Firestore User $id")
             //TODO: Make this function draw from local values if available
             val userRef = firestore.collection(USER_COLLECTION).document(id)
-            var user : User? = null
+
             userRef.get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -101,20 +104,51 @@ class StorageServiceImpl @Inject constructor(
                             Log.v("retrieveUserData", "Course $i: $course")
                             i += 1
                         }
-                        user = User(
+                        val user = User(
                             email = (doc.data)!!["email"].toString(),
                             name = (doc.data)!!["name"].toString(),
                             uid = (doc.data)!!["uid"].toString(),
                             courses = courses
                         )
+                        continuation.resume(user)
                     }
                     else
                     {
                         Log.v("retrieveUserData", "retrieveUserData failure")
                         Log.v("retrieveUserData", "id: $id")
+                        continuation.resume(null)
                     }
                 }
-            return user
+        }
+
+    /**
+     * Retrieves course data associated with a specified courseId as a CourseData object.
+     *
+     * @param courseId The unique identifier that identifies a certain course in Firestore
+     * @param onSuccess A callback function called when the course data is successfully retrieved.
+     *                  Receives the retrieved CourseData object as a parameter.
+     * @param onError A callback function called when an error occurs during data retrieval.
+     *                  Receives an error message (String) as a parameter.
+     */
+    override suspend fun getCourseData(
+        courseId: String,
+        onSuccess: (CourseData) -> Unit,
+        onError: (String) -> Unit)
+        {
+            // Get reference to the document of the passed courseId
+            val courseDocRef = firestore.collection(COURSE_COLLECTION).document(courseId)
+
+            // Cast the document to type CourseData
+            courseDocRef.get().addOnSuccessListener { courseSnapshot ->
+                val courseData = courseSnapshot.toObject<CourseData>()
+                if(courseData != null){
+                    onSuccess(courseData)
+                } else {
+                    onError("Course document not found.")
+                }
+            }.addOnFailureListener { exception ->
+                onError("Error fetching course document: ${exception.message ?: "Unknown error"}")
+            }
         }
 
     companion object {
