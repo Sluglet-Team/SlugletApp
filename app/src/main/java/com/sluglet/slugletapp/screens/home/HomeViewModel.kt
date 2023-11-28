@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.sluglet.slugletapp.SETTINGS_SCREEN
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
@@ -32,6 +33,7 @@ class HomeViewModel @Inject constructor(
     private val storageService: StorageService,
     private val accountService: AccountService
 ): SlugletViewModel(logService) {
+  
     private val showError = mutableStateOf(false)
     val courses = MutableStateFlow<List<CourseData>>(emptyList())
 
@@ -95,4 +97,14 @@ class HomeViewModel @Inject constructor(
     private suspend fun createAnonymousAccount() {
         accountService.createAnonymousAccount()
     }
+
+    /**
+     * Handles opening of the settings screen on click
+     *
+     * @param openScreen
+     */
+    fun onSettingsClick(openScreen: (String) -> Unit) {
+        openScreen(SETTINGS_SCREEN)
+    }
+
 }
