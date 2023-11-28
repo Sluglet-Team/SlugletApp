@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.sluglet.slugletapp"
-        minSdk = 24
+        minSdk = 30
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -102,4 +102,12 @@ dependencies {
     
     // OSM
     implementation("org.osmdroid:osmdroid-android:6.1.17")
+
+    // Location services
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+
+
+    // Permission
+    implementation ("com.google.accompanist:accompanist-permissions:0.31.3-beta")
 }

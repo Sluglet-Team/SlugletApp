@@ -1,20 +1,17 @@
 package com.sluglet.slugletapp.model.service.impl
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
-import com.sluglet.slugletapp.model.service.StorageService
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import android.util.Log
 import com.google.firebase.auth.AuthCredential
-import com.sluglet.slugletapp.model.CourseData
 
 class AccountServiceImpl @Inject constructor(
     private val auth: FirebaseAuth,

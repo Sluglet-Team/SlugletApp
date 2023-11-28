@@ -21,7 +21,6 @@ import kotlin.coroutines.suspendCoroutine
 import javax.inject.Inject
 
 
-
 class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val auth: AccountService
@@ -47,9 +46,9 @@ class StorageServiceImpl @Inject constructor(
                 // If firestore call succeeded, this should not be null
                 if (userRef != null) {
                     // Get their courses, cast to any Array type
-                    val courses = userRef.get(USER_COURSES) as ArrayList<*>
+                    val courses = userRef.get(USER_COURSES) as ArrayList<*>?
                     // If no courses, return an empty list, can't call firestore with empty list
-                    if (courses.isEmpty()) {
+                    if (courses == null) {
                         emptyFlow()
                     }
                     // Else return the list of courses as a list of CourseData objects --> .dataObjects()
