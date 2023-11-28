@@ -11,7 +11,6 @@ interface StorageService {
     // list of user specific courses
     val userCourses: Flow<List<CourseData>>
 
-
     // get specific course
     suspend fun getCourse(courseID: String): CourseData?
     suspend fun storeUserData(user: User)
