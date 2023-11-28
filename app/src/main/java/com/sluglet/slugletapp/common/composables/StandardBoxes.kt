@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -43,11 +45,16 @@ Calendars
 etc.
  */
 
+val ADD = Icons.Rounded.Add
+val REM = Icons.Rounded.Clear
+
 @Composable
 fun CourseBox(
     coursedata: CourseData,
     modifier: Modifier = Modifier,
-    onAddClick: ((CourseData) -> Unit)?
+    buttonType: ImageVector,
+    onAddClick: ((CourseData) -> Unit)?,
+    onRemoveClick: ((CourseData) -> Unit)?
 ) {
     var isExpanded by remember {mutableStateOf(false)}
     // Define a row: Left side will be the course info, right side the loc and add icons
@@ -109,6 +116,31 @@ fun CourseBox(
                 "map",
                 tint = Color.Black
             )
+            if (buttonType == ADD) {
+                Icon(
+                    ADD,
+                    "add",
+                    modifier = Modifier
+                        .clickable {
+                            if(onAddClick != null) {
+                                onAddClick(coursedata)
+                            }
+                        }
+                )
+            }
+            if (buttonType == REM) {
+                Icon(
+                    REM,
+                    "remove",
+                    modifier = Modifier
+                        .clickable {
+                            if(onRemoveClick != null) {
+                                onRemoveClick(coursedata)
+                            }
+                        }
+                )
+            }
+            /*
             Icon(
                 Icons.Rounded.Add,
                 "add",
@@ -119,7 +151,7 @@ fun CourseBox(
                         }
                     },
                 tint = Color.Black
-            )
+            )*/
         }
     }
 }
@@ -192,7 +224,7 @@ fun CourseBoxPreview (
         date_time = "MWF 8:00am - 9:05am",
         location = "Baskin Auditorium 1"
     )
-    CourseBox(coursedata = test, modifier = Modifier, onAddClick = null)
+    CourseBox(coursedata = test, modifier = Modifier, buttonType = ADD, onAddClick = null, onRemoveClick = null)
 }
 
 @Preview(showBackground = true)

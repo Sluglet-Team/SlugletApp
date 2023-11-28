@@ -121,6 +121,14 @@ class AccountServiceImpl @Inject constructor(
                 }
             }
     }
+
+    override suspend fun removeCourse(course: CourseData)
+    {
+        var userID = auth.currentUser!!.uid
+        Log.v("removeCourse", "Accessing Firestore User $userID")
+        val userRef = firestore.collection(USER_COLLECTION).document(userID)
+
+    }
     override suspend fun deleteAccount() {
         auth.currentUser!!.delete().await()
     }
