@@ -1,5 +1,7 @@
 package com.sluglet.slugletapp.common.composables
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.sluglet.slugletapp.common.ext.basicRow
@@ -38,12 +41,17 @@ Course information composables
 Calendars
 etc.
  */
+
 @Composable
 fun CourseBox(
     coursedata: CourseData,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAddClick: ((CourseData) -> Unit)?,
+    onMapClick: (((String) -> Unit, CourseData) -> Boolean)?,
+    openScreen: (String) -> Unit = {}
 ) {
     var isExpanded by remember {mutableStateOf(false)}
+    val context = LocalContext.current
     // Define a row: Left side will be the course info, right side the loc and add icons
     Row(
         modifier = modifier
@@ -62,7 +70,6 @@ fun CourseBox(
         ){
             // Course Prefix and Number
             CourseText(
-                modifier = Modifier,
                 text = coursedata.course_number,
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black
@@ -70,25 +77,21 @@ fun CourseBox(
             // Only show this data if the box is clicked
             if (isExpanded) {
                 CourseText(
-                    modifier = Modifier,
                     text = coursedata.course_name,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
                 CourseText(
-                    modifier = Modifier,
                     text = coursedata.prof_name,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
                 CourseText(
-                    modifier = Modifier,
                     text = coursedata.location,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
                 CourseText(
-                    modifier = Modifier,
                     text = coursedata.date_time,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
@@ -102,14 +105,33 @@ fun CourseBox(
                 .padding(end = 15.dp),
             Arrangement.SpaceEvenly
         ){
-            // TODO(CAMDEN): add clickables for icons that do the things
             Icon(
                 Icons.Rounded.LocationOn,
-                "map"
+                "map",
+                modifier = Modifier
+                    .clickable {
+                       if (onMapClick != null) {
+                           if(!onMapClick(openScreen, coursedata)) {
+                               Toast.makeText(
+                                   context,
+                                   "This course does not have a physical location",
+                                   Toast.LENGTH_LONG
+                               ).show()
+                           }
+                       }
+                    },
+                tint = Color.Black
             )
             Icon(
                 Icons.Rounded.Add,
-                "add"
+                "add",
+                modifier = Modifier
+                    .clickable {
+                        if(onAddClick != null) {
+                            onAddClick(coursedata)
+                        }
+                    },
+                tint = Color.Black
             )
         }
     }
@@ -117,7 +139,6 @@ fun CourseBox(
 
 @Composable
 fun SearchBox (
-    modifier: Modifier = Modifier,
     onSearchChange: (String) -> Unit,
     userSearch: String
 ) {
@@ -130,7 +151,6 @@ fun SearchBox (
 
 @Composable
 fun BottomNavBar(
-    modifier: Modifier = Modifier,
     items: List<BottomNavItem>,
     navController: NavController,
     onItemClick: (BottomNavItem) -> Unit
@@ -143,7 +163,7 @@ fun BottomNavBar(
         contentColor = Color.White,
         tonalElevation = 10.dp,
     ){
-        items.forEach() {item ->
+        items.forEach {item ->
             val selected = item.route == backStackEntry.value?.destination?.route
             NavigationBarItem(
                 selected = selected,
@@ -185,7 +205,7 @@ fun CourseBoxPreview (
         date_time = "MWF 8:00am - 9:05am",
         location = "Baskin Auditorium 1"
     )
-    CourseBox(coursedata = test, modifier = Modifier)
+    CourseBox(coursedata = test, modifier = Modifier, onAddClick = null, onMapClick = null)
 }
 
 @Preview(showBackground = true)
