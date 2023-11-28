@@ -20,7 +20,7 @@ class StorageServiceImpl @Inject constructor(
 ) : StorageService {
     override val courses: Flow<List<CourseData>>
         get() =
-            firestore.collection(COURSE_COLLECTION).limit(10).dataObjects()
+            firestore.collection(COURSE_COLLECTION).dataObjects()
     override suspend fun getCourse(courseID: String): CourseData? =
         firestore.collection(COURSE_COLLECTION).document(courseID).get().await().toObject()
     override suspend fun storeUserData(user: User)
