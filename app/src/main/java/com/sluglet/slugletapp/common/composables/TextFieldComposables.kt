@@ -40,7 +40,6 @@ fun SearchTextField (
         focusedIndicatorColor = Color.White,
         unfocusedLeadingIconColor = Color.Black,
         unfocusedTrailingIconColor = Color.Black,
-        textColor = Color.Black
     )
     // Keeps track of Keyboard focus
     val focusManager = LocalFocusManager.current

@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,13 +24,9 @@ import com.himanshoe.kalendar.color.KalendarColor
 import com.himanshoe.kalendar.color.KalendarColors
 import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.model.CourseData
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
@@ -162,14 +157,14 @@ standards for this function should also be changed.
 ) {
     LazyColumn (
         state = rememberLazyListState(),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         items(
             items = courses.filter {
                 it.date_time.contains(day, ignoreCase = false)
             }
         ) {courseItem ->
-            CourseBox(coursedata = courseItem)
+            CourseBox(coursedata = courseItem, onAddClick = null, onMapClick = null)
         }
 
     }
