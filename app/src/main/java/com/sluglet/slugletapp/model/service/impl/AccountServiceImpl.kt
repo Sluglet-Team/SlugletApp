@@ -134,7 +134,6 @@ class AccountServiceImpl @Inject constructor(
         // Sign the user back in anonymously.
         createAnonymousAccount()
     }
-
     /**
      * Links the current account to the provided matching parameters
      *
@@ -147,6 +146,15 @@ class AccountServiceImpl @Inject constructor(
     ) {
         val credential = EmailAuthProvider.getCredential(email, password)
         auth.currentUser!!.linkWithCredential(credential).await()
+    }
+
+    override fun isUserAnonymous(): Boolean {
+        val auth = FirebaseAuth.getInstance()
+        val currUser = auth.currentUser
+        if(currUser?.isAnonymous == true){
+            return true
+        }
+        return false
     }
 
     companion object {
