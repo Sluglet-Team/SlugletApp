@@ -81,7 +81,6 @@ class StorageServiceImpl @Inject constructor(
      * Retrieves course data associated with a specified courseId as a CourseData object.
      *
      * @param courseId The unique identifier that identifies a certain course in Firestore
-     * @param firestore An instance of firestore for database operations
      * @param onSuccess A callback function called when the course data is successfully retrieved.
      *                  Receives the retrieved CourseData object as a parameter.
      * @param onError A callback function called when an error occurs during data retrieval.
