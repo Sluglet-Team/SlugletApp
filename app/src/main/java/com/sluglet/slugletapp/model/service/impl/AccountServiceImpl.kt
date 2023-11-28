@@ -122,18 +122,44 @@ class AccountServiceImpl @Inject constructor(
             }
     }
 
-    /* TODO: FINISH REMOVE COURSE
-    override suspend fun removeCourse(course: CourseData)
+
+    /**
+     * Removes a course from a user's list of courses on Firestore
+     *
+     * @param course the course to be removed
+     */
+    suspend fun removeCourse(course: CourseData)
     {
         var userID = auth.currentUser!!.uid
         Log.v("removeCourse", "Accessing Firestore User $userID")
         val userRef = firestore.collection(USER_COLLECTION).document(userID)
-
+        userRef.get()
+            .addOnCompleteListener{task ->
+                if (task.isSuccessful) {
+                    var userMap = task.result.data
+                    val courses = ((userMap)!!["courses"] as ArrayList<String>)
+                    courses.remove(course.id)
+                    (userMap)!!["courses"] = courses
+                    firestore.collection(USER_COLLECTION).document(userID).set(userMap)
+                        .addOnCompleteListener {task ->
+                            if (task.isSuccessful) {
+                                Log.v("removeCourse", "removal success")
+                                Log.v("removeCourse", "removed " + course.id + " from $userID")
+                            }
+                        }
+                }
+                else {
+                    Log.v("removeCourse", "retrieveUserData failure")
+                    Log.v("remove course","id: $userID")
+                }
+            }
     }
+
+
     override suspend fun deleteAccount() {
         auth.currentUser!!.delete().await()
     }
-    */
+
 
     override suspend fun signOut() {
         if (auth.currentUser!!.isAnonymous) {
