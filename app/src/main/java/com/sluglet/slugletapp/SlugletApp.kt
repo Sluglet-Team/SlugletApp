@@ -1,7 +1,9 @@
 package com.sluglet.slugletapp
 
 import android.content.res.Resources
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -38,6 +40,7 @@ import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
 import kotlinx.coroutines.CoroutineScope
+import com.sluglet.slugletapp.screens.schedule.ScheduleScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,12 +135,16 @@ fun resources(): Resources {
     return LocalContext.current.resources
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     composable(HOME_SCREEN) {
         HomeScreen(openScreen = { route -> appState.navigate(route) })
     }
     composable(SEARCH_SCREEN) {
         SearchScreen(openScreen = { route -> appState.navigate(route) })
+    }
+    composable(SCHEDULE_SCREEN) {
+        ScheduleScreen(openScreen = { route -> appState.navigate(route) })
     }
     composable(SIGNUP_SCREEN) {
         SignUpScreen()

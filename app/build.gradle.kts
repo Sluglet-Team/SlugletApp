@@ -96,6 +96,10 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:2.47")
     kspAndroidTest("com.google.dagger:hilt-compiler:2.47")
 
+    // calendar
+    implementation("com.himanshoe:kalendar:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+    
     // OSM
     implementation("org.osmdroid:osmdroid-android:6.1.17")
 }

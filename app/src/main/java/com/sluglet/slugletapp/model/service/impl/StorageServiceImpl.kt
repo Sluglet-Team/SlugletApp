@@ -1,5 +1,8 @@
 package com.sluglet.slugletapp.model.service.impl
 
+import android.util.Log
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirestoreRegistrar
 import com.google.firebase.firestore.dataObjects
@@ -8,15 +11,12 @@ import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.AccountService
 import com.sluglet.slugletapp.model.service.StorageService
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
-import android.util.Log
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldPath
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
