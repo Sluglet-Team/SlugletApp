@@ -17,13 +17,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.himanshoe.kalendar.*
 import com.himanshoe.kalendar.color.KalendarColor
 import com.himanshoe.kalendar.color.KalendarColors
+import com.himanshoe.kalendar.ui.component.day.KalendarDayKonfig
 import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.model.CourseData
+import com.sluglet.slugletapp.ui.theme.WaveDarkOrange
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
@@ -52,12 +55,18 @@ fun ScheduleScreen (
     val kalColorList = List(monthsInYear) {
         KalendarColor(
             backgroundColor = Color.Transparent,
-            dayBackgroundColor = Color.Black,
+            dayBackgroundColor = WaveDarkOrange,
             headerTextColor = MaterialTheme.colorScheme.onBackground
         )
     }
     val kalendarColors = KalendarColors(
         color = kalColorList
+    )
+    val kalendarDayKonfig = KalendarDayKonfig(
+        size = 56.dp,
+        textSize = 16.sp,
+        textColor = MaterialTheme.colorScheme.onSurface,
+        selectedTextColor = Color.White
     )
 
     val events = KalendarEvents(userCourses.flatMap { course ->
@@ -103,7 +112,8 @@ fun ScheduleScreen (
         testList = userCourses,
         selectedDate = selectedDate,
         onDateSelected = viewModel::onDateSelected,
-        kalendarColors = kalendarColors
+        kalendarColors = kalendarColors,
+        kalendarDayKonfig = kalendarDayKonfig
     )
 }
 
@@ -178,7 +188,8 @@ fun ScheduleScreenContent(
     testList: List<CourseData>,
     selectedDate: LocalDate?,
     onDateSelected: (LocalDate) -> Unit,
-    kalendarColors: KalendarColors = KalendarColors(emptyList())
+    kalendarColors: KalendarColors = KalendarColors(emptyList()),
+    kalendarDayKonfig: KalendarDayKonfig
 ) {
 
     Column(
@@ -189,6 +200,7 @@ fun ScheduleScreenContent(
             kalendarType = KalendarType.Firey,
             events = events,
             kalendarColors = kalendarColors,
+            kalendarDayKonfig = kalendarDayKonfig,
             modifier = Modifier
                 .padding(5.dp)
                 .clip(shape = RoundedCornerShape(10.dp)),
