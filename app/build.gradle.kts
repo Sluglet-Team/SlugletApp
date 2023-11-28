@@ -108,6 +108,6 @@ dependencies {
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
 
 
-    // Permission
-    implementation ("com.google.accompanist:accompanist-permissions:0.31.3-beta")
+    // Permission: Do NOT UPDATE, this version is compatible with this project
+    implementation ("com.google.accompanist:accompanist-permissions:0.29.0-alpha")
 }
