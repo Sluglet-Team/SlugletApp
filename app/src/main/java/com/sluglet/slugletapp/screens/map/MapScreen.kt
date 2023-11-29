@@ -8,14 +8,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sluglet.slugletapp.BuildConfig
 import com.sluglet.slugletapp.OSMaps.OSMaps
+import com.sluglet.slugletapp.OSMaps.Polyline
 import com.sluglet.slugletapp.R
 import com.sluglet.slugletapp.common.composables.CourseMarker
+import com.sluglet.slugletapp.model.service.NavService
 import com.sluglet.slugletapp.resources
+import org.osmdroid.bonuspack.routing.OSRMRoadManager
+import org.osmdroid.bonuspack.routing.Road
+import org.osmdroid.config.Configuration
+import org.osmdroid.util.GeoPoint
+import kotlin.coroutines.suspendCoroutine
 
 
 @Composable
@@ -36,9 +45,11 @@ fun MapScreen (
         .clip(RoundedCornerShape(10.dp))
         .shadow(elevation = 10.dp)
 
+
     OSMaps (
         cameraPositionState = cameraPositionState,
-        modifier = mapModifier
+        modifier = mapModifier,
+        onFirstLoadListener = { }
     ) {
         userCourses.forEach { course->
             CourseMarker(
@@ -53,5 +64,22 @@ fun MapScreen (
                 markerIcon = ResourcesCompat.getDrawable(resources(), R.drawable.edu_map_pin_green, null)
             )
         }
+        val roadManager = OSRMRoadManager(LocalContext.current, BuildConfig.APPLICATION_ID)
+        var testPath : ArrayList<GeoPoint> = ArrayList()
+        testPath.add(GeoPoint(36.99467,-122.06085)) // East Baskin
+        testPath.add(GeoPoint(36.953,-122.06511)) // Earth & Marine
+        viewModel.setPath(testPath, LocalContext.current)
+
+        if (viewModel.currentPath != null)
+        {
+            Log.v("mapScreen", viewModel.currentPath.toString())
+            Polyline(viewModel.currentPath!!) {
+
+            }
+        }
+        //val initRoute = road.mRouteHigh
+        //Polyline(
+        //    initRoute
+        //) {}
     }
 }

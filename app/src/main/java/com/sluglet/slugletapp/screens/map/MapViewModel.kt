@@ -1,5 +1,7 @@
 package com.sluglet.slugletapp.screens.map
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
@@ -13,11 +15,14 @@ import com.sluglet.slugletapp.OSMaps.CameraProperty
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.MapService
+import com.sluglet.slugletapp.model.service.NavService
 import com.sluglet.slugletapp.model.service.StorageService
 import com.sluglet.slugletapp.screens.SlugletViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.osmdroid.bonuspack.routing.OSRMRoadManager
+import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,8 +30,10 @@ import javax.inject.Singleton
 class MapViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     logService: LogService,
+    private val navService: NavService,
     private val mapService: MapService,
     private val storageService: StorageService
+
 ) : SlugletViewModel(logService) {
     // FIXME(SPRINT 4): Would be ideal to keep the state of the map
     //        so that when navigating away and coming back
@@ -45,6 +52,9 @@ class MapViewModel @Inject constructor(
             )
         )
     }
+
+
+
     // FIXME(REMOVE): Previous impl used a more standard state handling mechanism
     //        See previous commits.
     // val cameraState: State<CameraPositionState> = _cameraState
@@ -54,6 +64,20 @@ class MapViewModel @Inject constructor(
     var courseToDisplay = mapService.courseToDisplay
     // Get user courses from firestore
     val userCourses = storageService.userCourses
+
+    var currentPath : ArrayList<GeoPoint>? = null
+    fun setPath(points : ArrayList<GeoPoint>, context: Context)
+    {
+        Log.v("setPath", "SetPath Called")
+        launchCatching {
+            currentPath = navService.getRoadCoords(points, context)
+            Log.v("setPath", currentPath.toString())
+        }
+    }
+    fun clearPath()
+    {
+        currentPath = null
+    }
 
     // NOTE: removed markerlist because it isn't needed
     // userCourses can be used, and is automatically reflected
