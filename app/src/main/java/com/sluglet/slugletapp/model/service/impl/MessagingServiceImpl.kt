@@ -1,32 +1,19 @@
 package com.sluglet.slugletapp.model.service.impl
-import NotificationWorker
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
-import android.widget.RemoteViews.RemoteView
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.sluglet.slugletapp.SlugletActivity
-import com.sluglet.slugletapp.SlugletApp
-import com.sluglet.slugletapp.SlugletAppState
-import java.nio.file.attribute.AclEntry.Builder
 import com.sluglet.slugletapp.R
-import android.app.AlarmManager
-import android.content.BroadcastReceiver
-import java.util.Calendar
 
 
-const val channelID = "notification_channel"
-const val channelName = "SlugNotification"
-
-
-class MyFirebaseMessagingService : FirebaseMessagingService(){
+class MessagingServiceImpl : FirebaseMessagingService(){
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
@@ -71,5 +58,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
             notificationManager.createNotificationChannel(notificationChannel)
         }
         notificationManager.notify(0, Builder.build())
+    }
+    companion object {
+        const val channelID = "notification_channel"
+        const val channelName = "SlugNotification"
     }
 }
