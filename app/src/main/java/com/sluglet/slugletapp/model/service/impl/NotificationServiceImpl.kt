@@ -1,19 +1,14 @@
 package com.sluglet.slugletapp.model.service.impl
 
 import NotificationWorker
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
 import android.os.Build
-import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class ClassNotification @Inject constructor(@ApplicationContext private val context: Context) {
+class NotificationServiceImpl @Inject constructor(@ApplicationContext private val context: Context) {
 
 //    fun createClassNotification(context: Context) {
 //        val notificationIntent = Intent(context, NotificationPublisher::class.java)
@@ -32,6 +27,7 @@ class ClassNotification @Inject constructor(@ApplicationContext private val cont
 //            }
 //        }
 //    }
+
 
     init {
         createNotificationChannel()
