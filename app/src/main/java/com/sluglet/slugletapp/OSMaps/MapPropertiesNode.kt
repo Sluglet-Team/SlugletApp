@@ -26,10 +26,10 @@ internal class MapPropertiesNode(
     }
 
     override fun onAttached() {
-        // This used to be setCenter() which doesn't do what it seems like it would
-        // Needs to be animateTo()
-        mapViewComposed.controller.animateTo(cameraPositionState.geoPoint)
+        // set zoom must come first
         mapViewComposed.controller.setZoom(cameraPositionState.zoom)
+        mapViewComposed.controller.setCenter(cameraPositionState.geoPoint)
+
 
         delayedMapListener = DelayedMapListener(object : MapListener {
             override fun onScroll(event: ScrollEvent?): Boolean {
