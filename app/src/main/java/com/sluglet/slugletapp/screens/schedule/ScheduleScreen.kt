@@ -128,7 +128,7 @@ fun ScheduleScreenContent(
         testList.add(testCourse2)
         testList.add(testCourseTTh)
 
-        DisplayCourses(courses = testList, day = "")
+        DisplayCourses(courses = testList, day = "", onRemoveClick = null)
         //DisplayCourses(courses = testList, day = "M")
         //DisplayCourses(courses = testList, day = "")
         //CourseBox(coursedata = testCourse)
@@ -198,7 +198,8 @@ TODO: implement user's course List as argument to eliminate hard coding of user'
 */
 @Composable fun DisplayCourses (
     courses: List<CourseData>,
-    day: String = ""
+    day: String = "",
+    onRemoveClick: ((CourseData) -> Unit)?
 ) {
     LazyColumn (
         state = rememberLazyListState(),
@@ -209,7 +210,7 @@ TODO: implement user's course List as argument to eliminate hard coding of user'
                 it.date_time.contains(day, ignoreCase = false)
             }
         ) {courseItem ->
-            CourseBox(coursedata = courseItem, onAddClick = null)
+            CourseBox(coursedata = courseItem, hasMapButton = false, onAddClick = null, onRemoveClick = onRemoveClick)
         }
 
     }

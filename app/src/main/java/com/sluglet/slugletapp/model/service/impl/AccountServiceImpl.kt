@@ -128,7 +128,7 @@ class AccountServiceImpl @Inject constructor(
      *
      * @param course the course to be removed
      */
-    suspend fun removeCourse(course: CourseData)
+    override suspend fun removeCourse(course: CourseData)
     {
         var userID = auth.currentUser!!.uid
         Log.v("removeCourse", "Accessing Firestore User $userID")
