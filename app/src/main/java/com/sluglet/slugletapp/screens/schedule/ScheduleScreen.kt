@@ -1,5 +1,6 @@
 package com.sluglet.slugletapp.screens.schedule
 
+import android.Manifest
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -12,31 +13,40 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.himanshoe.kalendar.*
 import com.himanshoe.kalendar.color.KalendarColor
 import com.himanshoe.kalendar.color.KalendarColors
 import com.himanshoe.kalendar.ui.component.day.KalendarDayKonfig
 import com.sluglet.slugletapp.common.composables.CourseBox
+import com.sluglet.slugletapp.common.ext.hasLocationPermission
+import com.sluglet.slugletapp.common.ext.hasNotificationPermission
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.ui.theme.WaveDarkOrange
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.toLocalTime
 
 
 // Use https://github.com/hi-manshu/Kalendar for documentation on using the library
 
+@OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleScreen (
@@ -49,6 +59,7 @@ fun ScheduleScreen (
     val userCourses = viewModel.userCourses.collectAsStateWithLifecycle(emptyList()).value
     Log.v("UserCourses", "$userCourses")
     val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle(currentDate.date)
+    val context = LocalContext.current
     val quarterStart = viewModel.quarterStart
     val quarterEnd = viewModel.quarterEnd
     val monthsInYear = 12
@@ -68,12 +79,27 @@ fun ScheduleScreen (
         textColor = MaterialTheme.colorScheme.onSurface,
         selectedTextColor = Color.White
     )
-
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val permissionState = rememberMultiplePermissionsState(
+                permissions = listOf(
+                    Manifest.permission.POST_NOTIFICATIONS,
+                    Manifest.permission.SCHEDULE_EXACT_ALARM
+                )
+            )
+        LaunchedEffect(!context.hasNotificationPermission()) {
+            permissionState.launchMultiplePermissionRequest()
+        }
+    }
+    // FIXME(Tanuj): Use this variable or get rid of it.
+    val startTimes = mutableListOf<LocalTime>()
     val events = KalendarEvents(userCourses.flatMap { course ->
         // Take only the first part of the string
         val daysOfWeek = course.date_time.split(" ")[0]
         val courseName = course.course_name
         val courseDetails = "${course.course_number} - ${course.location}"
+        // FIXME(Tanuj): An idea for getting startTimes of classes
+        //               Not necessarily the way to do this. Get rid of if not using.
+        // startTimes.add(course.date_time.split(" ")[1].split("-")[0].toLocalTime())
 
         // Split the days by looking for capital letters
         val days = daysOfWeek.split(Regex("(?=[A-Z])")).filter { it.isNotBlank() }
@@ -106,18 +132,17 @@ fun ScheduleScreen (
 
         eventsForCourse
     })
+
     ScheduleScreenContent(
         currentDate = currentDate.date,
         events = events,
-        testList = userCourses,
+        courseList = userCourses,
         selectedDate = selectedDate,
         onDateSelected = viewModel::onDateSelected,
         kalendarColors = kalendarColors,
         kalendarDayKonfig = kalendarDayKonfig
     )
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
 fun getDayOfWeekFromString(day: String): DayOfWeek {
     return when (day) {
         "M" -> DayOfWeek.MONDAY
@@ -128,8 +153,6 @@ fun getDayOfWeekFromString(day: String): DayOfWeek {
         else -> DayOfWeek.MONDAY // Default day, adjust as needed
     }
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
 fun dayOfWeekParam(day: LocalDate?): String {
     if (day != null) {
         return when (day.dayOfWeek) {
@@ -180,12 +203,11 @@ standards for this function should also be changed.
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleScreenContent(
     currentDate: LocalDate,
     events:   KalendarEvents,
-    testList: List<CourseData>,
+    courseList: List<CourseData>,
     selectedDate: LocalDate?,
     onDateSelected: (LocalDate) -> Unit,
     kalendarColors: KalendarColors = KalendarColors(emptyList()),
@@ -208,7 +230,7 @@ fun ScheduleScreenContent(
                     onDateSelected(selectedDate)
             }
         )
-        DisplayCourses(courses = testList, day = dayOfWeekParam(selectedDate) )
+        DisplayCourses(courses = courseList, day = dayOfWeekParam(selectedDate) )
 
     }
 }
