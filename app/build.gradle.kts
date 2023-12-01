@@ -98,6 +98,18 @@ dependencies {
     // OSM
     implementation("org.osmdroid:osmdroid-android:6.1.17")
 
-    // OSMdroid Bonus (Navigation)
+    // Navigation
     implementation("com.github.MKergall:osmbonuspack:6.9.0")
+
+    // HTTP Service
+    // define a BOM and its version
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
+
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
+    // JSON Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 }

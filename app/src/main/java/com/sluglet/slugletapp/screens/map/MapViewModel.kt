@@ -66,11 +66,11 @@ class MapViewModel @Inject constructor(
     val userCourses = storageService.userCourses
 
     var currentPath : ArrayList<GeoPoint>? = null
-    fun setPath(points : ArrayList<GeoPoint>, context: Context)
+    fun setPath(start : GeoPoint, end : GeoPoint)
     {
         Log.v("setPath", "SetPath Called")
         launchCatching {
-            currentPath = navService.getRoadCoords(points, context)
+            currentPath = navService.getRouteCoords(start, end)
             Log.v("setPath", currentPath.toString())
         }
     }

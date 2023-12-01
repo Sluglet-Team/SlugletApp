@@ -16,19 +16,84 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
+import org.json.JSONObject
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Callback
+import okhttp3.Call
+import okhttp3.Response
+import okio.IOException
+import org.json.JSONArray
 
 class NavServiceImpl @Inject constructor(): NavService {
-    val roadManager = OSRMRoadManager(Application(), BuildConfig.APPLICATION_ID)
+    val NAV_URL = "https://api.openrouteservice.org/v2/directions/foot-walking?"
+    val NAV_KEY = "5b3ce3597851110001cf6248ca6dfdea681b4927b17493a3a45cb427"
     override suspend fun setContext(context: Context)
     {
 
     }
-    override suspend fun getRoadCoords(points: ArrayList<GeoPoint>, context: Context): ArrayList<GeoPoint>  = suspendCoroutine { continuation ->
-        val roadManager = OSRMRoadManager(Application(), BuildConfig.APPLICATION_ID)
-        roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT)
+    override suspend fun getRouteCoords(start : GeoPoint, end : GeoPoint): ArrayList<GeoPoint>?  = suspendCoroutine { continuation ->
         Log.v("NavService", "Starting Nav")
-        val road : Road = roadManager.getRoad(points)
-        Log.v("NavService", "Road Found")
-        continuation.resume(road.mRouteHigh)
+        val startCoordString = start.latitude.toString() + "," + start.longitude.toString()
+        val endCoordString = end.latitude.toString() + "," + end.longitude.toString()
+        val apiCallUrl = NAV_URL + "api_key=" + NAV_KEY + "&start=" + startCoordString + "&end=" + endCoordString
+        val client = OkHttpClient()
+        val routeRequest = Request.Builder()
+            .url(apiCallUrl)
+            .build()
+
+        client.newCall(routeRequest).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {}
+            override fun onResponse(call: Call, response: Response)
+            {
+                Log.v("findRoute", response.toString())
+                val routeInfo = (response.body?.string())
+                if (routeInfo != null) {
+                    Log.v("findRoute", "A")
+                    var jsonObj = JSONObject(routeInfo)
+                    Log.v("findRoute", "B")
+                    var jsonArray = jsonObj.getJSONArray("features")
+                    Log.v("findRoute", "C")
+                    jsonObj = jsonArray.getJSONObject(0)
+                    Log.v("findRoute", "D")
+                    jsonObj = jsonObj.getJSONObject("geometry")
+                    Log.v("findRoute", "E")
+                    jsonArray = jsonObj.getJSONArray("coordinates")
+                    Log.v("findRoute", "F")
+                    Log.v("findRoute", jsonArray.toString())
+                }
+            }
+        })
+        continuation.resume(null)
+    }
+    suspend fun findRoute(start : GeoPoint, end : GeoPoint): ArrayList<GeoPoint>  = suspendCoroutine { continuation ->
+        val startCoordString = start.longitude.toString() + "," + start.latitude.toString()
+        val endCoordString = end.longitude.toString() + "," + end.latitude.toString()
+        val apiCallUrl = NAV_URL + "api_key=" + NAV_KEY + "&start=" + startCoordString + "&end=" + endCoordString
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(apiCallUrl)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {}
+            override fun onResponse(call: Call, response: Response)
+            {
+                val routeInfo = response.body?.string()
+                if (routeInfo != null) {
+                    var jsonReader = JSONObject(routeInfo)
+                    val jsonCoords : JSONArray
+                    // features, geometry, coordinates
+                    jsonReader = jsonReader.getJSONObject("features")
+                    jsonReader = jsonReader.getJSONObject("geometry")
+                    jsonCoords = jsonReader.getJSONArray("coordinates")
+                    Log.v("findRoute", jsonCoords.toString())
+
+                }
+            }
+        })
     }
 }

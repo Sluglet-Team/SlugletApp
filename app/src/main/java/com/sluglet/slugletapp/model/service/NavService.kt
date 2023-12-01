@@ -6,6 +6,6 @@ import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.util.GeoPoint
 
 interface NavService {
-    suspend fun setContext(context : Context)
-    suspend fun getRoadCoords(points: ArrayList<GeoPoint>, context: Context): ArrayList<GeoPoint>
+    suspend fun setContext(context: Context)
+    suspend fun getRouteCoords(start: GeoPoint, end: GeoPoint): ArrayList<GeoPoint>?
 }

@@ -64,11 +64,10 @@ fun MapScreen (
                 markerIcon = ResourcesCompat.getDrawable(resources(), R.drawable.edu_map_pin_green, null)
             )
         }
-        val roadManager = OSRMRoadManager(LocalContext.current, BuildConfig.APPLICATION_ID)
-        var testPath : ArrayList<GeoPoint> = ArrayList()
-        testPath.add(GeoPoint(36.99467,-122.06085)) // East Baskin
-        testPath.add(GeoPoint(36.953,-122.06511)) // Earth & Marine
-        viewModel.setPath(testPath, LocalContext.current)
+
+        val start = GeoPoint(-122.06085,36.99467,) // East Baskin
+        val end = GeoPoint(-122.06511,36.953,) // Earth & Marine
+        viewModel.setPath(start, end)
 
         if (viewModel.currentPath != null)
         {
