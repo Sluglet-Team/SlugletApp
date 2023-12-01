@@ -29,8 +29,9 @@ import okio.IOException
 import org.json.JSONArray
 
 class NavServiceImpl @Inject constructor(): NavService {
-    val NAV_URL = "https://api.openrouteservice.org/v2/directions/foot-walking?"
-    val NAV_KEY = "5b3ce3597851110001cf6248ca6dfdea681b4927b17493a3a45cb427"
+    private val NAV_URL = "https://api.openrouteservice.org/v2/directions/foot-walking?"
+    private val NAV_KEY = "5b3ce3597851110001cf6248ca6dfdea681b4927b17493a3a45cb427"
+    private val DIRECTION_INDEX = 0
     override suspend fun setContext(context: Context)
     {
 
@@ -52,22 +53,29 @@ class NavServiceImpl @Inject constructor(): NavService {
                 Log.v("findRoute", response.toString())
                 val routeInfo = (response.body?.string())
                 if (routeInfo != null) {
-                    Log.v("findRoute", "A")
                     var jsonObj = JSONObject(routeInfo)
-                    Log.v("findRoute", "B")
                     var jsonArray = jsonObj.getJSONArray("features")
-                    Log.v("findRoute", "C")
-                    jsonObj = jsonArray.getJSONObject(0)
-                    Log.v("findRoute", "D")
+                    jsonObj = jsonArray.getJSONObject(DIRECTION_INDEX)
                     jsonObj = jsonObj.getJSONObject("geometry")
-                    Log.v("findRoute", "E")
                     jsonArray = jsonObj.getJSONArray("coordinates")
-                    Log.v("findRoute", "F")
                     Log.v("findRoute", jsonArray.toString())
+                    val arrayLength = jsonArray.length()
+                    var i = 0
+                    val coordArray = ArrayList<GeoPoint>()
+                    while(i < arrayLength)
+                    {
+                        val coords = jsonArray.getString(i).split(',')
+                        val longitude = coords[0].trim(']','[')
+                        val latitude = coords[1].trim(']','[')
+                        coordArray.add(GeoPoint(latitude.toDouble(), longitude.toDouble()))
+                        i += 1
+                    }
+                    Log.v("findRoute", "Nav Complete")
+                    continuation.resume(coordArray)
                 }
             }
         })
-        continuation.resume(null)
+        //continuation.resume(null)
     }
     suspend fun findRoute(start : GeoPoint, end : GeoPoint): ArrayList<GeoPoint>  = suspendCoroutine { continuation ->
         val startCoordString = start.longitude.toString() + "," + start.latitude.toString()
