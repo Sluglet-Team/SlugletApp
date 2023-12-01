@@ -48,7 +48,7 @@ class StorageServiceImpl @Inject constructor(
                     // Get their courses, cast to any Array type
                     val courses = userRef.get(USER_COURSES) as ArrayList<*>?
                     // If no courses, return an empty list, can't call firestore with empty list
-                    if (courses == null) {
+                    if (courses.isNullOrEmpty()) {
                         emptyFlow()
                     }
                     // Else return the list of courses as a list of CourseData objects --> .dataObjects()
