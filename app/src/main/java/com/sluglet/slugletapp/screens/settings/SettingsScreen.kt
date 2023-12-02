@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import com.sluglet.slugletapp.HOME_SCREEN
 import com.sluglet.slugletapp.R
 import com.sluglet.slugletapp.common.composables.CourseBox
+import com.sluglet.slugletapp.common.ext.basicRow
 import com.sluglet.slugletapp.common.ext.smallSpacer
 
 @Composable
@@ -68,7 +69,8 @@ fun SettingsScreenContent (
     onSignOutClick: () -> Unit,
     onDeleteMyAccountClick: () -> Unit
 ) {
-    Column {
+    Column (
+    ){
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -79,21 +81,29 @@ fun SettingsScreenContent (
                 openScreen = openScreen
             )
         }
-        LoginButton (onLoginClick = onLoginClick, openScreen = openScreen)
+        if (uiState.isAnonymousAccount){
+            TextButton (onClick = onSignUpClick, openScreen = openScreen, text = "Sign Up")
+            TextButton(onClick = onLoginClick, openScreen = openScreen, text = "Login")
+        }else {
+            TextButton (onClick = onSignOutClick, openScreen = openScreen, text = "Log Out")
+            TextButton (onClick = onDeleteMyAccountClick, openScreen = openScreen, text = "Delete Account")
+        }
     }
-    //LoginButton (onLoginClick = onLoginClick, openScreen = openScreen)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginButton(
-    onLoginClick: () -> Unit,
+fun TextButton(
+    onClick: () -> Unit,
     openScreen: (String) -> Unit,
+    text: String
 ){
-    Card(onClick = { onLoginClick() }) {
-        Text(text = "Login", color = Color.Black)
+    Card(
+        onClick = { onClick() },
+        modifier = Modifier.basicRow()
+    ) {
+        Text(text = text, color = Color.Black, modifier = Modifier.smallSpacer())
     }
-
 }
 @Composable
 fun ReturnButton(
@@ -116,7 +126,7 @@ fun ReturnButton(
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    val uiState = SettingsUiState(false)
+    val uiState = SettingsUiState(true)
     SlugletAppTheme {
         SettingsScreenContent(
             onReturnClick = { },
