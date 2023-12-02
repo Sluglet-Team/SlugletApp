@@ -68,18 +68,29 @@ fun SettingsScreenContent (
     onSignOutClick: () -> Unit,
     onDeleteMyAccountClick: () -> Unit
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        ReturnButton(
-            modifier = Modifier
-                .align(Alignment.TopStart),
-            onReturnClick = onReturnClick,
-            openScreen = openScreen
-        )
+    Column {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            ReturnButton(
+                modifier = Modifier
+                    .align(Alignment.TopStart),
+                onReturnClick = onReturnClick,
+                openScreen = openScreen
+            )
+        }
+        LoginButton (onLoginClick = onLoginClick, openScreen = openScreen)
     }
+    //LoginButton (onLoginClick = onLoginClick, openScreen = openScreen)
 }
 
+@Composable
+fun LoginButton(
+    onLoginClick: () -> Unit,
+    openScreen: (String) -> Unit,
+){
+    Text(text = "Login", color = Color.Black)
+}
 @Composable
 fun ReturnButton(
     modifier: Modifier = Modifier,
@@ -98,17 +109,18 @@ fun ReturnButton(
             .smallSpacer()
     )
 }
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
     val uiState = SettingsUiState(false)
-    SettingsScreenContent(
-        onReturnClick = { },
-        uiState = uiState,
-        onLoginClick = { },
-        onSignUpClick = { },
-        onSignOutClick = { }
-    ) {
-
+    SlugletAppTheme {
+        SettingsScreenContent(
+            onReturnClick = { },
+            uiState = uiState,
+            onLoginClick = { },
+            onSignUpClick = { },
+            onSignOutClick = { },
+            onDeleteMyAccountClick = { },
+        )
     }
 }
