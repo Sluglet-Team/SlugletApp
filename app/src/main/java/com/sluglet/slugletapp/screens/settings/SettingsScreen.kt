@@ -70,7 +70,7 @@ fun SettingsScreenContent (
 ) {
     Column {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxWidth()
         ) {
             ReturnButton(
                 modifier = Modifier
@@ -84,12 +84,16 @@ fun SettingsScreenContent (
     //LoginButton (onLoginClick = onLoginClick, openScreen = openScreen)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginButton(
     onLoginClick: () -> Unit,
     openScreen: (String) -> Unit,
 ){
-    Text(text = "Login", color = Color.Black)
+    Card(onClick = { onLoginClick() }) {
+        Text(text = "Login", color = Color.Black)
+    }
+
 }
 @Composable
 fun ReturnButton(
