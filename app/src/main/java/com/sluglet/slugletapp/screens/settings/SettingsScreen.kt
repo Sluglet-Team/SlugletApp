@@ -98,3 +98,17 @@ fun ReturnButton(
             .smallSpacer()
     )
 }
+@Preview
+@Composable
+fun SettingsScreenPreview() {
+    val uiState = SettingsUiState(false)
+    SettingsScreenContent(
+        onReturnClick = { },
+        uiState = uiState,
+        onLoginClick = { },
+        onSignUpClick = { },
+        onSignOutClick = { }
+    ) {
+
+    }
+}

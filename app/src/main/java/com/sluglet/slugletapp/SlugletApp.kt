@@ -150,7 +150,10 @@ fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
         SignUpScreen()
     }
     composable(SETTINGS_SCREEN) {
-        SettingsScreen(openScreen = { route -> appState.navigate(route) })
+        SettingsScreen(
+            restartApp = { route -> appState.clearAndNavigate(route) },
+            openScreen = { route -> appState.navigate(route) }
+        )
     }
     composable(MAP_SCREEN) {
         MapScreen(openScreen = { route -> appState.navigate(route) })
