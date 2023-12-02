@@ -147,7 +147,6 @@ class AccountServiceImpl @Inject constructor(
     }
 
     override fun isUserAnonymous(): Boolean {
-        val auth = FirebaseAuth.getInstance()
         val currUser = auth.currentUser
         if(currUser?.isAnonymous == true){
             return true
