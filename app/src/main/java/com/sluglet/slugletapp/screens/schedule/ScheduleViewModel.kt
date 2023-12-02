@@ -1,6 +1,11 @@
 package com.sluglet.slugletapp.screens.schedule
 
+import android.Manifest
+import android.os.Build
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.SavedStateHandle
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.sluglet.slugletapp.common.ext.hasNotificationPermission
 import com.sluglet.slugletapp.model.CourseData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

@@ -80,18 +80,7 @@ fun ScheduleScreen (
         textColor = MaterialTheme.colorScheme.onSurface,
         selectedTextColor = Color.White
     )
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        val permissionState = rememberMultiplePermissionsState(
-                permissions = listOf(
-                    Manifest.permission.POST_NOTIFICATIONS,
-                    Manifest.permission.SCHEDULE_EXACT_ALARM
-                )
-            )
-        LaunchedEffect(!context.hasNotificationPermission()) {
-            permissionState.launchMultiplePermissionRequest()
-        }
-    }
-    viewModel.addDummyStartTimes()
+
     // FIXME(Tanuj): Use this variable or get rid of it.
     //val startTimes = mutableListOf<LocalTime>()
     val events = KalendarEvents(userCourses.flatMap { course ->
@@ -146,6 +135,19 @@ fun ScheduleScreen (
         kalendarColors = kalendarColors,
         kalendarDayKonfig = kalendarDayKonfig
     )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val permissionState = rememberMultiplePermissionsState(
+            permissions = listOf(
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.SCHEDULE_EXACT_ALARM
+            )
+        )
+        LaunchedEffect(!context.hasNotificationPermission()) {
+            permissionState.launchMultiplePermissionRequest()
+        }
+    }
+    val s = context.hasNotificationPermission()
+    viewModel.addDummyStartTimes()
 }
 fun getDayOfWeekFromString(day: String): DayOfWeek {
     return when (day) {
