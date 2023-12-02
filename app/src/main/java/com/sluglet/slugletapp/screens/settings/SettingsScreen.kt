@@ -100,7 +100,7 @@ fun TextButton(
 ){
     Card(
         onClick = { onClick() },
-        modifier = Modifier.basicRow()
+        modifier = Modifier.padding(5.dp).basicRow()
     ) {
         Text(text = text, color = Color.Black, modifier = Modifier.smallSpacer())
     }
