@@ -1,7 +1,9 @@
 package com.sluglet.slugletapp
 
 import android.content.res.Resources
+import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,6 +14,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -28,17 +31,20 @@ import com.sluglet.slugletapp.model.BottomNavItem
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.screens.search.SearchScreen
 import com.sluglet.slugletapp.screens.settings.SettingsScreen
-import com.sluglet.slugletapp.screens.settings.SettingsScreenContent
 import com.sluglet.slugletapp.screens.search.SearchScreenContent
 import com.sluglet.slugletapp.ui.theme.DarkMode
 import com.sluglet.slugletapp.ui.theme.LightMode
 import com.sluglet.slugletapp.ui.theme.SlugletAppTheme
 import kotlinx.coroutines.CoroutineScope
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SlugletApp () {
-    SlugletAppTheme {
+    val isDarkTheme = remember{mutableStateOf(false) }
+
+    SlugletAppTheme(darkTheme = isDarkTheme.value){
+
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize()
@@ -84,11 +90,12 @@ fun SlugletApp () {
                     )
                 }
             ) {innerPadding ->
+
                 // Anything in here will fill the max size of the screen
-                if (isSystemInDarkTheme()) {
+                /*if (isSystemInDarkTheme()) {
                     DarkMode()
                 }
-                else LightMode()
+                else LightMode()*/
 
                 NavHost(
                     navController = appState.navController,
@@ -123,6 +130,6 @@ fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
         SearchScreen(openScreen = { route -> appState.navigate(route) })
     }
     composable(SETTINGS_SCREEN) {
-        SettingsScreen(openScreen = { route -> appState.navigate(route) })
+        SettingsScreen()
     }
 }

@@ -1,8 +1,10 @@
 package com.sluglet.slugletapp
 
 import android.os.Bundle
+import android.widget.Switch
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
@@ -19,5 +21,6 @@ class SlugletActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { SlugletApp() }
+
     }
 }

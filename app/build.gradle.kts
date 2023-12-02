@@ -69,6 +69,7 @@ dependencies {
     implementation("androidx.wear.compose:compose-material:1.2.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.preference:preference-ktx:1.2.1")
+    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     testImplementation("junit:junit:4.13.2")
     implementation("androidx.constraintlayout:constraintlayout:2.2.0-alpha13")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13")
@@ -80,6 +81,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 

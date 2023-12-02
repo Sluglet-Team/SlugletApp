@@ -23,4 +23,12 @@
     <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
     <string name="password_match_error">Passwords do not match.</string>
     <string name="theme_switch_label">switch</string>
+
+    <!-- SettingsScreen -->
+    <string name="SlugletApp">sharedPreferences</string>
+    <string name="login">Login</string>
+    <string name="enter_password">Enter password</string>
+    <string name="enter_your_email">Enter your Email</string>
+    <string name="logout">Logout</string>
+    <string name="title_activity_home">HomeActivity</string>
 </resources>
