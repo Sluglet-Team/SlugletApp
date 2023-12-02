@@ -39,10 +39,6 @@ import com.sluglet.slugletapp.R
 import com.sluglet.slugletapp.common.composables.CourseBox
 import com.sluglet.slugletapp.common.ext.smallSpacer
 
-/*
-A composable that renders the Search Screen
-Uses a CourseBox composable along with a SearchTextField
- */
 @Composable
 fun SettingsScreen (
     openScreen: (String) -> Unit,
