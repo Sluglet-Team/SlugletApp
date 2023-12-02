@@ -7,12 +7,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.lifecycle.viewModelScope
 import com.sluglet.slugletapp.OSMaps.CameraPositionState
 import com.sluglet.slugletapp.OSMaps.CameraProperty
-import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.MapService
 import com.sluglet.slugletapp.model.service.NavService
@@ -23,15 +20,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.RoadManager
+import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
-import javax.inject.Singleton
+
 @HiltViewModel
 class MapViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     logService: LogService,
     private val navService: NavService,
     private val mapService: MapService,
+    private val getLocationUseCase: GetLocationUseCase,
     private val storageService: StorageService
 
 ) : SlugletViewModel(logService) {
@@ -39,22 +38,15 @@ class MapViewModel @Inject constructor(
     //        so that when navigating away and coming back
     //        it doesn't revert to this starting state
     //        Below is an attempt at doing this but is maybe not implemented right
-    @OptIn(SavedStateHandleSaveableApi::class)
-    var cameraState: CameraPositionState by savedStateHandle.saveable {
-        mutableStateOf(
-            CameraPositionState(
-                CameraProperty(
-                    // 36°59'44.5"N 122°03'35.5"W
-                    // Starting point and zoom for the map
-                    geoPoint = GeoPoint(36.99582810669116, -122.05824150361903),
-                    zoom = 15.5
-                )
+    private var _cameraState: MutableStateFlow<CameraPositionState> = MutableStateFlow(
+        CameraPositionState(
+            CameraProperty(
+                geoPoint = GeoPoint(36.99582810669116, -122.05824150361903),
+                zoom = 15.5
             )
         )
-    }
-
-
-
+    )
+    val cameraState = _cameraState.asStateFlow()
     // FIXME(REMOVE): Previous impl used a more standard state handling mechanism
     //        See previous commits.
     // val cameraState: State<CameraPositionState> = _cameraState
@@ -86,6 +78,42 @@ class MapViewModel @Inject constructor(
     {
         currentPath = null
     }
+
+    private val _viewState: MutableStateFlow<ViewState> = MutableStateFlow(ViewState.Loading)
+    val viewState = _viewState.asStateFlow()
+
+    /**
+     * This function is responsible for updating the ViewState based
+     * on the event coming from the view
+     *
+     * @param event the Permission event to handle
+     */
+    fun handle(event: PermissionEvent) {
+        when (event) {
+            PermissionEvent.Granted -> {
+                viewModelScope.launch {
+                    getLocationUseCase.invoke().collect() { location ->
+                        _viewState.value = ViewState.Success(location)
+                    }
+                }
+            }
+
+            PermissionEvent.Revoked -> {
+                _viewState.value = ViewState.RevokedPermissions
+            }
+        }
+    }
+
+    /**
+     * This function handles clicking of MyLocation Icon on the map
+     * On click, it animates to geoPoint
+     *
+     * @param geoPoint the geoPoint of the user's location
+     */
+    fun onMyLocationClick(geoPoint: GeoPoint) {
+        _cameraState.value.animateTo(geoPoint)
+    }
+
 
     // NOTE: removed markerlist because it isn't needed
     // userCourses can be used, and is automatically reflected

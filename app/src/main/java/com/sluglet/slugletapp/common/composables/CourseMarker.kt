@@ -23,10 +23,12 @@ import org.osmdroid.util.GeoPoint
 // Composable for a map marker
 @Composable
 fun CourseMarker (
-    course: CourseData,
+    latitude: Double,
+    longitude: Double,
+    course: CourseData? = null,
     markerIcon: Drawable? = null
 ) {
-    val geoPoint = GeoPoint(course.latitude, course.longitude)
+    val geoPoint = GeoPoint(latitude, longitude)
     val markerState = rememberMarkerState(
         geoPoint = geoPoint,
         rotation = 90f
@@ -49,8 +51,12 @@ fun CourseMarker (
         ) {
             // Info Window Content
             Column(modifier = Modifier.smallSpacer()) {
-                Text(text = course.course_name)
-                Text(text = course.location, fontSize = 10.sp)
+                if (course != null) {
+                    Text(text = course.course_name)
+                }
+                if (course != null) {
+                    Text(text = course.location, fontSize = 10.sp)
+                }
             }
         }
     }
