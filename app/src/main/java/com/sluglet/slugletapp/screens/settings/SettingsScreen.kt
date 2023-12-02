@@ -46,12 +46,18 @@ Uses a CourseBox composable along with a SearchTextField
 @Composable
 fun SettingsScreen (
     openScreen: (String) -> Unit,
-     viewModel: SettingsViewModel = hiltViewModel()
+    restartApp: (String) -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
-
+    val uiState by viewModel.uiState.collectAsState(initial = SettingsUiState(false))
     SettingsScreenContent(
+        uiState = uiState,
         onReturnClick = viewModel::onReturnClick,
-        openScreen = openScreen
+        openScreen = openScreen,
+        onLoginClick = { viewModel.onLoginClick(openScreen) },
+        onSignUpClick = { viewModel.onSignUpClick(openScreen) },
+        onSignOutClick = { viewModel.onSignOutClick(restartApp) },
+        onDeleteMyAccountClick = { viewModel.onDeleteMyAccountClick(restartApp) }
 
     )
 }
@@ -59,7 +65,12 @@ fun SettingsScreen (
 fun SettingsScreenContent (
     modifier: Modifier = Modifier,
     onReturnClick: (((String) -> Unit) -> Unit)?,
-    openScreen: (String) -> Unit = {}
+    openScreen: (String) -> Unit = {},
+    uiState: SettingsUiState,
+    onLoginClick: () -> Unit,
+    onSignUpClick: () -> Unit,
+    onSignOutClick: () -> Unit,
+    onDeleteMyAccountClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize()

@@ -16,7 +16,8 @@ import com.google.firebase.auth.EmailAuthProvider
 
 class AccountServiceImpl @Inject constructor(
     private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore) : AccountService {
+    private val firestore: FirebaseFirestore
+) : AccountService {
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
 
