@@ -7,5 +7,5 @@ import org.osmdroid.util.GeoPoint
 
 interface NavService {
     suspend fun setContext(context: Context)
-    suspend fun getRouteCoords(start: GeoPoint, end: GeoPoint): ArrayList<GeoPoint>?
+    suspend fun getRouteCoords(start: GeoPoint, end: GeoPoint): ArrayList<GeoPoint>
 }

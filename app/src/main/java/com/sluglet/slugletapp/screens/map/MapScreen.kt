@@ -3,6 +3,7 @@ package com.sluglet.slugletapp.screens.map
 import android.Manifest
 import android.content.Intent
 import android.provider.Settings
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -169,7 +170,7 @@ fun MapScreen (
                     mapModifier = mapModifier,
                     onMyLocationCLick = viewModel::onMyLocationClick,
                     onNavClick = viewModel::onNavClick,
-                    currentPath = viewModel.currentPath
+                    currentPath = viewModel.currentPath.value
                 )
             }
         }
@@ -185,7 +186,7 @@ fun MapScreenContent(
     mapModifier: Modifier,
     onMyLocationCLick: (GeoPoint) -> Unit,
     onNavClick: (CourseData) -> Boolean,
-    currentPath: ArrayList<GeoPoint>?
+    currentPath: ArrayList<GeoPoint>
 ) {
     Box {
         OSMaps(
@@ -193,6 +194,15 @@ fun MapScreenContent(
             cameraPositionState = cameraPositionState,
             modifier = mapModifier
         ) {
+            if(!currentPath.isNullOrEmpty())
+            {
+                Log.v("mapScreen", "Drawing route")
+                Log.v("mapScreen", currentPath.toString())
+                Polyline(
+                    geoPoints = currentPath,
+                    color = Color.Red
+                ) {}
+            }
             // Each course in User Profile
             userCourses.forEach { course ->
                 CourseMarker(
@@ -226,19 +236,14 @@ fun MapScreenContent(
                     null
                 )
             )
+
         }
         MyLocationIcon(
             userLocation = userLocation,
             onMyLocationClick = onMyLocationCLick,
             modifier = Modifier.align(Alignment.BottomEnd)
         )
-        if(currentPath != null)
-        {
-            Polyline(
-                geoPoints = currentPath,
-                color = Color.Red
-            )
-        }
+
     }
 }
 

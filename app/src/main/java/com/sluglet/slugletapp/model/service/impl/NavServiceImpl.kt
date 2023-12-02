@@ -36,10 +36,10 @@ class NavServiceImpl @Inject constructor(): NavService {
     {
 
     }
-    override suspend fun getRouteCoords(start : GeoPoint, end : GeoPoint): ArrayList<GeoPoint>?  = suspendCoroutine { continuation ->
+    override suspend fun getRouteCoords(start : GeoPoint, end : GeoPoint): ArrayList<GeoPoint>  = suspendCoroutine { continuation ->
         Log.v("NavService", "Starting Nav")
-        val startCoordString = start.latitude.toString() + "," + start.longitude.toString()
-        val endCoordString = end.latitude.toString() + "," + end.longitude.toString()
+        val startCoordString = start.longitude.toString() + "," + start.latitude.toString()
+        val endCoordString = end.longitude.toString() + "," + end.latitude.toString()
         val apiCallUrl = NAV_URL + "api_key=" + NAV_KEY + "&start=" + startCoordString + "&end=" + endCoordString
         val client = OkHttpClient()
         val routeRequest = Request.Builder()
@@ -47,7 +47,10 @@ class NavServiceImpl @Inject constructor(): NavService {
             .build()
 
         client.newCall(routeRequest).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {}
+            override fun onFailure(call: Call, e: IOException) {
+                Log.v("findRoute", "IO Exception")
+                continuation.resume(ArrayList<GeoPoint>())
+            }
             override fun onResponse(call: Call, response: Response)
             {
                 Log.v("findRoute", response.toString())
@@ -65,11 +68,13 @@ class NavServiceImpl @Inject constructor(): NavService {
                     while(i < arrayLength)
                     {
                         val coords = jsonArray.getString(i).split(',')
-                        val longitude = coords[0].trim(']','[')
-                        val latitude = coords[1].trim(']','[')
-                        coordArray.add(GeoPoint(latitude.toDouble(), longitude.toDouble()))
+                        val longitude = (coords[0].trim(']','[')).toDouble()
+                        val latitude = (coords[1].trim(']','[')).toDouble()
+                        Log.v("findRoute", "lon: " + longitude.toString() + " lat: " + latitude.toString())
+                        coordArray.add(GeoPoint(latitude, longitude))
                         i += 1
                     }
+                    Log.v("findRoute", coordArray.toString())
                     Log.v("findRoute", "Nav Complete")
                     continuation.resume(coordArray)
                 }

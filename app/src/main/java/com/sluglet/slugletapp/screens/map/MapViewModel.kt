@@ -17,6 +17,7 @@ import com.sluglet.slugletapp.model.service.MapService
 import com.sluglet.slugletapp.model.service.NavService
 import com.sluglet.slugletapp.model.service.StorageService
 import com.sluglet.slugletapp.screens.SlugletViewModel
+import com.sluglet.slugletapp.screens.sign_up.SignUpUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -59,27 +60,30 @@ class MapViewModel @Inject constructor(
     // Get user courses from firestore
     val userCourses = storageService.userCourses
 
-    var currentPath : ArrayList<GeoPoint>? = null
-    var pathSetInProgress = false
+    private var _currentPath = mutableStateOf(ArrayList<GeoPoint>())
+    var currentPath : State<ArrayList<GeoPoint>> = _currentPath
+
     var currentLocation : LatLng? = null
+    private var pathSetInProgress = false
     fun onNavClick(course : CourseData) : Boolean
     {
         if(currentLocation == null)
             return false
         val courseCoord = GeoPoint(course.latitude, course.longitude)
-        val myCoord = GeoPoint(currentLocation!!.latitude, currentLocation!!.longitude)
+        val myCoord = GeoPoint(36.99998,-122.06238)
+        //val myCoord = GeoPoint(currentLocation!!.latitude, currentLocation!!.longitude)
         return setPath(myCoord, courseCoord)
     }
-    fun setPath(start : GeoPoint, end : GeoPoint) : Boolean
+    private fun setPath(start : GeoPoint, end : GeoPoint) : Boolean
     {
         Log.v("setPath", "SetPath Called")
         if (!pathSetInProgress)
         {
             pathSetInProgress = true
             launchCatching {
-                currentPath = navService.getRouteCoords(start, end)
-                pathSetInProgress = false
+                _currentPath.value = navService.getRouteCoords(start, end)
                 Log.v("setPath", currentPath.toString())
+                pathSetInProgress = false
             }
             return true
         }
@@ -87,7 +91,7 @@ class MapViewModel @Inject constructor(
     }
     fun clearPath()
     {
-        currentPath = null
+        _currentPath.value = ArrayList()
     }
 
     private val _viewState: MutableStateFlow<ViewState> = MutableStateFlow(ViewState.Loading)
