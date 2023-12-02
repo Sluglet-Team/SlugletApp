@@ -8,8 +8,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.sluglet.slugletapp.OSMaps.CameraPositionState
 import com.sluglet.slugletapp.OSMaps.CameraProperty
+import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.MapService
 import com.sluglet.slugletapp.model.service.NavService
@@ -59,6 +61,15 @@ class MapViewModel @Inject constructor(
 
     var currentPath : ArrayList<GeoPoint>? = null
     var pathSetInProgress = false
+    var currentLocation : LatLng? = null
+    fun onNavClick(course : CourseData) : Boolean
+    {
+        if(currentLocation == null)
+            return false
+        val courseCoord = GeoPoint(course.latitude, course.longitude)
+        val myCoord = GeoPoint(currentLocation!!.latitude, currentLocation!!.longitude)
+        return setPath(myCoord, courseCoord)
+    }
     fun setPath(start : GeoPoint, end : GeoPoint) : Boolean
     {
         Log.v("setPath", "SetPath Called")

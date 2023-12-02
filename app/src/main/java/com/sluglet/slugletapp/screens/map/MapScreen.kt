@@ -61,7 +61,6 @@ import com.sluglet.slugletapp.common.ext.hasLocationPermission
 import com.sluglet.slugletapp.common.ext.smallSpacer
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.resources
-import org.osmdroid.util.GeoPoint
 
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -84,20 +83,10 @@ fun MapScreen (
         .clip(RoundedCornerShape(10.dp))
         .shadow(elevation = 10.dp)
 
-    OSMaps (
-        cameraPositionState = cameraPositionState,
-        modifier = mapModifier,
-        onFirstLoadListener = { }
-    ) {
-        userCourses.forEach { course->
-            CourseMarker(
-                course = course,
-                markerIcon = ResourcesCompat.getDrawable(resources(), R.drawable.edu_map_pin_red, null)
-            )
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_COARSE_LOCATION,
         )
     )
 
@@ -123,22 +112,6 @@ fun MapScreen (
                 viewModel.handle(PermissionEvent.Revoked)
             }
         }
-
-        val start = GeoPoint(-122.06085,36.99467,) // East Baskin
-        val end = GeoPoint(-122.06511,36.953,) // Earth & Marine
-        viewModel.setPath(start, end)
-
-        if (viewModel.currentPath != null)
-        {
-            Log.v("mapScreen", viewModel.currentPath.toString())
-            Polyline(viewModel.currentPath!!) {
-
-            }
-        }
-        //val initRoute = road.mRouteHigh
-        //Polyline(
-        //    initRoute
-        //) {}
     }
 
     with(viewState) {
@@ -186,13 +159,17 @@ fun MapScreen (
                         location?.latitude ?: 0.0,
                         location?.longitude ?: 0.0
                     )
+                viewModel.currentLocation = currentLoc
+
                 MapScreenContent(
                     userCourses = userCourses,
                     userLocation = currentLoc,
                     courseToDisplay = courseToDisplay,
                     cameraPositionState = cameraPositionState.value,
                     mapModifier = mapModifier,
-                    onMyLocationCLick = viewModel::onMyLocationClick
+                    onMyLocationCLick = viewModel::onMyLocationClick,
+                    onNavClick = viewModel::onNavClick,
+                    currentPath = viewModel.currentPath
                 )
             }
         }
@@ -206,7 +183,9 @@ fun MapScreenContent(
     courseToDisplay: CourseData?,
     cameraPositionState: CameraPositionState,
     mapModifier: Modifier,
-    onMyLocationCLick: (GeoPoint) -> Unit
+    onMyLocationCLick: (GeoPoint) -> Unit,
+    onNavClick: (CourseData) -> Boolean,
+    currentPath: ArrayList<GeoPoint>?
 ) {
     Box {
         OSMaps(
@@ -218,8 +197,7 @@ fun MapScreenContent(
             userCourses.forEach { course ->
                 CourseMarker(
                     course = course,
-                    latitude = course.latitude,
-                    longitude = course.longitude,
+                    onNavClick = onNavClick,
                     markerIcon = ResourcesCompat.getDrawable(
                         resources(),
                         R.drawable.edu_map_pin_red,
@@ -231,8 +209,7 @@ fun MapScreenContent(
             if (courseToDisplay != null) {
                 CourseMarker(
                     course = courseToDisplay,
-                    latitude = courseToDisplay.latitude,
-                    longitude = courseToDisplay.longitude,
+                    onNavClick = onNavClick,
                     markerIcon = ResourcesCompat.getDrawable(
                         resources(),
                         R.drawable.edu_map_pin_green,
@@ -255,6 +232,13 @@ fun MapScreenContent(
             onMyLocationClick = onMyLocationCLick,
             modifier = Modifier.align(Alignment.BottomEnd)
         )
+        if(currentPath != null)
+        {
+            Polyline(
+                geoPoints = currentPath,
+                color = Color.Red
+            )
+        }
     }
 }
 
