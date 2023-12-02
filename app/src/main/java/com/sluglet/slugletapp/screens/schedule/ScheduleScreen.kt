@@ -54,6 +54,7 @@ fun ScheduleScreen (
     viewModel: ScheduleViewModel = hiltViewModel()
 ) {
     // Getting the current date
+
     val currentDate = viewModel.currentDate.toLocalDateTime(TimeZone.currentSystemDefault())
     Log.v("Date", "$currentDate")
     val userCourses = viewModel.userCourses.collectAsStateWithLifecycle(emptyList()).value
@@ -90,8 +91,9 @@ fun ScheduleScreen (
             permissionState.launchMultiplePermissionRequest()
         }
     }
+    viewModel.addDummyStartTimes()
     // FIXME(Tanuj): Use this variable or get rid of it.
-    val startTimes = mutableListOf<LocalTime>()
+    //val startTimes = mutableListOf<LocalTime>()
     val events = KalendarEvents(userCourses.flatMap { course ->
         // Take only the first part of the string
         val daysOfWeek = course.date_time.split(" ")[0]
@@ -99,7 +101,9 @@ fun ScheduleScreen (
         val courseDetails = "${course.course_number} - ${course.location}"
         // FIXME(Tanuj): An idea for getting startTimes of classes
         //               Not necessarily the way to do this. Get rid of if not using.
-        // startTimes.add(course.date_time.split(" ")[1].split("-")[0].toLocalTime())
+        //startTimes.add(course.date_time.split(" ")[1].split("-")[0].toLocalTime())
+        //viewModel.updateStartTimes(startTimes)
+        viewModel.updateStartTimesFromCourses(userCourses)
 
         // Split the days by looking for capital letters
         val days = daysOfWeek.split(Regex("(?=[A-Z])")).filter { it.isNotBlank() }
