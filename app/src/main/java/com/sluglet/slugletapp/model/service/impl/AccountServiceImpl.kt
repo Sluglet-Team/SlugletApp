@@ -29,7 +29,7 @@ class AccountServiceImpl @Inject constructor(
         get() = callbackFlow {
             val listener =
                 FirebaseAuth.AuthStateListener { auth ->
-                    this.trySend(auth.currentUser?.let { User(uid = it.uid) } ?: User())
+                    this.trySend(auth.currentUser?.let { User(uid = it.uid, email = it.email.toString()) } ?: User())
                 }
             auth.addAuthStateListener(listener)
             awaitClose { auth.removeAuthStateListener(listener) }
@@ -77,17 +77,7 @@ class AccountServiceImpl @Inject constructor(
     }
 
     override suspend fun logIn(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.v("logIn", "logIn success")
-                }
-                else
-                {
-                    Log.v("logIn", "logIn failure")
-                    Log.v("logIn", "Email: -$email- Password: -$password-")
-                }
-            }
+        auth.signInWithEmailAndPassword(email, password).await()
     }
 
     override suspend fun addCourse(course: CourseData)
@@ -147,6 +137,7 @@ class AccountServiceImpl @Inject constructor(
     ) {
         val credential = EmailAuthProvider.getCredential(email, password)
         auth.currentUser!!.linkWithCredential(credential).await()
+        firestore.collection(USER_COLLECTION).document(currentUserId).update("email", email).await()
     }
 
     override fun isUserAnonymous(): Boolean {

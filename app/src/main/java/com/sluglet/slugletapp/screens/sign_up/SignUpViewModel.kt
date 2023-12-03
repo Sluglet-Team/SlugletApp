@@ -19,6 +19,8 @@ import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
 import com.sluglet.slugletapp.model.service.StorageService
 import android.util.Log
+import com.sluglet.slugletapp.HOME_SCREEN
+import com.sluglet.slugletapp.SIGNUP_SCREEN
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -49,7 +51,7 @@ class SignUpViewModel @Inject constructor(
         _uiState.value = uiState.value.copy(repeatPassword = newValue)
     }
 
-    fun onSignUpClick() {
+    fun onSignUpClick(openAndPopUp: (String, String) -> Unit) {
         if (!(_uiState.value.email).isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
@@ -72,12 +74,10 @@ class SignUpViewModel @Inject constructor(
             accountService.linkAccounts(_uiState.value.email, _uiState.value.password)
             // FIXME: Now with anonymous accounts, we maybe don't need this
             accountService.createAccount(_uiState.value.email, _uiState.value.password)
-            Log.v("onSignUpClick", "register button pressed")
-            //TODO Navigate Away from Login Page
+            openAndPopUp(HOME_SCREEN, SIGNUP_SCREEN)
         }
     }
-    //fun onSignInClick(openAndPopUp: (String, String) -> Unit) {
-    fun onSignInClick() {
+    fun onSignInClick(openAndPopUp: (String, String) -> Unit) {
     /*
     Tries to authenticate, and if the call succeeds,
     it proceeds to the next screen (the SettingsScreen).
@@ -86,9 +86,17 @@ class SignUpViewModel @Inject constructor(
     the exception will be caught and handled,
     and the second line will not be reached at all.
      */
+        if (!(_uiState.value.email).isValidEmail()) {
+            SnackbarManager.showMessage(AppText.email_error)
+            return
+        }
+        if (password.isBlank()) {
+            SnackbarManager.showMessage(AppText.empty_password_error)
+            return
+        }
         launchCatching {
             accountService.logIn(_uiState.value.email, _uiState.value.password)
-            //TODO Navigate Away from Login Page
+            openAndPopUp(HOME_SCREEN, SIGNUP_SCREEN)
         }
     }
     fun onTestClick() {
