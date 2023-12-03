@@ -63,17 +63,23 @@ class MapViewModel @Inject constructor(
     private var _currentPath = mutableStateOf(ArrayList<GeoPoint>())
     var currentPath : State<ArrayList<GeoPoint>> = _currentPath
 
+    var pathDisplayed : CourseData? = null
     var currentLocation : LatLng? = null
     private var pathSetInProgress = false
     fun onNavClick(course : CourseData) : Boolean
     {
         if(currentLocation == null)
             return false
+        if (pathDisplayed != null && pathDisplayed == course ) {
+            clearPath()
+            return true
+        }
         val courseCoord = GeoPoint(course.latitude, course.longitude)
-        val myCoord = GeoPoint(36.99998,-122.06238)
-        //val myCoord = GeoPoint(currentLocation!!.latitude, currentLocation!!.longitude)
+        //val myCoord = GeoPoint(36.99998,-122.06238)
+        val myCoord = GeoPoint(currentLocation!!.latitude, currentLocation!!.longitude)
         return setPath(myCoord, courseCoord)
     }
+
     private fun setPath(start : GeoPoint, end : GeoPoint) : Boolean
     {
         Log.v("setPath", "SetPath Called")
@@ -82,6 +88,9 @@ class MapViewModel @Inject constructor(
             pathSetInProgress = true
             launchCatching {
                 _currentPath.value = navService.getRouteCoords(start, end)
+                if(_currentPath.value.isEmpty()) {
+                    // This should trigger a toast somehow
+                }
                 Log.v("setPath", currentPath.toString())
                 pathSetInProgress = false
             }
@@ -89,7 +98,7 @@ class MapViewModel @Inject constructor(
         }
         return false
     }
-    fun clearPath()
+    private fun clearPath()
     {
         _currentPath.value = ArrayList()
     }
