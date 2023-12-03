@@ -37,6 +37,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
+    openScreen: (String) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 
 ) {

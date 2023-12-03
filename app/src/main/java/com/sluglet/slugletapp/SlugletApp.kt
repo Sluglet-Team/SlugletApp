@@ -83,12 +83,6 @@ fun SlugletApp () {
                                 unselectedIcon = Icons.Default.DateRange
                             ),
                             BottomNavItem(
-                                name = "Sign Up",
-                                route = SIGNUP_SCREEN,
-                                selectedIcon = Icons.Filled.Settings,
-                                unselectedIcon = Icons.Default.Settings
-                            ),
-                            BottomNavItem(
                                 name = "Map",
                                 route = MAP_SCREEN,
                                 selectedIcon = Icons.Filled.LocationOn,
@@ -135,7 +129,6 @@ fun resources(): Resources {
     return LocalContext.current.resources
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     composable(HOME_SCREEN) {
         HomeScreen(openScreen = { route -> appState.navigate(route) })
@@ -147,7 +140,7 @@ fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
         ScheduleScreen(openScreen = { route -> appState.navigate(route) })
     }
     composable(SIGNUP_SCREEN) {
-        SignUpScreen()
+        SignUpScreen(openScreen = { route -> appState.navigate(route) })
     }
     composable(SETTINGS_SCREEN) {
         SettingsScreen(
