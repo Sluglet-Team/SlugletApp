@@ -13,6 +13,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
+import com.sluglet.slugletapp.model.service.StorageService
 
 class AccountServiceImpl @Inject constructor(
     private val auth: FirebaseAuth,
@@ -131,7 +132,7 @@ class AccountServiceImpl @Inject constructor(
         auth.signOut()
 
         // Sign the user back in anonymously.
-        createAnonymousAccount()
+        // createAnonymousAccount()
     }
     /**
      * Links the current account to the provided matching parameters
