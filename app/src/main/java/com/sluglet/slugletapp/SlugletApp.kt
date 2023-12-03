@@ -55,7 +55,7 @@ fun SlugletApp () {
             Scaffold (
                 snackbarHost = {
                     SnackbarHost (
-                        hostState = snackbarHostState,
+                        hostState = appState.snackbarHostState,
                         snackbar = {snackbarData ->
                             Snackbar(snackbarData, contentColor = MaterialTheme.colorScheme.primary)
                         }
@@ -121,12 +121,13 @@ fun SlugletApp () {
 @Composable
 fun rememberAppState(
     navController: NavHostController = rememberNavController(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     snackbarManager: SnackbarManager = SnackbarManager,
     resources: Resources = resources(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) =
     remember(navController, snackbarManager, resources, coroutineScope) {
-        SlugletAppState(navController, snackbarManager, resources, coroutineScope)
+        SlugletAppState(navController, snackbarHostState, snackbarManager, resources, coroutineScope)
     }
 @Composable
 @ReadOnlyComposable
