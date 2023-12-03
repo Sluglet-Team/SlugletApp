@@ -81,7 +81,7 @@ class SignUpViewModel @Inject constructor(
             return
         }
         launchCatching {
-            accountService.logIn(_uiState.value.email, _uiState.value.password)
+            accountService.logIn(email, password)
             openAndPopUp(HOME_SCREEN, SIGNUP_SCREEN)
         }
     }
