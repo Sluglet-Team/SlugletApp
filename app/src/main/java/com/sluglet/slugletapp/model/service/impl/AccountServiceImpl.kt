@@ -80,7 +80,7 @@ class AccountServiceImpl @Inject constructor(
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    Log.v("logIn", "createAccount success")
+                    Log.v("logIn", "logIn success")
                 }
                 else
                 {
@@ -122,6 +122,7 @@ class AccountServiceImpl @Inject constructor(
             }
     }
     override suspend fun deleteAccount() {
+        firestore.collection(USER_COLLECTION).document(currentUserId).delete().await()
         auth.currentUser!!.delete().await()
     }
 

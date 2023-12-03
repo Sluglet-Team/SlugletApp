@@ -36,8 +36,6 @@ class SettingsViewModel @Inject constructor(
     fun onDeleteMyAccountClick(restartApp: (String) -> Unit) {
         launchCatching {
             accountService.deleteAccount()
-            // FIXME: https://github.com/Sluglet-Team/SlugletApp/issues/35
-            //        Add fix here
             restartApp(HOME_SCREEN)
         }
     }
