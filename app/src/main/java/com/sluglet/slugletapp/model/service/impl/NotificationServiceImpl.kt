@@ -25,10 +25,7 @@ class NotificationServiceImpl @Inject constructor(
 ) : NotificationService {
 
     private  val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-    @Inject
-    lateinit var broadcastReceiver: BroadcastReceiver
+    val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     // FIXME: maybe move to slugletactivity instead of init
     init {
@@ -50,7 +47,7 @@ class NotificationServiceImpl @Inject constructor(
         val activityIntent = Intent(context, SlugletActivity::class.java)
         val activityPendingIntent = PendingIntent.getActivity(
             context,
-            1,
+            2,
             activityIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
@@ -66,7 +63,7 @@ class NotificationServiceImpl @Inject constructor(
 
     @SuppressLint("ScheduleExactAlarm")
     override fun scheduleNotificationAtTime(hour: Int, minute: Int) {
-        val intent = Intent(context, NotificationServiceImpl::class.java)
+        val intent = Intent(context, BroadcastReceiverImpl::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             1,
@@ -75,19 +72,15 @@ class NotificationServiceImpl @Inject constructor(
         )
 
         val calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, hour)
             set(Calendar.MINUTE, minute)
         }
-
-        alarmManager.setExact(
+        Log.v("Calendar millis", "${calendar.timeInMillis}")
+        alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
             pendingIntent
         )
-    }
-    override fun onReceive(context: Context, intent: Intent) {
-        broadcastReceiver.onReceive(context, intent)
     }
 
     companion object {

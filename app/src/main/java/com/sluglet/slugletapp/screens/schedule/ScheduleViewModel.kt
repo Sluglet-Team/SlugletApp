@@ -1,8 +1,5 @@
 package com.sluglet.slugletapp.screens.schedule
 
-import android.Manifest
-import android.os.Build
-import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.SavedStateHandle
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.sluglet.slugletapp.common.ext.hasNotificationPermission
@@ -40,7 +37,15 @@ class ScheduleViewModel @Inject constructor(
             add(LocalTime.parse("10:30"))
             add(LocalTime.parse("13:45"))
         }
-        scheduleNotifications()
+    }
+
+    fun onDateSelected(date: LocalDate) {
+        _selectedDate.value = date
+        // FIXME(Tanuj): I put the notification call here to test
+        //               Click on a date and confirm that it works the way you intended
+        //               Then REMOVE this call, cause this is not intended functionality
+        notificationService.showNotification()
+        notificationService.scheduleNotificationAtTime(18, 15)
     }
     fun updateStartTimesFromCourses(courses: List<CourseData>) {
         startTimes.clear()
@@ -48,9 +53,10 @@ class ScheduleViewModel @Inject constructor(
             val courseStartTime = course.date_time.split(" ")[1].split("-")[0].toLocalTime()
             startTimes.add(courseStartTime)
         }
-        scheduleNotifications()
     }
-
+    fun scheduleNotificationForTime(startTime: LocalTime) {
+        notificationService.scheduleNotificationAtTime(startTime.hour, startTime.minute)
+    }
 
     // FIXME(Tanuj): Notifications are showing, but I haven't done anything to handle
     //               time events, just testing to make sure they show.
@@ -64,18 +70,6 @@ class ScheduleViewModel @Inject constructor(
 //        launchCatching {
 //            notificationService.showNotification()
 //        }
-    }
-
-    private fun scheduleNotificationForTime(startTime: LocalTime) {
-        notificationService.scheduleNotificationAtTime(startTime.hour, startTime.minute)
-    }
-
-    fun onDateSelected(date: LocalDate) {
-        _selectedDate.value = date
-        // FIXME(Tanuj): I put the notification call here to test
-        //               Click on a date and confirm that it works the way you intended
-        //               Then REMOVE this call, cause this is not intended functionality
-       // notificationService.showNotification()
     }
 
 
