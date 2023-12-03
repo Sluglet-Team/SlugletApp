@@ -1,23 +1,17 @@
 package com.sluglet.slugletapp.screens.settings
 
-import androidx.compose.runtime.*
-import androidx.lifecycle.SavedStateHandle
 import com.sluglet.slugletapp.HOME_SCREEN
 import com.sluglet.slugletapp.SIGNUP_SCREEN
 import com.sluglet.slugletapp.model.service.AccountService
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import com.sluglet.slugletapp.model.service.LogService
-import com.sluglet.slugletapp.model.service.StorageService
 import com.sluglet.slugletapp.screens.SlugletViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     logService: LogService,
-    private val storageService: StorageService,
     private val accountService: AccountService
 ) : SlugletViewModel(logService) {
     val uiState = MutableStateFlow(SettingsUiState(accountService.isUserAnonymous()))
