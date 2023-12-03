@@ -37,7 +37,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = hiltViewModel()
+    viewModel: SignUpViewModel = hiltViewModel(),
+    openAndPopUp: (String, String) -> Unit
 
 ) {
     val uiState by viewModel.uiState
@@ -46,8 +47,8 @@ fun SignUpScreen(
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
-        onSignUpClick = { viewModel.onSignUpClick() },
-        onSignInClick = { viewModel.onSignInClick() },
+        onSignUpClick = { viewModel.onSignUpClick(openAndPopUp) },
+        onSignInClick = { viewModel.onSignInClick(openAndPopUp) },
         onTestClick = { viewModel.onTestClick() }
     )
 

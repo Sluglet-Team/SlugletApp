@@ -136,7 +136,6 @@ fun resources(): Resources {
     return LocalContext.current.resources
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     composable(HOME_SCREEN) {
         HomeScreen(openScreen = { route -> appState.navigate(route) })
@@ -148,7 +147,7 @@ fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
         ScheduleScreen(openScreen = { route -> appState.navigate(route) })
     }
     composable(SIGNUP_SCREEN) {
-        SignUpScreen()
+        SignUpScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
     composable(SETTINGS_SCREEN) {
         SettingsScreen(openScreen = { route -> appState.navigate(route) })

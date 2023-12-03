@@ -75,17 +75,7 @@ class AccountServiceImpl @Inject constructor(
     }
 
     override suspend fun logIn(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.v("logIn", "createAccount success")
-                }
-                else
-                {
-                    Log.v("logIn", "logIn failure")
-                    Log.v("logIn", "Email: -$email- Password: -$password-")
-                }
-            }
+        auth.signInWithEmailAndPassword(email, password).await()
     }
 
     override suspend fun addCourse(course: CourseData)
