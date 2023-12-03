@@ -27,7 +27,7 @@ class AccountServiceImpl @Inject constructor(
         get() = callbackFlow {
             val listener =
                 FirebaseAuth.AuthStateListener { auth ->
-                    this.trySend(auth.currentUser?.let { User(uid = it.uid) } ?: User())
+                    this.trySend(auth.currentUser?.let { User(uid = it.uid, email = it.email.toString()) } ?: User())
                 }
             auth.addAuthStateListener(listener)
             awaitClose { auth.removeAuthStateListener(listener) }
@@ -144,6 +144,7 @@ class AccountServiceImpl @Inject constructor(
     ) {
         val credential = EmailAuthProvider.getCredential(email, password)
         auth.currentUser!!.linkWithCredential(credential).await()
+        firestore.collection(USER_COLLECTION).document(currentUserId).update("email", email).await()
     }
 
     override fun isUserAnonymous(): Boolean {
