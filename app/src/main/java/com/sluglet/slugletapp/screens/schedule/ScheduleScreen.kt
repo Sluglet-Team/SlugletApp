@@ -87,10 +87,10 @@ fun ScheduleScreen (
         val courseDetails = "${course.course_number} - ${course.location}"
 
         // Main call to schedule alarms for the notification
-        //viewModel.updateStartTimesFromCourses(userCourses)
+        viewModel.updateStartTimesFromCourses(userCourses)
 
         // Uncomment this to use the testing function for notification
-        viewModel.addDummyStartTimes()
+        //viewModel.addDummyStartTimes()
 
         // Split the days by looking for capital letters
         val days = daysOfWeek.split(Regex("(?=[A-Z])")).filter { it.isNotBlank() }
