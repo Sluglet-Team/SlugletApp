@@ -1,9 +1,6 @@
 package com.sluglet.slugletapp
 
 import android.content.res.Resources
-import android.os.Build
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,7 +9,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -29,11 +25,9 @@ import androidx.navigation.compose.rememberNavController
 import com.sluglet.slugletapp.common.composables.BottomNavBar
 import com.sluglet.slugletapp.common.snackbar.SnackbarManager
 import com.sluglet.slugletapp.model.BottomNavItem
-import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.screens.home.HomeScreen
 import com.sluglet.slugletapp.screens.map.MapScreen
 import com.sluglet.slugletapp.screens.search.SearchScreen
-import com.sluglet.slugletapp.screens.search.SearchScreenContent
 import com.sluglet.slugletapp.screens.settings.SettingsScreen
 import com.sluglet.slugletapp.screens.sign_up.SignUpScreen
 import com.sluglet.slugletapp.ui.theme.DarkMode
@@ -51,11 +45,10 @@ fun SlugletApp () {
             modifier = Modifier.fillMaxSize()
         ) {
             val appState = rememberAppState()
-            val snackbarHostState = remember { SnackbarHostState() }
             Scaffold (
                 snackbarHost = {
                     SnackbarHost (
-                        hostState = snackbarHostState,
+                        hostState = appState.snackbarHostState,
                         snackbar = {snackbarData ->
                             Snackbar(snackbarData, contentColor = MaterialTheme.colorScheme.primary)
                         }
@@ -81,12 +74,6 @@ fun SlugletApp () {
                                 route = SCHEDULE_SCREEN,
                                 selectedIcon = Icons.Filled.DateRange,
                                 unselectedIcon = Icons.Default.DateRange
-                            ),
-                            BottomNavItem(
-                                name = "Sign Up",
-                                route = SIGNUP_SCREEN,
-                                selectedIcon = Icons.Filled.Settings,
-                                unselectedIcon = Icons.Default.Settings
                             ),
                             BottomNavItem(
                                 name = "Map",
@@ -121,12 +108,13 @@ fun SlugletApp () {
 @Composable
 fun rememberAppState(
     navController: NavHostController = rememberNavController(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     snackbarManager: SnackbarManager = SnackbarManager,
     resources: Resources = resources(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) =
     remember(navController, snackbarManager, resources, coroutineScope) {
-        SlugletAppState(navController, snackbarManager, resources, coroutineScope)
+        SlugletAppState(navController, snackbarHostState, snackbarManager, resources, coroutineScope)
     }
 @Composable
 @ReadOnlyComposable
@@ -135,7 +123,6 @@ fun resources(): Resources {
     return LocalContext.current.resources
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
     composable(HOME_SCREEN) {
         HomeScreen(openScreen = { route -> appState.navigate(route) })
@@ -147,10 +134,13 @@ fun NavGraphBuilder.slugletGraph(appState: SlugletAppState) {
         ScheduleScreen(openScreen = { route -> appState.navigate(route) })
     }
     composable(SIGNUP_SCREEN) {
-        SignUpScreen()
+        SignUpScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
     composable(SETTINGS_SCREEN) {
-        SettingsScreen(openScreen = { route -> appState.navigate(route) })
+        SettingsScreen(
+            restartApp = { route -> appState.clearAndNavigate(route) },
+            openScreen = { route -> appState.navigate(route) }
+        )
     }
     composable(MAP_SCREEN) {
         MapScreen(openScreen = { route -> appState.navigate(route) })
