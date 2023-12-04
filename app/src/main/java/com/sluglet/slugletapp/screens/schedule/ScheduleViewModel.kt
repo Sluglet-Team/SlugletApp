@@ -13,6 +13,10 @@ import com.sluglet.slugletapp.screens.SlugletViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.datetime.*
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
@@ -30,46 +34,79 @@ class ScheduleViewModel @Inject constructor(
     val quarterEnd = FALL_END
     private val startTimes = mutableListOf<LocalTime>()
 
+    /**
+     * Function for testing notification
+     * set time in start times and change the date in call to schedule notification at time
+     * Sunday ->1, Monday->2, ... Saturday ->7
+     */
     fun addDummyStartTimes() {
         // Adding some dummy values to startTimes for testing
         startTimes.apply {
-            add(LocalTime.parse("18:56"))
-            add(LocalTime.parse("10:30"))
-            add(LocalTime.parse("13:45"))
+            add(LocalTime.parse("20:10"))
+            add(LocalTime.parse("16:57"))
+            add(LocalTime.parse("16:58"))
+        }
+        for (startTime in startTimes) {
+            notificationService.scheduleNotificationAtTime(1,startTime.hour, startTime.minute)
         }
     }
 
+    /**
+     * Function to handle events when a date is clicked
+     */
     fun onDateSelected(date: LocalDate) {
         _selectedDate.value = date
-        // FIXME(Tanuj): I put the notification call here to test
-        //               Click on a date and confirm that it works the way you intended
-        //               Then REMOVE this call, cause this is not intended functionality
-        notificationService.showNotification()
-        notificationService.scheduleNotificationAtTime(18, 15)
     }
+
+    /**
+     * Helper function to get the day from courses
+     */
+    private fun getIntDayOfWeekFromString(day: String): Int {
+        return when (day) {
+            "M" -> 2
+            "Tu" -> 3
+            "W" -> 4
+            "Th" -> 5
+            "F" -> 6
+            "S" ->7
+            else -> 2 // Default day (Monday) represented as 2
+        }
+    }
+    /**
+     * Helper function to convert string to actual time
+     */
+    fun convertStringToLocalTime(timeString: String): LocalTime {
+        val timeComponents = timeString.split(":")
+        var hour = timeComponents[0].toInt()
+        val minute = timeComponents[1].take(2).toInt()
+        val isPM = timeString.takeLast(2).equals("PM", ignoreCase = true)
+
+        if (isPM && hour < 12) {
+            hour += 12
+        } else if (!isPM && hour == 12) {
+            hour = 0
+        }
+
+        return LocalTime(hour, minute)
+    }
+
+    /**
+     * Main function that handles scheduling alarms for the courses,
+     * Is called from ScheduleScreen.kt, needds the list of courses to be passed through as a parameter
+     */
     fun updateStartTimesFromCourses(courses: List<CourseData>) {
-        startTimes.clear()
         courses.forEach { course ->
-            val courseStartTime = course.date_time.split(" ")[1].split("-")[0].toLocalTime()
-            startTimes.add(courseStartTime)
+            val courseTime = course.date_time.substringAfterLast(" ").split("-")
+            val startTimeString = courseTime[0]
+            val startTime = convertStringToLocalTime(startTimeString)
+            val daysOfWeek = course.date_time.split(" ")[0]
+            val days = daysOfWeek.split(Regex("(?=[A-Z])")).filter { it.isNotBlank() }
+            days.forEach { day ->
+                val dayOfWeek = getIntDayOfWeekFromString(day)
+                // Scheduling notification for the given day and time
+                notificationService.scheduleNotificationAtTime(dayOfWeek, startTime.hour, startTime.minute)
+            }
         }
-    }
-    fun scheduleNotificationForTime(startTime: LocalTime) {
-        notificationService.scheduleNotificationAtTime(startTime.hour, startTime.minute)
-    }
-
-    // FIXME(Tanuj): Notifications are showing, but I haven't done anything to handle
-    //               time events, just testing to make sure they show.
-    //               Maybe an init { } for this viewModel that creates an alarm
-    //               for this time.  Idk exactly.
-    fun scheduleNotifications() {
-
-        for (startTime in startTimes) {
-            scheduleNotificationForTime(startTime)
-        }
-//        launchCatching {
-//            notificationService.showNotification()
-//        }
     }
 
 

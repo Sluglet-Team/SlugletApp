@@ -8,6 +8,6 @@ import android.widget.RemoteViews
 interface NotificationService {
     fun createNotificationChannel()
     fun showNotification()
-    fun scheduleNotificationAtTime(hour: Int, minute: Int)
+    fun scheduleNotificationAtTime(day: Int, hour: Int, minute: Int)
 
 }

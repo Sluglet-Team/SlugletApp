@@ -54,7 +54,6 @@ fun ScheduleScreen (
     viewModel: ScheduleViewModel = hiltViewModel()
 ) {
     // Getting the current date
-
     val currentDate = viewModel.currentDate.toLocalDateTime(TimeZone.currentSystemDefault())
     Log.v("Date", "$currentDate")
     val userCourses = viewModel.userCourses.collectAsStateWithLifecycle(emptyList()).value
@@ -81,18 +80,17 @@ fun ScheduleScreen (
         selectedTextColor = Color.White
     )
 
-    // FIXME(Tanuj): Use this variable or get rid of it.
-    //val startTimes = mutableListOf<LocalTime>()
     val events = KalendarEvents(userCourses.flatMap { course ->
         // Take only the first part of the string
         val daysOfWeek = course.date_time.split(" ")[0]
         val courseName = course.course_name
         val courseDetails = "${course.course_number} - ${course.location}"
-        // FIXME(Tanuj): An idea for getting startTimes of classes
-        //               Not necessarily the way to do this. Get rid of if not using.
-        //startTimes.add(course.date_time.split(" ")[1].split("-")[0].toLocalTime())
-        //viewModel.updateStartTimes(startTimes)
-        viewModel.updateStartTimesFromCourses(userCourses)
+
+        // Main call to schedule alarms for the notification
+        //viewModel.updateStartTimesFromCourses(userCourses)
+
+        // Uncomment this to use the testing function for notification
+        viewModel.addDummyStartTimes()
 
         // Split the days by looking for capital letters
         val days = daysOfWeek.split(Regex("(?=[A-Z])")).filter { it.isNotBlank() }
@@ -146,9 +144,12 @@ fun ScheduleScreen (
             permissionState.launchMultiplePermissionRequest()
         }
     }
-    val s = context.hasNotificationPermission()
-    viewModel.addDummyStartTimes()
+
 }
+
+/**
+ * Helpfer function to get the day from the course string
+ */
 fun getDayOfWeekFromString(day: String): DayOfWeek {
     return when (day) {
         "M" -> DayOfWeek.MONDAY
