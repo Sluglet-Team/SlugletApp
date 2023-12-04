@@ -55,7 +55,7 @@ class NavServiceImpl @Inject constructor(): NavService {
             {
                 Log.v("NavService", response.toString())
                 val routeInfo = (response.body?.string())
-                if (routeInfo != null) { // TODO Add a check for no valid route
+                if (routeInfo != null) {
                     val coordArray = geoJsonToArrayList(routeInfo)
                     Log.v("NavService", "Nav Complete")
                     continuation.resume(coordArray)
@@ -71,6 +71,9 @@ class NavServiceImpl @Inject constructor(): NavService {
      */
     fun geoJsonToArrayList(routeInfo : String) : ArrayList<GeoPoint>{
         var jsonObj = JSONObject(routeInfo)
+        if (jsonObj.optJSONObject("error") != null)
+            return ArrayList()
+
         var jsonArray = jsonObj.getJSONArray("features")
         jsonObj = jsonArray.getJSONObject(DIRECTION_INDEX)
         jsonObj = jsonObj.getJSONObject("geometry")

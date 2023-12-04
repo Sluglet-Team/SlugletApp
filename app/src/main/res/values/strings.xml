@@ -24,8 +24,9 @@
     <string name="password_match_error">Passwords do not match.</string>
 
     <!-- MapScreen -->
-    <string name="location_error">Device location not found.</string>
+    <string name="location_error">Device location not found. Make sure location services are enabled.</string>
     <string name="starting_navigation">Computing route...</string>
+    <string name="navigation_success">Route Found!</string>
     <string name="no_route">Routing failed, no route exists. Move to a known path and try again.</string>
 
     <!-- Routing Service -->
