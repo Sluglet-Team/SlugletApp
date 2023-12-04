@@ -185,7 +185,7 @@ fun MapScreenContent(
     cameraPositionState: CameraPositionState,
     mapModifier: Modifier,
     onMyLocationCLick: (GeoPoint) -> Unit,
-    onNavClick: (CourseData) -> Boolean,
+    onNavClick: (CourseData) -> Unit,
     currentPath: ArrayList<GeoPoint>
 ) {
     Box {
@@ -194,15 +194,7 @@ fun MapScreenContent(
             cameraPositionState = cameraPositionState,
             modifier = mapModifier
         ) {
-            if(!currentPath.isNullOrEmpty())
-            {
-                Log.v("mapScreen", "Drawing route")
-                Log.v("mapScreen", currentPath.toString())
-                Polyline(
-                    geoPoints = currentPath,
-                    color = Color.Red
-                ) {}
-            }
+
             // Each course in User Profile
             userCourses.forEach { course ->
                 CourseMarker(
@@ -236,7 +228,15 @@ fun MapScreenContent(
                     null
                 )
             )
-
+            if(!currentPath.isNullOrEmpty())
+            {
+                Log.v("mapScreen", "Drawing route")
+                Log.v("mapScreen", currentPath.toString())
+                Polyline(
+                    geoPoints = currentPath,
+                    color = Color.Red
+                ) {}
+            }
         }
         MyLocationIcon(
             userLocation = userLocation,

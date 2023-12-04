@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.ui.platform.LocalContext
 import com.sluglet.slugletapp.BuildConfig
+import com.sluglet.slugletapp.R
+import com.sluglet.slugletapp.common.snackbar.SnackbarManager
 import com.sluglet.slugletapp.model.service.MapService
 import com.sluglet.slugletapp.model.service.NavService
 import dagger.Provides
@@ -45,6 +47,7 @@ class NavServiceImpl @Inject constructor(): NavService {
 
         client.newCall(routeRequest).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                SnackbarManager.showMessage(R.string.routing_connection_error)
                 Log.v("NavService", "Failed to connect to routing service")
                 continuation.resume(ArrayList<GeoPoint>())
             }

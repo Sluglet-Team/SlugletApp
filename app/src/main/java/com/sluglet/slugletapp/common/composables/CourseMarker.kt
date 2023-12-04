@@ -31,7 +31,7 @@ import org.osmdroid.util.GeoPoint
 fun CourseMarker (
     course: CourseData,
     markerIcon: Drawable? = null,
-    onNavClick: (CourseData) -> Boolean
+    onNavClick: (CourseData) -> Unit
 ) {
     val context = LocalContext.current
     val geoPoint = GeoPoint(course.latitude, course.longitude)
@@ -63,16 +63,7 @@ fun CourseMarker (
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
                         contentColor = Color.Black),
-                    onClick = {
-                        if (!onNavClick(course))
-                        {
-                            Toast.makeText(
-                                context,
-                                "Routing Failed, make sure your internet connection is stable",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
+                    onClick = { onNavClick(course) }
                 ) {
                     Text(text = "Navigate Here")
                 }

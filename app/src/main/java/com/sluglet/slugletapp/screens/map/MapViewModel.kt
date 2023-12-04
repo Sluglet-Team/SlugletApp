@@ -11,6 +11,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.sluglet.slugletapp.OSMaps.CameraPositionState
 import com.sluglet.slugletapp.OSMaps.CameraProperty
+import com.sluglet.slugletapp.R
+import com.sluglet.slugletapp.common.snackbar.SnackbarManager
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.MapService
@@ -21,8 +23,6 @@ import com.sluglet.slugletapp.screens.sign_up.SignUpUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.RoadManager
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
@@ -66,38 +66,52 @@ class MapViewModel @Inject constructor(
     var pathDisplayed : CourseData? = null
     var currentLocation : LatLng? = null
     private var pathSetInProgress = false
-    fun onNavClick(course : CourseData) : Boolean
+    /**
+     * Triggers when a map marker's navigation button is clicked
+     *
+     * @param course The CourseData for the clicked marker
+     */
+    fun onNavClick(course : CourseData)
     {
-        if(currentLocation == null)
-            return false
-        if (pathDisplayed != null && pathDisplayed == course ) {
-            clearPath()
-            return true
+        if(currentLocation == null) {
+            SnackbarManager.showMessage(R.string.location_error)
         }
-        val courseCoord = GeoPoint(course.latitude, course.longitude)
-        //val myCoord = GeoPoint(36.99998,-122.06238)
-        val myCoord = GeoPoint(currentLocation!!.latitude, currentLocation!!.longitude)
-        return setPath(myCoord, courseCoord)
+        else if (pathDisplayed != null && pathDisplayed == course ) {
+            clearPath()
+            return
+        }
+        else {
+            val courseCoord = GeoPoint(course.latitude, course.longitude)
+            val myCoord = GeoPoint(currentLocation!!.latitude, currentLocation!!.longitude)
+            setPath(myCoord, courseCoord)
+        }
     }
-
-    private fun setPath(start : GeoPoint, end : GeoPoint) : Boolean
+    /**
+     * Sets the currentPath variable to a path returned by NavService
+     *
+     * @param start GeoPoint representing the start of the path
+     * @param end GeoPoint representing the end of the path
+     * @return A bool that indicates whether the function was successful
+     */
+    private fun setPath(start : GeoPoint, end : GeoPoint)
     {
         Log.v("setPath", "SetPath Called")
+        SnackbarManager.showMessage(R.string.starting_navigation)
         if (!pathSetInProgress)
         {
             pathSetInProgress = true
             launchCatching {
                 _currentPath.value = navService.getRouteCoords(start, end)
                 if(_currentPath.value.isEmpty()) {
-                    // This should trigger a toast somehow
-                }
+                    SnackbarManager.showMessage(R.string.location_error)                }
                 Log.v("setPath", currentPath.toString())
                 pathSetInProgress = false
             }
-            return true
         }
-        return false
     }
+    /**
+     * Clears the current path
+     */
     private fun clearPath()
     {
         _currentPath.value = ArrayList()
