@@ -45,7 +45,6 @@ fun SlugletApp () {
             modifier = Modifier.fillMaxSize()
         ) {
             val appState = rememberAppState()
-            val snackbarHostState = remember { SnackbarHostState() }
             Scaffold (
                 snackbarHost = {
                     SnackbarHost (
