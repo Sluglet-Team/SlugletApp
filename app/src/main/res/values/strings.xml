@@ -28,6 +28,7 @@
     <string name="starting_navigation">Computing route...</string>
     <string name="navigation_success">Route Found!</string>
     <string name="no_route">Routing failed, no route exists. Move to a known path and try again.</string>
+    <string name="location_permission">Location Permissions Required</string>
 
     <!-- Routing Service -->
     <string name="routing_connection_error">Failed to connect to routing service</string>

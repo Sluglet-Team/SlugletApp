@@ -102,7 +102,6 @@ dependencies {
     // OSM
     implementation("org.osmdroid:osmdroid-android:6.1.17")
 
-
     // Navigation
     implementation("com.github.MKergall:osmbonuspack:6.9.0")
 
@@ -117,7 +116,6 @@ dependencies {
 
     // JSON Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-
 
     // Location services
     implementation ("com.google.android.gms:play-services-location:21.0.1")

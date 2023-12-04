@@ -49,7 +49,7 @@ import com.sluglet.slugletapp.OSMaps.Marker
 import com.sluglet.slugletapp.OSMaps.MarkerState
 import com.sluglet.slugletapp.OSMaps.OSMaps
 import com.sluglet.slugletapp.OSMaps.Polyline
-import com.sluglet.slugletapp.R
+import com.sluglet.slugletapp.R.drawable as AppIcon
 import com.sluglet.slugletapp.common.composables.CourseMarker
 import com.sluglet.slugletapp.model.service.NavService
 import com.sluglet.slugletapp.resources
@@ -70,15 +70,11 @@ fun MapScreen (
     openScreen: (String) -> Unit,
     viewModel: MapViewModel = hiltViewModel()
 ) {
-    // Gets state from the view model for the camera position
     val cameraPositionState = viewModel.cameraState.collectAsStateWithLifecycle()
-    // Collect as state with lifecycle means that anytime the state of the flow changes
-    // the value will change and cause recomposition
     val userCourses by viewModel.userCourses.collectAsStateWithLifecycle(emptyList())
     val courseToDisplay = viewModel.courseToDisplay.collectAsStateWithLifecycle(null).value
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    // Use this modifier to modify the look of the map
     val mapModifier = Modifier
         .padding(start = 10.dp, top = 10.dp, end = 10.dp)
         .clip(RoundedCornerShape(10.dp))
@@ -202,7 +198,7 @@ fun MapScreenContent(
                     onNavClick = onNavClick,
                     markerIcon = ResourcesCompat.getDrawable(
                         resources(),
-                        R.drawable.edu_map_pin_red,
+                        AppIcon.edu_map_pin_red,
                         null
                     )
                 )
@@ -214,7 +210,7 @@ fun MapScreenContent(
                     onNavClick = onNavClick,
                     markerIcon = ResourcesCompat.getDrawable(
                         resources(),
-                        R.drawable.edu_map_pin_green,
+                        AppIcon.edu_map_pin_green,
                         null
                     )
                 )
@@ -224,7 +220,7 @@ fun MapScreenContent(
                 state = MarkerState(GeoPoint(userLocation.latitude, userLocation.longitude)),
                 icon = ResourcesCompat.getDrawable(
                     resources(),
-                    R.drawable.user_loc_map_pin,
+                    AppIcon.user_loc_map_pin,
                     null
                 )
             )
@@ -254,7 +250,7 @@ fun MyLocationIcon(
     modifier: Modifier
 ) {
     Icon(
-        painter = painterResource(id = R.drawable.my_loc_button),
+        painter = painterResource(id = AppIcon.my_loc_button),
         tint = MaterialTheme.colorScheme.primary,
         contentDescription = "Animate to User Loc",
         modifier = modifier
