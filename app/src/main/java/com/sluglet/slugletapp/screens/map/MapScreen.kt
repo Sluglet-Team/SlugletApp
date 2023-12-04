@@ -3,6 +3,7 @@ package com.sluglet.slugletapp.screens.map
 import android.Manifest
 import android.content.Intent
 import android.provider.Settings
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -38,6 +40,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sluglet.slugletapp.BuildConfig
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.LatLng
@@ -45,13 +48,20 @@ import com.sluglet.slugletapp.OSMaps.CameraPositionState
 import com.sluglet.slugletapp.OSMaps.Marker
 import com.sluglet.slugletapp.OSMaps.MarkerState
 import com.sluglet.slugletapp.OSMaps.OSMaps
-import com.sluglet.slugletapp.R
+import com.sluglet.slugletapp.OSMaps.Polyline
+import com.sluglet.slugletapp.R.drawable as AppIcon
 import com.sluglet.slugletapp.common.composables.CourseMarker
+import com.sluglet.slugletapp.model.service.NavService
+import com.sluglet.slugletapp.resources
+import org.osmdroid.bonuspack.routing.OSRMRoadManager
+import org.osmdroid.bonuspack.routing.Road
+import org.osmdroid.config.Configuration
+import org.osmdroid.util.GeoPoint
+import kotlin.coroutines.suspendCoroutine
 import com.sluglet.slugletapp.common.ext.hasLocationPermission
 import com.sluglet.slugletapp.common.ext.smallSpacer
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.resources
-import org.osmdroid.util.GeoPoint
 
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -60,15 +70,11 @@ fun MapScreen (
     openScreen: (String) -> Unit,
     viewModel: MapViewModel = hiltViewModel()
 ) {
-    // Gets state from the view model for the camera position
     val cameraPositionState = viewModel.cameraState.collectAsStateWithLifecycle()
-    // Collect as state with lifecycle means that anytime the state of the flow changes
-    // the value will change and cause recomposition
     val userCourses by viewModel.userCourses.collectAsStateWithLifecycle(emptyList())
     val courseToDisplay = viewModel.courseToDisplay.collectAsStateWithLifecycle(null).value
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    // Use this modifier to modify the look of the map
     val mapModifier = Modifier
         .padding(start = 10.dp, top = 10.dp, end = 10.dp)
         .clip(RoundedCornerShape(10.dp))
@@ -77,7 +83,7 @@ fun MapScreen (
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_COARSE_LOCATION,
         )
     )
 
@@ -150,13 +156,17 @@ fun MapScreen (
                         location?.latitude ?: 0.0,
                         location?.longitude ?: 0.0
                     )
+                viewModel.currentLocation = currentLoc
+
                 MapScreenContent(
                     userCourses = userCourses,
                     userLocation = currentLoc,
                     courseToDisplay = courseToDisplay,
                     cameraPositionState = cameraPositionState.value,
                     mapModifier = mapModifier,
-                    onMyLocationCLick = viewModel::onMyLocationClick
+                    onMyLocationCLick = viewModel::onMyLocationClick,
+                    onNavClick = viewModel::onNavClick,
+                    currentPath = viewModel.currentPath.value
                 )
             }
         }
@@ -170,7 +180,9 @@ fun MapScreenContent(
     courseToDisplay: CourseData?,
     cameraPositionState: CameraPositionState,
     mapModifier: Modifier,
-    onMyLocationCLick: (GeoPoint) -> Unit
+    onMyLocationCLick: (GeoPoint) -> Unit,
+    onNavClick: (CourseData) -> Unit,
+    currentPath: ArrayList<GeoPoint>
 ) {
     Box {
         OSMaps(
@@ -178,15 +190,15 @@ fun MapScreenContent(
             cameraPositionState = cameraPositionState,
             modifier = mapModifier
         ) {
+
             // Each course in User Profile
             userCourses.forEach { course ->
                 CourseMarker(
                     course = course,
-                    latitude = course.latitude,
-                    longitude = course.longitude,
+                    onNavClick = onNavClick,
                     markerIcon = ResourcesCompat.getDrawable(
                         resources(),
-                        R.drawable.edu_map_pin_red,
+                        AppIcon.edu_map_pin_red,
                         null
                     )
                 )
@@ -195,11 +207,10 @@ fun MapScreenContent(
             if (courseToDisplay != null) {
                 CourseMarker(
                     course = courseToDisplay,
-                    latitude = courseToDisplay.latitude,
-                    longitude = courseToDisplay.longitude,
+                    onNavClick = onNavClick,
                     markerIcon = ResourcesCompat.getDrawable(
                         resources(),
-                        R.drawable.edu_map_pin_green,
+                        AppIcon.edu_map_pin_green,
                         null
                     )
                 )
@@ -209,16 +220,26 @@ fun MapScreenContent(
                 state = MarkerState(GeoPoint(userLocation.latitude, userLocation.longitude)),
                 icon = ResourcesCompat.getDrawable(
                     resources(),
-                    R.drawable.user_loc_map_pin,
+                    AppIcon.user_loc_map_pin,
                     null
                 )
             )
+            if(!currentPath.isNullOrEmpty())
+            {
+                Log.v("mapScreen", "Drawing route")
+                Log.v("mapScreen", currentPath.toString())
+                Polyline(
+                    geoPoints = currentPath,
+                    color = Color.Red
+                ) {}
+            }
         }
         MyLocationIcon(
             userLocation = userLocation,
             onMyLocationClick = onMyLocationCLick,
             modifier = Modifier.align(Alignment.BottomEnd)
         )
+
     }
 }
 
@@ -229,7 +250,7 @@ fun MyLocationIcon(
     modifier: Modifier
 ) {
     Icon(
-        painter = painterResource(id = R.drawable.my_loc_button),
+        painter = painterResource(id = AppIcon.my_loc_button),
         tint = MaterialTheme.colorScheme.primary,
         contentDescription = "Animate to User Loc",
         modifier = modifier

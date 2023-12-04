@@ -52,6 +52,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sluglet.slugletapp.common.ext.smallSpacer
 
 /**
  * Composable that renders Home screen
@@ -134,5 +135,6 @@ fun SettingsGear (
                     onSettingsClick(openScreen)
                 }
             }
+            .smallSpacer()
     )
 }

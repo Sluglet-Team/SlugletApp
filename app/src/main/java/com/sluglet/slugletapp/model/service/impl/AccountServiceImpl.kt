@@ -92,17 +92,19 @@ class AccountServiceImpl @Inject constructor(
                     var userMap = task.result.data
                     Log.v("addCourse", "User Map for " + (userMap)!!["email"].toString())
                     val courses = ((userMap)!!["courses"] as ArrayList<String>)
-                    courses.add(course.id)
-                    (userMap)!!["courses"] = courses
-                    firestore.collection(USER_COLLECTION).document(userID).set(userMap)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                Log.v("addCourse", "store success")
-                                Log.v("addCourse", "added " + course.id + " to $userID")
-                            } else {
-                                Log.v("addCourse", "store failure for $userID")
+                    if (!courses.contains(course.id)) {
+                        courses.add(course.id)
+                        (userMap)!!["courses"] = courses
+                        firestore.collection(USER_COLLECTION).document(userID).set(userMap)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Log.v("addCourse", "store success")
+                                    Log.v("addCourse", "added " + course.id + " to $userID")
+                                } else {
+                                    Log.v("addCourse", "store failure for $userID")
+                                }
                             }
-                        }
+                    }
                 }
                 else
                 {

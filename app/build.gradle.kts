@@ -7,7 +7,6 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
 }
-
 android {
     namespace = "com.sluglet.slugletapp"
     compileSdk = 34
@@ -103,11 +102,26 @@ dependencies {
     // OSM
     implementation("org.osmdroid:osmdroid-android:6.1.17")
 
+    // Navigation
+    implementation("com.github.MKergall:osmbonuspack:6.9.0")
+
+    // HTTP Service
+    // define a BOM and its version
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
+
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
+    // JSON Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
     // Location services
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
 
-
     // Permission: Do NOT UPDATE, this version is compatible with this project
     implementation ("com.google.accompanist:accompanist-permissions:0.29.0-alpha")
+
 }
