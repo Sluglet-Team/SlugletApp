@@ -74,7 +74,7 @@ fun SearchScreenContent (
                             || it.course_name.contains(userSearch.trim(), ignoreCase = true)
                 }
             ) { courseItem ->
-                CourseBox(coursedata = courseItem, onAddClick = onAddClick)
+                CourseBox(coursedata = courseItem, hasMapButton = true, onAddClick = onAddClick, onRemoveClick = null)
             }
         }
     }

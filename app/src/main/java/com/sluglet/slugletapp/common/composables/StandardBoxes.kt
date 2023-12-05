@@ -218,7 +218,7 @@ fun CourseBoxPreview (
         date_time = "MWF 8:00am - 9:05am",
         location = "Baskin Auditorium 1"
     )
-    CourseBox(coursedata = test, modifier = Modifier, buttonType = ADD, hasMapButton = true, onAddClick = null, onRemoveClick = null)
+    CourseBox(coursedata = test, modifier = Modifier, buttonType = REM, hasMapButton = false, onAddClick = null, onRemoveClick = null)
 }
 
 @Preview(showBackground = true)
