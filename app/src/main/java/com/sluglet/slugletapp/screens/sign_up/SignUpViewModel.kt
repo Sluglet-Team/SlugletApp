@@ -37,6 +37,11 @@ class SignUpViewModel @Inject constructor(
         _uiState.value = uiState.value.copy(password = newValue)
     }
 
+    /**
+     * Calls services to link Anonymous user to an account with the provided credentials
+     * @param openAndPopUp Indicates which screen to open and pops this screen from the
+     * backstack.
+     */
     fun onSignUpClick(openAndPopUp: (String, String) -> Unit) {
         if (!(email).isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
@@ -48,30 +53,18 @@ class SignUpViewModel @Inject constructor(
             return
         }
 
-        /*
-        Tries to authenticate, and if the call succeeds,
-        it proceeds to the next screen (the SettingsScreen).
-        As you are executing these calls inside a launchCatching block,
-        if an error happens on the first line,
-        the exception will be caught and handled,
-        and the second line will not be reached at all.
-         */
         launchCatching {
             accountService.linkAccounts(_uiState.value.email, _uiState.value.password)
-            // FIXME: Now with anonymous accounts, we maybe don't need this
-            accountService.createAccount(_uiState.value.email, _uiState.value.password)
             openAndPopUp(HOME_SCREEN, SIGNUP_SCREEN)
         }
     }
-    fun onSignInClick(openAndPopUp: (String, String) -> Unit) {
-    /*
-    Tries to authenticate, and if the call succeeds,
-    it proceeds to the next screen (the SettingsScreen).
-    As you are executing these calls inside a launchCatching block,
-    if an error happens on the first line,
-    the exception will be caught and handled,
-    and the second line will not be reached at all.
+
+    /**
+     * Calls services to log a user into their account.
+     * @param openAndPopUp Indicates which screen to open and pops this screen from the
+     * backstack.
      */
+    fun onSignInClick(openAndPopUp: (String, String) -> Unit) {
         if (!(email).isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return

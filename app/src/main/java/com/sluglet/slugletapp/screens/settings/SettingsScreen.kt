@@ -19,8 +19,12 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.material3.*
+import androidx.compose.ui.res.stringResource
+import com.sluglet.slugletapp.common.composables.DialogCancelButton
+import com.sluglet.slugletapp.common.composables.DialogConfirmButton
 import com.sluglet.slugletapp.common.ext.basicRow
 import com.sluglet.slugletapp.common.ext.smallSpacer
+import com.sluglet.slugletapp.R.string as AppText
 
 @Composable
 fun SettingsScreen (
@@ -35,9 +39,9 @@ fun SettingsScreen (
         uiState = uiState,
         onLoginClick = { viewModel.onLoginClick(openScreen) },
         onSignUpClick = { viewModel.onSignUpClick(openScreen) },
-        onSignOutClick = { viewModel.onSignOutClick(restartApp) }
-
-    ) { viewModel.onDeleteMyAccountClick(restartApp) }
+        onSignOutClick = { viewModel.onSignOutClick(restartApp) },
+        onDeleteMyAccountClick = { viewModel.onDeleteMyAccountClick(restartApp) }
+    )
 }
 @Composable
 fun SettingsScreenContent (
@@ -63,7 +67,7 @@ fun SettingsScreenContent (
             TextButton(onClick = onLoginClick, text = "Login")
         }else {
             TextButton (onClick = onSignOutClick, text = "Log Out")
-            TextButton (onClick = onDeleteMyAccountClick, text = "Delete Account")
+            TextButton (onClick = onDeleteMyAccountClick, text = "Delete Account", isDeleteButton = true)
         }
     }
 }
@@ -72,15 +76,42 @@ fun SettingsScreenContent (
 @Composable
 fun TextButton(
     onClick: () -> Unit,
-    text: String
+    text: String,
+    isDeleteButton: Boolean = false
 ){
-    Card(
-        onClick = { onClick() },
-        modifier = Modifier.padding(5.dp).basicRow()
-    ) {
-        Text(text = text, color = Color.Black, modifier = Modifier.smallSpacer())
+    if (!isDeleteButton) {
+        Card(
+            onClick = { onClick() },
+            modifier = Modifier.padding(5.dp).basicRow()
+        ) {
+            Text(text = text, color = Color.Black, modifier = Modifier.smallSpacer())
+        }
+    }
+    else  {
+        var showWarningDialog by remember { mutableStateOf(false) }
+        Card(
+            onClick = { showWarningDialog = true },
+            modifier = Modifier.padding(5.dp).basicRow()
+        ) {
+            Text(text = text, color = Color.Black, modifier = Modifier.smallSpacer())
+        }
+        if (showWarningDialog) {
+            AlertDialog(
+                title = { Text(stringResource(AppText.delete_account_title)) },
+                text = { Text(stringResource(AppText.delete_account_description)) },
+                dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
+                confirmButton = {
+                    DialogConfirmButton(AppText.delete_my_account) {
+                        onClick()
+                        showWarningDialog = false
+                    }
+                },
+                onDismissRequest = { showWarningDialog = false }
+            )
+        }
     }
 }
+
 @Composable
 fun ReturnButton(
     onReturnClick: (((String) -> Unit) -> Unit)?,

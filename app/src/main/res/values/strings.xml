@@ -10,6 +10,18 @@
     <string name="cancel">Cancel</string>
     <string name="try_again">Try again</string>
     <string name="ok">OK</string>
+    <string name="deleted_account">Account Deleted</string>
+
+    <!-- SettingsScreen -->
+    <string name="settings">Settings</string>
+    <string name="sign_out">Sign out</string>
+    <string name="delete_my_account">Delete my account</string>
+
+    <!-- Dialogs -->
+    <string name="sign_out_title">Sign out?</string>
+    <string name="sign_out_description">You will have to sign in again to see your tasks.</string>
+    <string name="delete_account_title">Delete account?</string>
+    <string name="delete_account_description">You will lose all your courses and your account will be deleted. This action is irreversible.</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>
