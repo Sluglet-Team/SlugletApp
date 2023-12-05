@@ -114,7 +114,6 @@ class AccountServiceImpl @Inject constructor(
             }
     }
     override suspend fun deleteAccount() {
-        firestore.collection(USER_COLLECTION).document(currentUserId).delete().await()
         auth.currentUser!!.delete().await()
     }
 
@@ -128,7 +127,8 @@ class AccountServiceImpl @Inject constructor(
         // createAnonymousAccount()
     }
     /**
-     * Links the current account to the provided matching parameters
+     * Links the current account to the provided matching parameters.
+     * Also updates the users document in Firestore with the email provided.
      *
      * @param email The email associated with the account to be linked to
      * @param password The password associated with the account to be linked to
@@ -139,7 +139,7 @@ class AccountServiceImpl @Inject constructor(
     ) {
         val credential = EmailAuthProvider.getCredential(email, password)
         auth.currentUser!!.linkWithCredential(credential).await()
-        firestore.collection(USER_COLLECTION).document(currentUserId).update("email", email).await()
+        firestore.collection(USER_COLLECTION).document(currentUserId).update(EMAIL_FIELD, email).await()
     }
 
     override fun isUserAnonymous(): Boolean {
@@ -152,5 +152,6 @@ class AccountServiceImpl @Inject constructor(
 
     companion object {
         private const val USER_COLLECTION = "users"
+        private const val EMAIL_FIELD = "email"
     }
 }

@@ -25,48 +25,57 @@ class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val auth: AccountService
 ) : StorageService {
-    // Get all courses
+    /**
+     * Gets all courses as a flow.  Any changes to the query with .dataObjects()
+     * will be emitted to the flow.
+     * For example, if a course is added to the collection, the flow will be updated.
+     */
     override val courses: Flow<List<CourseData>>
         get() =
             firestore.collection(COURSE_COLLECTION).dataObjects()
 
-    // Get user specific courses as a Flow List
+    /**
+     * Obtains the current users courses as flow.  Any changes to the query with .dataObjects()
+     * will be posted to the flow and can be collected as state within a view
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     override val userCourses: Flow<List<CourseData>>
         get() =
-            // Grab the current user
             auth.currentUser.flatMapLatest {user ->
                 var userRef: DocumentSnapshot? = null
                 try {
                     userRef = firestore.collection(USER_COLLECTION).document(user.uid).get().await()
                 } catch (e: Exception) {
-                    // Error thrown by firestore, likely quota exceeded
                     Log.e("Error: override val userCourses", "$e")
                 }
-                // If firestore call succeeded, this should not be null
                 if (userRef != null) {
-                    // Get their courses, cast to any Array type
                     val courses = userRef.get(USER_COURSES) as ArrayList<*>?
-                    // If no courses, return an empty list, can't call firestore with empty list
                     if (courses.isNullOrEmpty()) {
                         emptyFlow()
                     }
-                    // Else return the list of courses as a list of CourseData objects --> .dataObjects()
                     else {
-                        // This only listens to course collection which is why no recomposition occurs
-                        // when changing USER_COLLECTION.  Not ideal but not sure there is a work around.
                         firestore.collection(COURSE_COLLECTION).whereIn(FieldPath.documentId(), courses).dataObjects()
                     }
                 }
-                // Return an empty flow, worst case scenario
                 else {
                     emptyFlow()
                 }
 
             }
-            
+
+    /**
+     * Gets a single course form the course collection
+     * @param courseID The unique reference to the course in the collection.
+     */
     override suspend fun getCourse(courseID: String): CourseData? =
         firestore.collection(COURSE_COLLECTION).document(courseID).get().await().toObject()
+
+    /**
+     * Stores user data into the users document in firestore.
+     * If the user doc does not exist, it will be created as per firestore documentation
+     * of set().
+     * @param user The user object referencing the current user
+     */
     override suspend fun storeUserData(user: User)
     {
         val userMap = hashMapOf(
@@ -133,8 +142,8 @@ class StorageServiceImpl @Inject constructor(
     override suspend fun getCourseData(
         courseId: String,
         onSuccess: (CourseData) -> Unit,
-        onError: (String) -> Unit)
-        {
+        onError: (String) -> Unit
+    ) {
             // Get reference to the document of the passed courseId
             val courseDocRef = firestore.collection(COURSE_COLLECTION).document(courseId)
 
@@ -150,6 +159,18 @@ class StorageServiceImpl @Inject constructor(
                 onError("Error fetching course document: ${exception.message ?: "Unknown error"}")
             }
         }
+
+    /**
+     * Deletes a Users document from Firestore. This should only be done after account deletion
+     * within a launchCatching block to ensure that the account is deleted before deleting the
+     * document.
+     *
+     * @param userId The unique userId referencing the document to be deleted. This must be obtained
+     * before the account is deleted.
+     */
+    override suspend fun deleteUser(userId: String) {
+        firestore.collection(USER_COLLECTION).document(userId).delete().await()
+    }
 
     companion object {
         private const val USER_COLLECTION = "users"

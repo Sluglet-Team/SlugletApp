@@ -16,6 +16,7 @@ interface StorageService {
     suspend fun storeUserData(user: User)
     suspend fun retrieveUserData(id: String): User?
     suspend fun getCourseData(courseId: String, onSuccess: (CourseData) -> Unit, onError: (String) -> Unit)
+    suspend fun deleteUser(userId: String)
     /*
     // FIXME: I don't think we need these since user shouldn't be able to manipulate courses
     suspend fun save(course: CourseData): String
