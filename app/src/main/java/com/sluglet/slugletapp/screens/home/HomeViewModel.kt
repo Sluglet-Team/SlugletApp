@@ -1,15 +1,9 @@
 package com.sluglet.slugletapp.screens.home
 
 import android.util.Log
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.sluglet.slugletapp.SETTINGS_SCREEN
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.User
@@ -18,13 +12,9 @@ import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.StorageService
 import com.sluglet.slugletapp.screens.SlugletViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -33,7 +23,7 @@ class HomeViewModel @Inject constructor(
     private val storageService: StorageService,
     private val accountService: AccountService
 ): SlugletViewModel(logService) {
-  
+
     private val showError = mutableStateOf(false)
     val courses = MutableStateFlow<List<CourseData>>(emptyList())
 
@@ -47,8 +37,8 @@ class HomeViewModel @Inject constructor(
             // Call createAnonymousAccount when initializing the ViewModel
             if(!accountService.hasUser) {
                 try {
-                    createAnonymousAccount()
-                    var anonymousUser = User()
+                    accountService.createAnonymousAccount()
+                    var anonymousUser = User()                  //Add a user doc to the users collection
                     anonymousUser = anonymousUser.copy(
                         email = "",
                         name = "",
@@ -92,10 +82,6 @@ class HomeViewModel @Inject constructor(
                 Log.e("UserData", "Error fetching user data: ${e.message}")
             }
         }
-    }
-
-    private suspend fun createAnonymousAccount() {
-        accountService.createAnonymousAccount()
     }
 
     /**

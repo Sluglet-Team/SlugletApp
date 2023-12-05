@@ -143,9 +143,15 @@ class AccountServiceImpl @Inject constructor(
         password: String,
     ) {
         val credential = EmailAuthProvider.getCredential(email, password)
+        //Update user's email in their user document
+        val userRef = auth.currentUser?.let { firestore.collection(USER_COLLECTION).document(it.uid) }
+        userRef?.update("email", email)
         auth.currentUser!!.linkWithCredential(credential).await()
     }
 
+    /**
+     * Checks if the current user is anonymously authenticated
+     */
     override fun isUserAnonymous(): Boolean {
         val currUser = auth.currentUser
         if(currUser?.isAnonymous == true){
