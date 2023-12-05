@@ -26,7 +26,9 @@ private val DarkColorScheme = darkColorScheme(
     primary = DarkBlue,
     secondary = White,
     tertiary = Pink80,
-    surfaceVariant = White
+    surfaceVariant = White,
+    onSurface = White,
+    secondaryContainer = WaveDarkOrange
 
 )
 
@@ -34,7 +36,10 @@ private val LightColorScheme = lightColorScheme(
     primary = LightPink,
     secondary = White,
     tertiary = Pink40,
-    surfaceVariant = White
+    surfaceVariant = White,
+    onSurface = Color.Black,
+    secondaryContainer = WaveDarkOrange,
+    primaryContainer = White
 
 
 

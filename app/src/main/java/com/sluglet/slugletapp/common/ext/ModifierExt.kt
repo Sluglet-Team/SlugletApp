@@ -27,3 +27,6 @@ fun Modifier.basicRow(): Modifier {
 fun Modifier.smallSpacer(): Modifier {
     return this.padding(10.dp)
 }
+fun Modifier.largeSpacer(): Modifier {
+    return this.padding(40.dp)
+}
