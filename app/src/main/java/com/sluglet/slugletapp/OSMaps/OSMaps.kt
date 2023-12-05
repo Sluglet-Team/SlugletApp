@@ -24,11 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.sluglet.slugletapp.BuildConfig
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.awaitCancellation
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView as OSMapView
-
 enum class ZoomButtonVisibility {
     ALWAYS, NEVER, SHOW_AND_FADEOUT
 }
@@ -183,6 +183,7 @@ private fun OSMapView.onLowMemory() {
 }
 
 private fun OSMapView.onCreate(context: Context) {
-    org.osmdroid.config.Configuration.getInstance()
-        .load(context, context.getSharedPreferences("osm", Context.MODE_PRIVATE))
+    val instance = org.osmdroid.config.Configuration.getInstance()
+    instance.load(context, context.getSharedPreferences("osm", Context.MODE_PRIVATE))
+    instance.userAgentValue = BuildConfig.APPLICATION_ID
 }

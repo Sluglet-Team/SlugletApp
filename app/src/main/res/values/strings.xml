@@ -22,4 +22,17 @@
     <string name="create_account">Create account</string>
     <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
     <string name="password_match_error">Passwords do not match.</string>
+
+    <!-- MapScreen -->
+    <string name="location_error">Device location not found. Make sure location services are enabled.</string>
+    <string name="starting_navigation">Computing route...</string>
+    <string name="navigation_success">Route Found!</string>
+    <string name="no_route">Routing failed, no route exists. Move to a known path and try again.</string>
+    <string name="location_permission">Location Permissions Required</string>
+
+    <!-- Routing Service -->
+    <string name="routing_connection_error">Failed to connect to routing service</string>
+    <string name="routing_error">Routing service failed. Make sure you have a stable internet connection.</string>
+
+
 </resources>

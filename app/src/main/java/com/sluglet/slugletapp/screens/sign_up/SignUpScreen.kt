@@ -5,39 +5,29 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.platform.LocalConfiguration
-
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
-import com.sluglet.slugletapp.model.service.AccountService
-import com.sluglet.slugletapp.model.service.StorageService
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun SignUpScreen(
-    modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = hiltViewModel()
+    viewModel: SignUpViewModel = hiltViewModel(),
+    openAndPopUp: (String, String) -> Unit
 
 ) {
     val uiState by viewModel.uiState
@@ -45,24 +35,18 @@ fun SignUpScreen(
         uiState = uiState,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
-        onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
-        onSignUpClick = { viewModel.onSignUpClick() },
-        onSignInClick = { viewModel.onSignInClick() },
-        onTestClick = { viewModel.onTestClick() }
+        onSignUpClick = { viewModel.onSignUpClick(openAndPopUp) },
+        onSignInClick =  { viewModel.onSignInClick(openAndPopUp) }
     )
 
 }
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreenContent(
-    modifier: Modifier = Modifier,
     uiState: SignUpUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onRepeatPasswordChange: (String) -> Unit,
     onSignUpClick: () -> Unit,
-    onSignInClick: () -> Unit,
-    onTestClick: () -> Unit
+    onSignInClick: () -> Unit
 )
 {
         val localConfig = LocalConfiguration.current
@@ -130,7 +114,6 @@ fun SignUpScreenContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun UserLoginPreview() {
