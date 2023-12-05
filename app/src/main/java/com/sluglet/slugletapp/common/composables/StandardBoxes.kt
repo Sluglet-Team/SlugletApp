@@ -1,6 +1,5 @@
 package com.sluglet.slugletapp.common.composables
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -145,7 +145,12 @@ fun SearchBox (
     Box (
         modifier = Modifier.padding(top = 15.dp, bottom = 20.dp)
     ) {
-        SearchTextField(userSearch = userSearch, onSearchChange = onSearchChange)
+        RoundedTextField(
+            icon = Icons.Rounded.Search,
+            text = "Search",
+            userSearch = userSearch,
+            onSearchChange = onSearchChange
+        )
     }
 }
 

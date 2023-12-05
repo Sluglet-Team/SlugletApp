@@ -11,6 +11,8 @@ import com.sluglet.slugletapp.model.service.AccountService
 import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.screens.SlugletViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import com.sluglet.slugletapp.R.string as AppText
 
@@ -20,8 +22,8 @@ class SignUpViewModel @Inject constructor(
     private val accountService: AccountService
 ) : SlugletViewModel(logService) {
 
-    private var _uiState = mutableStateOf(SignUpUiState())
-    val uiState: State<SignUpUiState> = _uiState
+    private var _uiState = MutableStateFlow(SignUpUiState())
+    val uiState = _uiState.asStateFlow()
 
     private val email
         get() = uiState.value.email
