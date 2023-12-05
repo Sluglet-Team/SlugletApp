@@ -1,12 +1,12 @@
 package com.sluglet.slugletapp.model.module
 
-import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.AccountService
+import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.MapService
 import com.sluglet.slugletapp.model.service.NavService
 import com.sluglet.slugletapp.model.service.StorageService
-import com.sluglet.slugletapp.model.service.impl.LogServiceImpl
 import com.sluglet.slugletapp.model.service.impl.AccountServiceImpl
+import com.sluglet.slugletapp.model.service.impl.LogServiceImpl
 import com.sluglet.slugletapp.model.service.impl.MapServiceImpl
 import com.sluglet.slugletapp.model.service.impl.NavServiceImpl
 import com.sluglet.slugletapp.model.service.impl.StorageServiceImpl
