@@ -1,26 +1,20 @@
 package com.sluglet.slugletapp.screens.schedule
 
-import androidx.lifecycle.SavedStateHandle
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.sluglet.slugletapp.common.ext.hasNotificationPermission
 import com.sluglet.slugletapp.model.CourseData
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.NotificationService
 import com.sluglet.slugletapp.model.service.StorageService
 import com.sluglet.slugletapp.screens.SlugletViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.datetime.*
-import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
+import javax.inject.Inject
 
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     logService: LogService,
     private val storageService: StorageService,
     private val notificationService: NotificationService

@@ -3,7 +3,6 @@ package com.sluglet.slugletapp.screens.schedule
 import android.Manifest
 import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -30,24 +29,20 @@ import com.himanshoe.kalendar.color.KalendarColor
 import com.himanshoe.kalendar.color.KalendarColors
 import com.himanshoe.kalendar.ui.component.day.KalendarDayKonfig
 import com.sluglet.slugletapp.common.composables.CourseBox
-import com.sluglet.slugletapp.common.ext.hasLocationPermission
 import com.sluglet.slugletapp.common.ext.hasNotificationPermission
 import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.ui.theme.WaveDarkOrange
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.toLocalTime
 
 
 // Use https://github.com/hi-manshu/Kalendar for documentation on using the library
 
 @OptIn(ExperimentalPermissionsApi::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleScreen (
     openScreen: (String) -> Unit,
