@@ -20,6 +20,7 @@ interface AccountService {
     suspend fun createAccount(email: String, password: String)
     suspend fun logIn(email: String, password: String)
     suspend fun addCourse(course: CourseData)
+    suspend fun removeCourse(course: CourseData)
     suspend fun deleteAccount()
     suspend fun signOut()
     suspend fun linkAccounts(email: String, password: String)

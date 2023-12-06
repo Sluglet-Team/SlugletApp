@@ -73,7 +73,10 @@ fun SearchScreenContent (
             ) { courseItem ->
                 CourseBox(
                     coursedata = courseItem,
+                    buttonType = "ADD",
                     onAddClick = onAddClick,
+                    onRemoveClick = null,
+                    hasMapButton = true,
                     onMapClick = onMapClick,
                     openScreen = openScreen
                 )
