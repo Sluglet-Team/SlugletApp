@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
@@ -41,12 +42,14 @@ Course information composables
 Calendars
 etc.
  */
-
 @Composable
 fun CourseBox(
     coursedata: CourseData,
     modifier: Modifier = Modifier,
+    buttonType: String = "",
     onAddClick: ((CourseData) -> Unit)?,
+    onRemoveClick: ((CourseData) -> Unit)?,
+    hasMapButton: Boolean = true,
     onMapClick: (((String) -> Unit, CourseData) -> Boolean)?,
     openScreen: (String) -> Unit = {}
 ) {
@@ -105,24 +108,52 @@ fun CourseBox(
                 .padding(end = 15.dp),
             Arrangement.SpaceEvenly
         ){
-            Icon(
-                Icons.Rounded.LocationOn,
-                "map",
-                modifier = Modifier
-                    .clickable {
-                       if (onMapClick != null) {
-                           if(!onMapClick(openScreen, coursedata)) {
-                               Toast.makeText(
-                                   context,
-                                   "This course does not have a physical location",
-                                   Toast.LENGTH_LONG
-                               ).show()
-                           }
-                       }
-                    },
-                tint = Color.Black
-            )
-            Icon(
+            if (hasMapButton) {
+                Icon(
+                    Icons.Rounded.LocationOn,
+                    "map",
+                    modifier = Modifier
+                        .clickable {
+                            if (onMapClick != null) {
+                                if (!onMapClick(openScreen, coursedata)) {
+                                    Toast.makeText(
+                                        context,
+                                        "This course does not have a physical location",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        },
+                    tint = Color.Black
+                )
+            }
+            if (buttonType == "ADD") {
+                Icon(
+                    Icons.Rounded.Add,
+                    "add",
+                    modifier = Modifier
+                        .clickable {
+                            if (onAddClick != null) {
+                                onAddClick(coursedata)
+                            }
+                        },
+                    tint = Color.Black
+                )
+            }
+            if (buttonType == "REM") {
+                Icon(
+                    Icons.Rounded.Close,
+                    "remove",
+                    modifier = Modifier
+                        .clickable {
+                            if (onRemoveClick != null) {
+                                onRemoveClick(coursedata)
+                            }
+                        },
+                    tint = Color.Black
+                )
+            }
+            /*Icon(
                 Icons.Rounded.Add,
                 "add",
                 modifier = Modifier
@@ -132,7 +163,7 @@ fun CourseBox(
                         }
                     },
                 tint = Color.Black
-            )
+            )*/
         }
     }
 }
@@ -210,7 +241,13 @@ fun CourseBoxPreview (
         date_time = "MWF 8:00am - 9:05am",
         location = "Baskin Auditorium 1"
     )
-    CourseBox(coursedata = test, modifier = Modifier, onAddClick = null, onMapClick = null)
+    CourseBox(coursedata = test,
+              modifier = Modifier,
+              buttonType = "ADD",
+              onAddClick = null,
+              onRemoveClick = null,
+              hasMapButton = false,
+              onMapClick = null)
 }
 
 @Preview(showBackground = true)

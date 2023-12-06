@@ -113,7 +113,11 @@ fun HomeScreenContent(
                 verticalArrangement = Arrangement.spacedBy(15.dp)
             ) {
                 items(courses) {courseItem ->
-                    CourseBox(coursedata = courseItem, onAddClick = null, onMapClick = null)
+                    CourseBox(coursedata = courseItem,
+                              onAddClick = null,
+                              onRemoveClick = null,
+                              hasMapButton = false,
+                              onMapClick = null)
                 }
             }
 

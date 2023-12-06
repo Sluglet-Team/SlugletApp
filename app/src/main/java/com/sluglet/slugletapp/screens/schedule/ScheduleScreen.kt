@@ -3,6 +3,7 @@ package com.sluglet.slugletapp.screens.schedule
 import android.Manifest
 import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -42,6 +43,7 @@ import kotlinx.datetime.toLocalDateTime
 
 // Use https://github.com/hi-manshu/Kalendar for documentation on using the library
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ScheduleScreen (
@@ -126,7 +128,8 @@ fun ScheduleScreen (
         selectedDate = selectedDate,
         onDateSelected = viewModel::onDateSelected,
         kalendarColors = kalendarColors,
-        kalendarDayKonfig = kalendarDayKonfig
+        kalendarDayKonfig = kalendarDayKonfig,
+        onRemoveClick = viewModel::onRemoveClick
     )
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         val permissionState = rememberMultiplePermissionsState(
@@ -145,6 +148,7 @@ fun ScheduleScreen (
 /**
  * Helpfer function to get the day from the course string
  */
+@RequiresApi(Build.VERSION_CODES.O)
 fun getDayOfWeekFromString(day: String): DayOfWeek {
     return when (day) {
         "M" -> DayOfWeek.MONDAY
@@ -155,6 +159,7 @@ fun getDayOfWeekFromString(day: String): DayOfWeek {
         else -> DayOfWeek.MONDAY // Default day, adjust as needed
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
 fun dayOfWeekParam(day: LocalDate?): String {
     if (day != null) {
         return when (day.dayOfWeek) {
@@ -188,7 +193,8 @@ standards for this function should also be changed.
  */
 @Composable fun DisplayCourses (
     courses: List<CourseData>,
-    day: String = ""
+    day: String = "",
+    onRemoveClick: ((CourseData) -> Unit)?
 ) {
     LazyColumn (
         state = rememberLazyListState(),
@@ -199,7 +205,12 @@ standards for this function should also be changed.
                 it.date_time.contains(day, ignoreCase = false)
             }
         ) {courseItem ->
-            CourseBox(coursedata = courseItem, onAddClick = null, onMapClick = null)
+            CourseBox(coursedata = courseItem,
+                      buttonType = "REM",
+                      onAddClick = null,
+                      onRemoveClick = onRemoveClick,
+                      hasMapButton = false,
+                      onMapClick = null)
         }
 
     }
@@ -213,7 +224,8 @@ fun ScheduleScreenContent(
     selectedDate: LocalDate?,
     onDateSelected: (LocalDate) -> Unit,
     kalendarColors: KalendarColors = KalendarColors(emptyList()),
-    kalendarDayKonfig: KalendarDayKonfig
+    kalendarDayKonfig: KalendarDayKonfig,
+    onRemoveClick: ((CourseData) -> Unit)?
 ) {
 
     Column(
@@ -232,7 +244,7 @@ fun ScheduleScreenContent(
                     onDateSelected(selectedDate)
             }
         )
-        DisplayCourses(courses = courseList, day = dayOfWeekParam(selectedDate) )
+        DisplayCourses(courses = courseList, day = dayOfWeekParam(selectedDate), onRemoveClick = onRemoveClick)
 
     }
 }

@@ -4,6 +4,7 @@ import com.sluglet.slugletapp.model.CourseData
 import com.sluglet.slugletapp.model.service.LogService
 import com.sluglet.slugletapp.model.service.NotificationService
 import com.sluglet.slugletapp.model.service.StorageService
+import com.sluglet.slugletapp.model.service.AccountService
 import com.sluglet.slugletapp.screens.SlugletViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class ScheduleViewModel @Inject constructor(
     logService: LogService,
     private val storageService: StorageService,
+    private val accountService: AccountService,
     private val notificationService: NotificationService
 ) : SlugletViewModel(logService) {
     val userCourses = storageService.userCourses
@@ -27,6 +29,7 @@ class ScheduleViewModel @Inject constructor(
     val quarterStart = FALL_START
     val quarterEnd = FALL_END
     private val startTimes = mutableListOf<LocalTime>()
+
 
     /**
      * Function for testing notification
@@ -107,6 +110,12 @@ class ScheduleViewModel @Inject constructor(
     companion object {
         private val FALL_START = LocalDate(2023, 9, 28)
         private val FALL_END = LocalDate(2023, 12, 15)
+    }
+
+    fun onRemoveClick(data: CourseData) {
+        launchCatching {
+            accountService.removeCourse(data)
+        }
     }
 
 }
