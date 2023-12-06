@@ -2,6 +2,8 @@
 
 An app for UC Santa Cruz Students - Organize your schedule, find your classes, and more!
 
+![Slugs on the move](app/src/main/res/drawable/slug.png "No Known Predators")
+
 ## Features
 
 - Add any course from the UCSC catalogue to your profile so you can keep track of your schedule
@@ -23,3 +25,16 @@ An app for UC Santa Cruz Students - Organize your schedule, find your classes, a
 - Max Platt
 - Tanuj Sood
 - Max Totten
+
+# Acknowledgements
+
+This project was developed on Android Studio using Kotlin, Android, and GoogleCloudPlatform APIs including Firebase and Google Play Services
+
+The following libraries were included under the open source Apache 2.0 License:
+
+- [kotlin](https://github.com/JetBrains/kotlin)
+- [osmdroid](https://github.com/osmdroid/osmdroid)
+- [osm-android-compose (Modified)](https://github.com/utsmannn/osm-android-compose)
+- [okhttp](https://github.com/square/okhttp)
+- [dagger](https://github.com/google/dagger)
+- [kalendar](https://github.com/hi-manshu/Kalendar)
