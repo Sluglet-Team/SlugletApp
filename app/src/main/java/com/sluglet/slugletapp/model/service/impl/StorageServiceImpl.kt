@@ -174,7 +174,7 @@ class StorageServiceImpl @Inject constructor(
 
     companion object {
         private const val USER_COLLECTION = "users"
-        private const val COURSE_COLLECTION = "courses2023"
+        private const val COURSE_COLLECTION = "courses2024"
         private const val USER_COURSES = "courses"
         private const val TEST_COURSE_COLLECTION3 = "courses3"
     }
